@@ -1,0 +1,95 @@
+{# _nc-modal.twig #}
+<div class="modal fade" id="addnc-{{ criterion.id|replace({'.': '-'}) }}" tabindex="-1" aria-labelledby="addnc-label-{{ criterion.id|replace({'.': '-'}) }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg"> {# Ajout de modal-lg pour plus d'espace #}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addnc-label-{{ criterion.id|replace({'.': '-'}) }}">Ajout d'une non-conformité - Critère {{ criterion.id }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="ncForm-{{ criterion.id|replace({'.': '-'}) }}" 
+                  class="senddata nc-form" 
+                  method="POST" 
+                  enctype="multipart/form-data"
+                  data-modal="addnc-{{ criterion.id|replace({'.': '-'}) }}"> {# Ajout de data-modal #}
+                <div class="modal-body">
+                    {# Champs cachés #}
+                    <input type="hidden" name="criterionId" value="{{ criterion.id }}">
+                    <input type="hidden" name="pageId" value="{{ currentPage ? currentPage.id : '' }}">
+                    
+                    <div class="mb-3">
+                        <label for="page-select-{{ criterion.id|replace({'.': '-'}) }}" class="form-label">Écran</label>
+                        <select class="form-select" id="page-select-{{ criterion.id|replace({'.': '-'}) }}" disabled>
+                            <option value="">Toutes les pages</option>
+                            {% for page in pages %}
+                                <option value="{{ page.id }}" {% if currentPage and currentPage.id == page.id %}selected{% endif %}>
+                                    {{ page.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="suggestions-container mb-2 d-none">
+                            <div class="alert alert-info">
+                                <h6>Suggestions :</h6>
+                                <div class="suggestions-list"></div>
+                            </div>
+                        </div>
+                        
+                        <label for="impact-{{ criterion.id|replace({'.': '-'}) }}" class="form-label">Impact</label>
+                        <select class="form-select" id="impact-{{ criterion.id|replace({'.': '-'}) }}" name="impact" required>
+                            <option>Majeur</option>
+                            <option>Fort</option>
+                            <option>Modéré</option>
+                            <option>Faible</option>         
+                        </select>
+                        <div class="form-text">
+                            <a href="https://disic.github.io/guide-impacts_utilisateurs/" target="_blank" rel="noopener">
+                                Voir le guide impacts utilisateurs
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description-{{ criterion.id|replace({'.': '-'}) }}" class="form-label">Erreur</label>
+                        <textarea class="form-control" id="description-{{ criterion.id|replace({'.': '-'}) }}" name="description" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="screenshot-{{ criterion.id|replace({'.': '-'}) }}" class="form-label">Impression écran de la non-conformité :</label>
+                        <input type="file" class="form-control" id="screenshot-{{ criterion.id|replace({'.': '-'}) }}" name="screenshot" accept="image/jpeg">
+                        <small class="text-muted">L'image doit être au format jpg.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="solution-{{ criterion.id|replace({'.': '-'}) }}" class="form-label">Solution proposée</label>
+                        <textarea class="form-control" id="solution-{{ criterion.id|replace({'.': '-'}) }}" name="solution" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" 
+                                class="form-check-input" 
+                                id="allPages-{{ criterion.id|replace({'.': '-'}) }}" 
+                                name="allPages" 
+                                {% if not currentPage %}checked disabled{% endif %}>
+                            <label class="form-check-label" for="allPages-{{ criterion.id|replace({'.': '-'}) }}">
+                                Appliquer à toutes les pages
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        Ajouter
+                        <span class="spinner-border spinner-border-sm d-none" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

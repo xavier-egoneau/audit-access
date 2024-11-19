@@ -1,0 +1,89 @@
+<div class="modal fade" id="editProject" tabindex="-1" aria-labelledby="Paramètres du projet" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Paramètres du projet</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editProjectForm" 
+                action="/audit/{{ currentProjectId }}/edit" 
+                method="post">
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editProjectName" class="form-label">Nom du projet</label>
+                        <input type="text" 
+                            class="form-control" 
+                            id="editProjectName" 
+                            name="name" 
+                            value="{{ currentProject.name }}" 
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editProjectUrl" class="form-label">URL du site (optionnel)</label>
+                        <input type="url" 
+                            class="form-control" 
+                            id="editProjectUrl" 
+                            name="url" 
+                            value="{{ currentProject.url }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editReferential" class="form-label">Référentiel</label>
+                        <select class="form-select" id="editReferential" name="referential">
+                            <option value="RGAA" {% if currentProject.referential == 'RGAA' %}selected{% endif %}>RGAA</option>
+                            <option value="WCAG" {% if currentProject.referential == 'WCAG' %}selected{% endif %}>WCAG</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editReferentialVersion" class="form-label">Version</label>
+                        <select class="form-select" id="editReferentialVersion" name="referentialVersion">
+                            <option value="4.1" {% if currentProject.referential_version == '4.1' %}selected{% endif %}>4.1</option>
+                            <option value="4.0" {% if currentProject.referential_version == '4.0' %}selected{% endif %}>4.0</option>
+                            <option value="2.1" {% if currentProject.referential_version == '2.1' %}selected{% endif %}>2.1 (WCAG)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="screens" class="form-label">Pages du projet</label>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" id="screenInput" placeholder="Nom de la page">
+                            <button class="btn btn-outline-secondary" type="button" id="addScreen">Ajouter</button>
+                        </div>
+                        <div id="screensList" class="mt-2">
+                            {% for page in pages %}
+                                <div class="badge bg-primary me-2 mb-2">
+                                    {{ page.name }}
+                                    <button type="button" class="btn-close btn-close-white ms-2" 
+                                            data-page-id="{{ page.id }}" 
+                                            aria-label="Supprimer"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="alert alert-info mt-4">
+                            Note : La suppression d'une page supprimera également toutes les non-conformités associées.
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger me-auto" id="deleteProjectBtn">
+                            Supprimer ce projet
+                            <span class="spinner-border spinner-border-sm d-none" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">
+                            Enregistrer
+                            <span class="spinner-border spinner-border-sm d-none" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

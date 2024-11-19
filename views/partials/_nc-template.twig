@@ -1,0 +1,41 @@
+{# _nc-template.twig #}
+<div class="card mb-3" id="nc-{{ nc.id }}">
+    {% if nc.pages %}
+        <div class="card-header bg-light">
+            Pages concernées : 
+            {% if nc.allPages %}
+                <span class="badge bg-primary">Toutes les pages</span>
+            {% else %}
+                {% for page in nc.pages %}
+                    <span class="badge bg-primary me-1">{{ page }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if nc.screenshot_path %}
+        <img src="{{ nc.screenshot_path }}" class="card-img-top" alt="Capture d'écran de la non-conformité">
+    {% endif %}
+    <div class="card-body">
+        <h5 class="card-title">Impact</h5>
+        <p>{{ nc.impact }}</p>
+        <h5 class="card-text">Description</h5>
+        <p>{{ nc.description }}</p>
+        <h5 class="card-title">Solution proposée</h5>
+        <p>{{ nc.solution }}</p>
+        <!-- data-debug="id:{{ nc.id|default('undefined') }},ncId:{{ nc.ncId|default('undefined') }}" -->
+        <div class="d-flex justify-content-end">
+            <button type="button" 
+                    class="card-link btn btn-outline-primary me-2 btn-modifier" 
+                    data-nc-id="{{ nc.id }}"
+                    title="Modifier cette non-conformité">
+                Modifier
+            </button>
+            <button type="button" 
+                    class="card-link btn btn-outline-danger delete-nc" 
+                    data-nc-id="{{ nc.id|default(nc.nonConformities[0].id) }}"
+                    title="Supprimer cette non-conformité">
+                Supprimer
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<div class="alert alert-danger">
+    <h4 class="alert-heading">Erreur</h4>
+    <p>{{ message }}</p>
+    {% if error and error.stack %}
+        <hr>
+        <pre class="mb-0">{{ error.stack }}</pre>
+    {% endif %}
+</div>
+{% endblock %}

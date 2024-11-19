@@ -1,0 +1,35 @@
+<div class="modal fade" id="learningModal" tabindex="-1" aria-labelledby="learningModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="learningModalLabel">Suggestions d'apprentissage</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                        <h6>Métriques globales :</h6>
+                        <div id="learning-metrics" class="small text-muted">
+                            Chargement...
+                        </div>
+                    </div>
+                    <div>
+                        <label for="learning-filter" class="form-label">Pertinence minimum :</label>
+                        <select class="form-select form-select-sm" id="learning-filter">
+                            <option value="0">Toutes les suggestions</option>
+                            <option value="0.3" selected>30% et plus</option>
+                            <option value="0.5">50% et plus</option>
+                            <option value="0.7">70% et plus</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="learning-suggestions">
+                    <!-- Les suggestions seront chargées ici -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="container-fluid mb-4">
+    <div class="row align-items-center">
+        {# Titre éditable #}
+        <div class="col">
+            <h1 id="titre" class="pb-4" contenteditable="true">{{ currentProject.name }}</h1>
+        </div>
+
+        {# Sélecteur d'écran #}
+        <div class="col-auto">
+            <select class="form-select" id="screenSelector">
+                <option value="">Tous les écrans</option>
+                {% if pages %}
+                    {% for page in pages %}
+                        <option value="{{ page.id }}" {% if currentPage and currentPage.id == page.id %}selected{% endif %}>
+                            {{ page.name }}
+                        </option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+
+        {# Statistiques #}
+        <div class="col-auto">
+            <div class="d-flex gap-3">
+                <div>
+                    Page actuelle: 
+                    <span id="taux_conform_pa" class="badge bg-primary">{{ currentRate|default('0') }}%</span>
+                </div>
+                <div>
+                    Taux moyen:
+                    <span id="taux_moyen" class="badge bg-primary">{{ averageRate|default('0') }}%</span>
+                </div>
+                <div>
+                    Taux Global:
+                    <span id="taux_conform" class="badge bg-primary">{{ globalRate|default('0') }}%</span>
+                </div>
+                <div>
+                    Critères totaux:
+                    <span class="badge bg-secondary">{{ totalCriteria }}</span>
+                </div>
+            </div>
+        </div>
+
+        {# Menu Actions #}
+        <div class="col-auto">
+           <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" 
+                        type="button" 
+                        id="dropdownMenuButton" 
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false">
+                    Actions
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editProject">Paramètres du projet</button></li>
+                    <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#newProject">Nouveau projet</button></li>
+                    <li><a class="dropdown-item" href="/audit/{{ currentProject.id }}/restitution" target="_blank">Restitution</a></li>
+                    <li><a class="dropdown-item" href="/">Changer de projet</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

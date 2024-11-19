@@ -1,0 +1,59 @@
+{# Modal pour nouveau projet #}
+    <div class="modal fade" id="newProject" tabindex="-1" aria-labelledby="newProjectLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newProjectLabel">Nouveau projet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <form id="newProjectForm" 
+                    class="senddata" 
+                    action="/audit/new" 
+                    method="post"
+                    data-custom='{"screens": []}'>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="projectName" class="form-label">Nom du projet</label>
+                            <input type="text" class="form-control" id="projectName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="projectUrl" class="form-label">URL du site (optionnel)</label>
+                            <input type="url" class="form-control" id="projectUrl" name="url">
+                        </div>
+                        <div class="mb-3">
+                            <label for="referential" class="form-label">Référentiel</label>
+                            <select class="form-select" id="referential" name="referential">
+                                <option value="RGAA">RGAA</option>
+                                <option value="WCAG">WCAG</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="referentialVersion" class="form-label">Version</label>
+                            <select class="form-select" id="referentialVersion" name="referentialVersion">
+                                <option value="4.1">4.1</option>
+                                <option value="4.0">4.0</option>
+                                <option value="2.1">2.1 (WCAG)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="screens" class="form-label">Pages du projet</label>
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" id="screenInput" placeholder="Nom de la page">
+                                <button class="btn btn-outline-secondary" type="button" id="addScreen">Ajouter</button>
+                            </div>
+                            <div id="screensList" class="mt-2"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">
+                            Créer le projet
+                            <span class="spinner-border spinner-border-sm d-none" role="status">
+                                <span class="visually-hidden">Chargement...</span>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

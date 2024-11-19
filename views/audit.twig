@@ -1,0 +1,59 @@
+{% extends "layout.twig" %}
+
+{% block title %}Audit RGAA{% endblock %}
+
+{% block head_assets %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" integrity="sha512-9xKTRVabjVeZmc+GUW8GgSmcREDunMM+Dt/GrzchfN8tkwHizc5RP4Ok/MXFFy5rIjJjzhndFScTceq5e6GvVQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/assets/css/all.css">
+{% endblock %}
+
+{% block content %}
+<main id="main" class="main" role="main">
+    <div id="app">
+        {# Header avec les statistiques #}
+        {% include 'partials/_header.twig' %}
+
+        {# Alert pour les NT restants #}
+        {% if hasNT %}
+        <div id="alert" class="alert alert-warning d-flex align-items-center mt-4 show" role="alert">
+            Attention, il reste des Non-Testé!
+        </div>
+        {% endif %}
+
+        {# Grille des critères #}
+        {% include 'partials/_criteria-grid.twig' %}
+
+        {# Modales #}
+        {% include 'partials/_modals.twig' %}
+
+        {# Loader global #}
+        <div id="loaderglobal" class="spinner-border" role="status" style="display: none;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block js_footer %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/all.js"></script>
+<script>
+    console.log("audit.twig");
+    const currentProjectId = '{{ currentProjectId }}';
+    const pages = {{ pages|json_encode|raw }};
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('form.senddata, form[id^="ncForm-"]');
+        if (forms.length > 0) {
+            forms.forEach(form => {
+                // Ne pas initialiser FormHandler pour le formulaire d'édition
+                if (form.id !== 'editProjectForm' && !form.dataset.initialized) {
+                    new FormHandler(form);
+                }
+            });
+        }
+    });
+    
+</script>
+{% endblock %}

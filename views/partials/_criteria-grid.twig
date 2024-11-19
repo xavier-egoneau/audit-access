@@ -1,0 +1,129 @@
+<div class="container-fluid">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Critère</th>
+
+                <th>Description</th>
+                <th>État</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for criterion in criteria %}
+                {# Ligne principale du critère #}
+                <tr class="statut statut-{{ criterion.status }}">
+                    <td>{{ criterion.id }}</td>
+                    <td>{{ criterion.titre }}</td>
+                    
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <select class="form-select form-select-sm criterion-status me-2"
+                                    data-criterion="{{ criterion.id }}">
+                                <option value="NT" {% if criterion.status == 'NT' %}selected{% endif %}>Non Testé</option>
+                                <option value="NA" {% if criterion.status == 'NA' %}selected{% endif %}>Non Applicable</option>
+                                <option value="C" {% if criterion.status == 'C' %}selected{% endif %}>Conforme</option>
+                                <option value="NC" {% if criterion.status == 'NC' %}selected{% endif %}>Non Conforme</option>
+                                {% if not currentPage and criterion.hasDifferentStatuses %}
+                                    <option value="MULTIPLE" {% if criterion.status == 'MULTIPLE' %}selected{% endif %} disabled>Statuts multiples</option>
+                                {% endif %}
+                            </select>
+                            {% if criterion.hasDifferentStatuses %}
+                                <span class="badge bg-warning" 
+                                      data-bs-toggle="tooltip" 
+                                      title="Les statuts diffèrent selon les pages">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="audit-actions">
+                        
+                            
+                                
+                                    <button class="btn btn-sm btn-primary open_NC" 
+                                            data-bs-toggle="collapse" 
+                                            data-bs-target="#collapse-{{ criterion.id|replace({'.': '-'}) }}">
+                                        Voir NC
+                                    </button>
+                                
+                                <button class="btn btn-primary" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#test-modal_{{criterion.id|replace({'.': '-'})}}">
+                                        Méthodologie
+                                </button>
+                            
+                        
+                    </td>
+                </tr>
+                {# Ligne collapsable pour les NC #}
+                <tr>
+                    <td colspan="5" class="collapse_container" id="accordion-detail-{{ criterion.id|replace({'.': '-'}) }}">
+                        <div id="collapse-{{ criterion.id|replace({'.': '-'}) }}" 
+                             class="accordion-collapse collapse" 
+                             aria-labelledby="heading-{{ criterion.id|replace({'.': '-'}) }}" 
+                             data-bs-parent="#accordion-{{ criterion.id|replace({'.': '-'}) }}">
+                            <div class="accordion-body">
+                                <div class="container2">
+                                    <div class="row">
+                                        <div id="wrapper-{{ criterion.id|replace({'.': '-'}) }}" class="wrapper_ncs row" data-criterion-id="{{ criterion.id }}">
+                                            {% if criterion.nonConformities|length > 0 %}
+                                                {% for nc in criterion.nonConformities %}
+                                            
+                                                    {% include 'partials/_nc-template.twig' with { "nc": nc} %}
+                                                    
+                                                {% endfor %}
+                                            {% else %}
+                                            <div class="alert alert-info">
+                                                Aucune non-conformité trouvée pour ce critère
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-12 mt-4 mb-4">
+                                            <button class="btn btn-primary add-nc" 
+                                                    data-criterion="{{ criterion.id }}"
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#addnc-{{ criterion.id|replace({'.': '-'}) }}">
+                                                Ajouter une non-conformité
+                                            </button>
+                                            {% if currentPage %}
+                                                <button class="btn btn-secondary seeall">
+                                                    Voir tous les écrans
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {# Ajout des modales de NC pour chaque critère #}
+    {% for criterion in criteria %}
+        {% include 'partials/_nc-modal.twig' with {'criterion': criterion} %}
+
+        
+        {# Modal pour édition de NC #}
+        <div class="modal" tabindex="-1" id="test-modal_{{criterion.id|replace({'.': '-'})}}" aria-labelledby="tests méthodologie" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Méthodologie de tests:</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    {% for test in criterion.tests %}
+                            <p><b>{{ test.id }}</b> {{ test.description }}</p>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
