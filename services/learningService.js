@@ -25,29 +25,35 @@ class LearningService {
 
     // Méthode principale pour apprendre d'une nouvelle NC
     async learnFromNC(nonConformity) {
+        console.log("NC reçue:", nonConformity); // Debug
+    
         const { criterionId, impact, description, solution, projectId } = nonConformity;
-        
+    
         try {
             await this.db.beginTransaction();
-
-            // 1. Analyser et stocker les patterns
+    
+            // On vérifie que description existe et n'est pas vide
+            if (!description) {
+                console.warn("Description manquante dans la NC");
+                throw new Error("Description obligatoire");
+            }
+    
             const patterns = this.extractPatterns(description);
-            await this.updatePatterns(criterionId, patterns);
-
+            await this.updatePattern(criterionId, patterns);
+    
             // 2. Créer ou mettre à jour la suggestion
             const suggestionId = await this.createOrUpdateSuggestion(criterionId, {
                 impact,
                 description,
-                solution,
-                patterns
+                solution
             });
-
+    
             // 3. Mettre à jour les métriques
             await this.updateMetrics(criterionId);
-
+    
             await this.db.commit();
             return suggestionId;
-
+    
         } catch (error) {
             await this.db.rollback();
             throw error;
@@ -55,11 +61,12 @@ class LearningService {
     }
 
     // Extraction des patterns depuis une description
-    extractPatterns(text) {
+    extractPatterns(description) {
+        const textToAnalyze = String(description);
+        const lowercaseText = textToAnalyze.toLowerCase();
         const patterns = new Set();
-        const lowercaseText = text.toLowerCase();
-
-        // 1. Patterns techniques
+    
+        // Patterns techniques
         Object.entries(this.technicalPatterns).forEach(([category, categoryPatterns]) => {
             categoryPatterns.forEach(pattern => {
                 if (lowercaseText.includes(pattern.toLowerCase())) {
@@ -67,8 +74,8 @@ class LearningService {
                 }
             });
         });
-
-        // 2. Patterns d'impact
+    
+        // Patterns d'impact
         Object.entries(this.impactPatterns).forEach(([category, impactPatterns]) => {
             impactPatterns.forEach(pattern => {
                 if (lowercaseText.includes(pattern)) {
@@ -76,36 +83,39 @@ class LearningService {
                 }
             });
         });
-
-        // 3. Expressions régulières pour les patterns techniques courants
+    
+        // Expressions régulières pour les patterns techniques
         const regexPatterns = [
             /attribut ["'](\w+)["']/g,
             /balise ["'](\w+)["']/g,
             /role="(\w+)"/g,
             /aria-\w+/g
         ];
-
+    
         regexPatterns.forEach(regex => {
-            const matches = text.matchAll(regex);
+            const matches = textToAnalyze.matchAll(regex);
             for (const match of matches) {
                 patterns.add(`technique:${match[0]}`);
             }
         });
-
+    
         return Array.from(patterns);
     }
-
     // Mise à jour des patterns en base
-    async updatePatterns(criterionId, patterns) {
+    async updatePattern(criterionId, patterns) {
+        if (!Array.isArray(patterns)) {
+            console.warn('Patterns invalides:', patterns);
+            return;
+        }
+    
         for (const pattern of patterns) {
             await new Promise((resolve, reject) => {
                 this.db.db.run(`
-                    INSERT INTO learning_patterns (criterion_id, pattern, frequency)
-                    VALUES (?, ?, 1)
-                    ON CONFLICT (criterion_id, pattern) 
-                    DO UPDATE SET 
-                        frequency = frequency + 1,
-                        updated_at = CURRENT_TIMESTAMP
+                    INSERT INTO learning_patterns (criterion_id, pattern)
+                    VALUES (?, ?)
+                    ON CONFLICT(criterion_id, pattern) DO UPDATE SET 
+                    frequency = frequency + 1,
+                    updated_at = CURRENT_TIMESTAMP
                 `, [criterionId, pattern], (err) => {
                     if (err) reject(err);
                     resolve();

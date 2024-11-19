@@ -27,7 +27,8 @@ class LearningDatabase {
                         frequency INTEGER DEFAULT 1,
                         confidence_score FLOAT DEFAULT 0,
                         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        UNIQUE(criterion_id, pattern)
                     )
                 `);
 
