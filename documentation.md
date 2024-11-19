@@ -1,6 +1,6 @@
 # Auditeur RGAA/WCAG
 
-Application d'audit d'accessibilité web permettant de tester la conformité aux référentiels RGAA et WCAG.
+Application d'audit d'accessibilité web permettant de tester la conformité aux référentiels RGAA et WCAG tout en automatisant un maximum de tâches.
 
 ## Table des matières
 
@@ -26,7 +26,7 @@ Application d'audit d'accessibilité web permettant de tester la conformité aux
 
 1. Cloner le repository :
 ```bash
-git clone [URL_DU_REPO]
+git clone https://github.com/xavier-egoneau/audit-access.git
 ```
 
 2. Installer les dépendances :
@@ -50,16 +50,24 @@ npm run dev
 
 ```
 .
-├── database/               # Bases de données SQLite des projets
-├── public/                 # Fichiers statiques
-│   ├── assets/            # CSS et JS compilés
-│   └── uploads/           # Screenshots des non-conformités
-├── models/                # Modèles de données
-├── services/             # Services métier
-├── views/                # Templates Twig
+├── database/            # Bases de données SQLite des projets
+├── data/                # Bdd pour l'apprentissage des suggestions
+├── public/              # Fichiers statiques
+│   ├── assets/          # CSS et JS compilés
+│   └── uploads/         # Screenshots des non-conformités
+├── models/              # Modèles de données
+├── services/            # Services métier
+├── views/               # Templates Twig
 │   └── partials/        # Composants réutilisables
+│   └── audit/           # Templates Twig
+├── sources/             # Sources js & scss + gulp process
+│   └── js/              # js
+│   └── scss/            # scss
+│   └── tasks/           # tasks gulp
 ├── app.js               # Point d'entrée de l'application
 └── package.json
+└── criteres_rgaa.xml
+└── criteres_wcag.xml
 ```
 
 ## Fonctionnalités

@@ -554,17 +554,27 @@ app.post('/audit/new', async (req, res) => {
     try {
         console.log("Données reçues:", req.body);
         
-        // Vérification du nom du projet
-        if (!req.body.name || req.body.name.trim() === '') {
+        // Nettoyage et validation des données reçues
+        const projectData = {
+            name: req.body.name ? req.body.name.trim() : '',
+            url: req.body.url || '',
+            referential: req.body.referential,
+            screens: Array.isArray(req.body.screens) ? req.body.screens : []
+        };
+
+        if (!projectData.name) {
             throw new Error('Le nom du projet est requis');
         }
-  
+
+        const validReferentials = ['RGAA', 'WCAG', 'RAAM'];
+        if (!validReferentials.includes(projectData.referential)) {
+            throw new Error('Référentiel invalide');
+        }
+
         const projectId = uuidv4();
-        console.log("Création du projet:", projectId);
-  
         const db = new Database(projectId);
-  
-        // Créer le projet
+
+        // Création du projet
         await new Promise((resolve, reject) => {
             db.db.run(
                 `INSERT INTO project_info (
@@ -572,27 +582,24 @@ app.post('/audit/new', async (req, res) => {
                     name, 
                     url,
                     referential, 
-                    referential_version,
                     created_at
-                ) VALUES (?, ?, ?, ?, ?, datetime('now'))`,
+                ) VALUES (?, ?, ?, ?, datetime('now'))`,
                 [
                     projectId,
-                    req.body.name,
-                    req.body.url || '',
-                    req.body.referential || 'RGAA',
-                    req.body.referentialVersion || '4.1'
+                    projectData.name,
+                    projectData.url,
+                    projectData.referential
                 ],
                 function(err) {
                     if (err) reject(err);
-                    console.log("Projet créé dans la base");
                     resolve();
                 }
             );
         });
-  
-        // Créer les pages
-        if (req.body.screens && Array.isArray(req.body.screens)) {
-            await Promise.all(req.body.screens.map(screen => {
+
+        // Création des pages
+        if (projectData.screens.length > 0) {
+            await Promise.all(projectData.screens.map(screen => {
                 return new Promise((resolve, reject) => {
                     db.db.run(
                         'INSERT INTO pages (name, created_at) VALUES (?, datetime("now"))',
@@ -605,12 +612,13 @@ app.post('/audit/new', async (req, res) => {
                 });
             }));
         }
-  
+
         db.close();
         res.json({ 
             success: true, 
             projectId
         });
+
     } catch (error) {
         console.error("Erreur lors de la création du projet:", error);
         res.status(500).json({ 
@@ -618,7 +626,7 @@ app.post('/audit/new', async (req, res) => {
             message: error.message || 'Erreur lors de la création du projet'
         });
     }
-  });
+});
 
 // Route pour mettre à jour le statut d'un critère
 app.post('/audit/:projectId/criterion/:criterionId', async (req, res) => {

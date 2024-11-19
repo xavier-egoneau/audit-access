@@ -48,7 +48,7 @@ class Database {
                         name TEXT NOT NULL,
                         url TEXT,
                         referential TEXT NOT NULL,
-                        referential_version TEXT NOT NULL,
+                        referential_version TEXT, -- Modification ici : utiliser -- pour les commentaires SQL
                         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                     )
                 `);
@@ -175,22 +175,28 @@ class Database {
             });
     
             // Choisir le fichier XML approprié
-            const xmlFile = projectInfo.referential === 'WCAG' ? 'criteres_wcag.xml' : 'criteres_rgaa.xml';
+            const xmlFile = projectInfo.referential === 'WCAG' ? 'criteres_wcag.xml' : 
+                           projectInfo.referential === 'RAAM' ? 'criteres_raam.xml' : 
+                           'criteres_rgaa.xml';
             const xmlPath = path.join(__dirname, '..', xmlFile);
     
-            // Utiliser fsPromises.readFile au lieu de fs.readFile
             const xmlData = await fsPromises.readFile(xmlPath, 'utf8');
             const parser = new xml2js.Parser();
             
-            // Transformer la méthode parseString en Promise
             const result = await new Promise((resolve, reject) => {
                 parser.parseString(xmlData, (err, result) => {
                     if (err) reject(err);
                     else resolve(result);
                 });
             });
+    
+            // Récupérer la version depuis le XML
+            const version = result.CRITERES.$.version;
             
-            return result.RGAA.Critere.map(critere => {
+            // Mettre à jour la version dans la base de données
+            await this.updateReferentialVersion(version);
+            
+            return result.CRITERES.Critere.map(critere => {
                 return {
                     id: critere.$.id,
                     titre: this.encodeHtml(critere.Titre[0]),
@@ -209,6 +215,19 @@ class Database {
             console.error('Erreur lors du chargement des critères:', error);
             throw error;
         }
+    }
+
+    async updateReferentialVersion(version) {
+        return new Promise((resolve, reject) => {
+            this.db.run(
+                'UPDATE project_info SET referential_version = ? WHERE id = ?',
+                [version, this.projectId],
+                (err) => {
+                    if (err) reject(err);
+                    resolve();
+                }
+            );
+        });
     }
 
     // Ajouter cette méthode à la classe Database

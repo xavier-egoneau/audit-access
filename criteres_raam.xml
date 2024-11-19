@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='utf-8'?>
+<CRITERES version="1.0.0">
+    <Critere id="1.1">
+        <Titre>Chaque image porteuse d'information a-t-elle une alternative textuelle ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="1.1.1">
+                <Description>Chaque image porteuse d'information a-t-elle une alternative textuelle pertinente ?</Description>
+                <Methodologie>
+                    <Etape>Repérer toutes les images du site mobile qui apportent de l'information</Etape>
+                    <Etape>Pour chaque image, vérifier la présence d'une alternative textuelle</Etape>
+                    <Etape>Pour chaque image, vérifier que l'alternative textuelle est pertinente</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="1.2">
+        <Titre>Les images de décoration sont-elles correctement ignorées par les technologies d'assistance ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="1.2.1">
+                <Description>Chaque image de décoration est-elle correctement ignorée par les technologies d'assistance ?</Description>
+                <Methodologie>
+                    <Etape>Repérer toutes les images de décoration du site mobile</Etape>
+                    <Etape>Vérifier que ces images sont ignorées par les technologies d'assistance</Etape>
+                    <Etape>Vérifier qu'aucune alternative textuelle n'est fournie pour ces images</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="2.1">
+        <Titre>Les éléments d'interface sont-ils utilisables sur les terminaux mobiles ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="2.1.1">
+                <Description>Chaque élément d'interface est-il facilement activable sur mobile ?</Description>
+                <Methodologie>
+                    <Etape>Vérifier que la zone activable est suffisamment grande (au moins 9mm x 9mm)</Etape>
+                    <Etape>Vérifier que l'espacement entre les éléments cliquables est suffisant (au moins 2mm)</Etape>
+                    <Etape>Tester l'activation avec différents types de pointage (doigt, stylet)</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="2.2">
+        <Titre>La consultation est-elle confortable en orientation portrait et paysage ?</Titre>
+        <NiveauWCAG>AA</NiveauWCAG>
+        <Tests>
+            <Test id="2.2.1">
+                <Description>Le contenu et les fonctionnalités sont-ils disponibles quelle que soit l'orientation de l'écran ?</Description>
+                <Methodologie>
+                    <Etape>Tester le site en orientation portrait</Etape>
+                    <Etape>Tester le site en orientation paysage</Etape>
+                    <Etape>Vérifier que toutes les fonctionnalités restent accessibles</Etape>
+                    <Etape>Vérifier que le contenu reste lisible et utilisable</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="3.1">
+        <Titre>Le contenu est-il présenté sans perte d'information ou de fonctionnalité lors du redimensionnement ?</Titre>
+        <NiveauWCAG>AA</NiveauWCAG>
+        <Tests>
+            <Test id="3.1.1">
+                <Description>Le contenu reste-t-il consultable sans défilement horizontal à 320px de large ?</Description>
+                <Methodologie>
+                    <Etape>Réduire la fenêtre à une largeur de 320 pixels</Etape>
+                    <Etape>Vérifier qu'aucun défilement horizontal n'est nécessaire</Etape>
+                    <Etape>Vérifier que tout le contenu reste accessible</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="4.1">
+        <Titre>Les fonctionnalités sont-elles utilisables avec les gestes complexes et simples ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="4.1.1">
+                <Description>Chaque fonctionnalité utilisable avec un geste complexe peut-elle être utilisée avec un geste simple ?</Description>
+                <Methodologie>
+                    <Etape>Identifier les fonctionnalités utilisant des gestes complexes</Etape>
+                    <Etape>Vérifier qu'une alternative avec geste simple existe</Etape>
+                    <Etape>Tester les alternatives avec différents types d'interaction</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="5.1">
+        <Titre>Les contenus sont-ils accessibles avec les lecteurs d'écran mobiles ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="5.1.1">
+                <Description>Les contenus sont-ils correctement restitués par les lecteurs d'écran mobiles ?</Description>
+                <Methodologie>
+                    <Etape>Tester avec VoiceOver sur iOS</Etape>
+                    <Etape>Tester avec TalkBack sur Android</Etape>
+                    <Etape>Vérifier que tous les contenus sont correctement vocalisés</Etape>
+                    <Etape>Vérifier que l'ordre de lecture est logique</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="6.1">
+        <Titre>Les gestes essentiels de navigation sont-ils utilisables ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="6.1.1">
+                <Description>Les gestes de base de navigation sont-ils fonctionnels ?</Description>
+                <Methodologie>
+                    <Etape>Tester le balayage vertical</Etape>
+                    <Etape>Tester le balayage horizontal si nécessaire</Etape>
+                    <Etape>Vérifier le tap simple pour les activations</Etape>
+                    <Etape>Vérifier que les gestes sont fluides et réactifs</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="7.1">
+        <Titre>L'interface est-elle utilisable en conditions dégradées ?</Titre>
+        <NiveauWCAG>AA</NiveauWCAG>
+        <Tests>
+            <Test id="7.1.1">
+                <Description>L'interface reste-t-elle fonctionnelle dans différentes conditions d'utilisation ?</Description>
+                <Methodologie>
+                    <Etape>Tester avec une connexion lente</Etape>
+                    <Etape>Tester avec différents niveaux de luminosité</Etape>
+                    <Etape>Vérifier le fonctionnement en mode économie d'énergie</Etape>
+                    <Etape>Tester avec différentes tailles de police système</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="8.1">
+        <Titre>Les notifications et retours d'information sont-ils accessibles ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="8.1.1">
+                <Description>Les notifications et messages sont-ils perceptibles par tous ?</Description>
+                <Methodologie>
+                    <Etape>Vérifier que les notifications sont visibles</Etape>
+                    <Etape>Vérifier qu'elles sont vocalisées par les lecteurs d'écran</Etape>
+                    <Etape>Vérifier la présence de retours haptiques si pertinent</Etape>
+                    <Etape>Vérifier que les messages d'erreur sont explicites</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="9.1">
+        <Titre>La navigation dans l'application est-elle cohérente ?</Titre>
+        <NiveauWCAG>AA</NiveauWCAG>
+        <Tests>
+            <Test id="9.1.1">
+                <Description>Les mécanismes de navigation sont-ils cohérents dans l'application ?</Description>
+                <Methodologie>
+                    <Etape>Vérifier la cohérence des menus de navigation</Etape>
+                    <Etape>Vérifier la présence de fil d'Ariane si nécessaire</Etape>
+                    <Etape>Vérifier que le retour en arrière fonctionne correctement</Etape>
+                    <Etape>Vérifier la cohérence des boutons d'action</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="10.1">
+        <Titre>Les formulaires sont-ils accessibles sur mobile ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="10.1.1">
+                <Description>Les formulaires sont-ils facilement utilisables sur mobile ?</Description>
+                <Methodologie>
+                    <Etape>Vérifier que les champs sont suffisamment grands</Etape>
+                    <Etape>Vérifier que le type de clavier est adapté à chaque champ</Etape>
+                    <Etape>Vérifier que les étiquettes sont correctement associées</Etape>
+                    <Etape>Tester la validation avec différents claviers virtuels</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+</CRITERES>
