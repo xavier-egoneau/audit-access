@@ -1,0 +1,69 @@
+#projet
+.env
+db.sqlite
+
+backups/
+*.sqlite
+# Maven
+target/
+
+# File Vault (VLT) / Sync
+.vlt
+.vlt-sync*
+
+# Eclipse
+.project
+.classpath
+.settings
+
+# IntelliJ
+.idea/
+*.iml*
+*.iml
+*.ipr
+
+# Netbeans
+**/nbactions.xml
+
+# Brackets
+.brackets.json
+
+# VSCode
+.vscode/
+.history
+.editorconfig
+
+# Mac OS X
+.DS_Store
+*.swp
+
+# Node related files
+node_modules/
+sources/node_modules/
+node_modules/*
+node_modules/**/*
+uploads/
+uploads/*
+uploads/**/*
+public/uploads/
+node/
+typings
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.stylelintcache
+.eslintcache
+package-lock.json
+sources/package-lock.json
+# project related files
+frontend/tmp/
+frontend-globalforms/tmp/
+*.bundle.js
+*.bundle.js.map
+*.bundle.css
+*.bundle.css.map
+
+.repository/
+.serverDef/
+
+
