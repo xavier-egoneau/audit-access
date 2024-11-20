@@ -8,181 +8,387 @@
                 <Description>Critère 1.1 [A] Chaque élément graphique de décoration est-il ignoré par les technologies d'assistance ?</Description>
                 <Methodologie>
                     <Etape>Activer le lecteur d'écran.</Etape>
-                    <Etape>Repérer dans l'écran les éléments graphiques décoratifs (voir la note de glossaire concernant les particularités de restitution).</Etape>
-                    <Etape>Vérifier : q'ils ne peuvent pas être atteints avec le lecteur d'écran ; que leur contenu n'est pas restitué par ailleurs depuis un autre élément dans l'écran.</Etape>
-                    <etape>Si c'est le cas, le critère est validé.</etape>
+                    <Etape>Repérer dans l'écran les éléments graphiques décoratifs.</Etape>
+                    <Etape>Vérifier qu'ils ne peuvent pas être atteints avec le lecteur d'écran.</Etape>
+                    <Etape>Vérifier que leur contenu n'est pas restitué par ailleurs depuis un autre élément dans l'écran.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
                 </Methodologie>
             </Test>
         </Tests>
     </Critere>
 
     <Critere id="1.2">
-        <Titre>Les images de décoration sont-elles correctement ignorées par les technologies d'assistance ?</Titre>
+        <Titre>Chaque élément graphique porteur d'information possède-t-il une alternative accessible aux technologies d'assistance ?</Titre>
         <NiveauWCAG>A</NiveauWCAG>
         <Tests>
             <Test id="1.2.1">
-                <Description>Chaque image de décoration est-elle correctement ignorée par les technologies d'assistance ?</Description>
+                <Description>Chaque élément graphique porteur d'information a-t-il une alternative accessible ?</Description>
                 <Methodologie>
-                    <Etape>Repérer toutes les images de décoration du site mobile</Etape>
-                    <Etape>Vérifier que ces images sont ignorées par les technologies d'assistance</Etape>
-                    <Etape>Vérifier qu'aucune alternative textuelle n'est fournie pour ces images</Etape>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Repérer dans l'écran les éléments graphiques porteurs d'informations, par exemple, une image ou une icône.</Etape>
+                    <Etape>Vérifier qu'ils peuvent être atteints avec le lecteur d'écran.</Etape>
+                    <Etape>Vérifier que l'information qu'ils véhiculent est restituée depuis un autre élément dans l'écran.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="1.3">
+        <Titre>Pour chaque élément graphique porteur d'information, l'alternative accessible aux technologies d'assistance est-elle pertinente ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="1.3.1">
+                <Description>L'alternative accessible est-elle pertinente pour chaque élément graphique porteur d'information ?</Description>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Repérer dans l'écran les éléments graphiques porteurs d'information.</Etape>
+                    <Etape>Vérifier que l'alternative restituée par le lecteur d'écran est pertinente.</Etape>
+                    <Etape>Vérifier que l'information restituée depuis un autre élément dans l'écran est pertinente.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                    <Etape>Cas particuliers :</Etape>
+                    <Etape>Le critère est non applicable lorsque l'élément graphique est utilisé comme CAPTCHA ou comme élément graphique de test. Dans cette situation, où il n'est pas possible de donner une alternative pertinente sans détruire l'objet du CAPTCHA ou du test, le critère est non applicable.</Etape>
                 </Methodologie>
             </Test>
         </Tests>
     </Critere>
 
     <Critere id="2.1">
-        <Titre>Les éléments d'interface sont-ils utilisables sur les terminaux mobiles ?</Titre>
+        <Titre>Dans chaque écran, l'information ne doit pas être donnée uniquement par la couleur. Cette règle est-elle respectée ?</Titre>
         <NiveauWCAG>A</NiveauWCAG>
         <Tests>
             <Test id="2.1.1">
-                <Description>Chaque élément d'interface est-il facilement activable sur mobile ?</Description>
+                <Description>Dans chaque écran, chaque élément dont la mise en couleur est porteuse d'information respecte-t-il au moins une de ces conditions ?</Description>
                 <Methodologie>
-                    <Etape>Vérifier que la zone activable est suffisamment grande (au moins 9mm x 9mm)</Etape>
-                    <Etape>Vérifier que l'espacement entre les éléments cliquables est suffisant (au moins 2mm)</Etape>
-                    <Etape>Tester l'activation avec différents types de pointage (doigt, stylet)</Etape>
+                    <Etape>Activer l'option Différencier sans couleur.</Etape>
+                    <Etape>Repérer dans l'écran les mots ou ensemble de mots, les textes, les éléments graphiques porteurs d'information et les médias temporels dont la mise en couleur est porteuse d'information.</Etape>
+                    <Etape>Vérifier qu'il existe un autre moyen visuel de récupérer cette information.</Etape>
+                    <Etape>Avec le lecteur d'écran, accéder à l'information donnée par la couleur.</Etape>
+                    <Etape>Vérifier qu'une information équivalente est restituée par le lecteur d'écran.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
                 </Methodologie>
             </Test>
         </Tests>
     </Critere>
 
     <Critere id="2.2">
-        <Titre>La consultation est-elle confortable en orientation portrait et paysage ?</Titre>
+        <Titre>Dans chaque écran, le contraste entre la couleur du texte et la couleur de son arrière-plan est-il suffisamment élevé ?</Titre>
         <NiveauWCAG>AA</NiveauWCAG>
         <Tests>
             <Test id="2.2.1">
-                <Description>Le contenu et les fonctionnalités sont-ils disponibles quelle que soit l'orientation de l'écran ?</Description>
+                <Description>Pour chaque texte, le contraste entre la couleur du texte et la couleur de son arrière-plan est-il suffisant ?</Description>
                 <Methodologie>
-                    <Etape>Tester le site en orientation portrait</Etape>
-                    <Etape>Tester le site en orientation paysage</Etape>
-                    <Etape>Vérifier que toutes les fonctionnalités restent accessibles</Etape>
-                    <Etape>Vérifier que le contenu reste lisible et utilisable</Etape>
+                    <Etape>Activer l'option Augmenter le contraste.</Etape>
+                    <Etape>Repérer dans l'écran les textes qui pourraient poser des problèmes de contraste.</Etape>
+                    <Etape>Vérifier que pour les textes en taille normale, la valeur de contraste est de 4.5:1, au moins.</Etape>
+                    <Etape>Vérifier que pour les textes de grande taille, la valeur de contraste est de 3:1 au moins.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                    <Etape>Cas particuliers :</Etape>
+                    <Etape>Le texte fait partie d'un logo ou d'un nom de marque d'un organisme ou d'une société.</Etape>
+                    <Etape>Le texte ou le texte contenu dans l'élément graphique est purement décoratif.</Etape>
+                    <Etape>Le texte fait partie d'un élément graphique porteur d'information, mais le texte lui-même n'apporte aucune information essentielle.</Etape>
+                    <Etape>Le texte ou le texte contenu dans l'élément graphique fait partie d'un élément d'interface sur lequel aucune action n'est possible.</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+    <Critere id="2.3">
+        <Titre>Dans chaque écran, les couleurs utilisées dans les composants d'interface et les éléments graphiques porteurs d'informations sont-elles suffisamment contrastées ?</Titre>
+        <NiveauWCAG>AA</NiveauWCAG>
+        <Tests>
+            <Test id="2.3.1">
+                <Description>Dans chaque écran, le rapport de contraste entre les couleurs d'un composant d'interface dans ses différents états et les couleurs adjacentes est-il suffisant ?</Description>
+                <Methodologie>
+                    <Etape>Activer l'option Augmenter le contraste ou s'il est présent dans l'application, activer le mécanisme de remplacement permettant d'afficher les éléments graphiques avec un rapport de contraste suffisant.</Etape>
+                    <Etape>Repérer dans l'écran les éléments graphiques porteurs d'information et identifier les couleurs nécessaires à l'identification.</Etape>
+                    <Etape>Identifier les couleurs adjacentes qui ont un impact sur la visibilité.</Etape>
+                    <Etape>Repérer dans l'écran les composants interactifs qui peuvent avoir plusieurs états et identifier les couleurs nécessaires.</Etape>
+                    <Etape>Activer le logiciel Colour Contrast Analyser sur l'ordinateur et capturer les couleurs d'avant-plan et d'arrière-plan.</Etape>
+                    <Etape>Vérifier que le rapport de contraste entre les couleurs identifiées est de 3:1 au moins.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                    <Etape>Cas particuliers :</Etape>
+                    <Etape>Composant d'interface inactif sur lequel aucune action n'est possible.</Etape>
+                    <Etape>Composant d'interface géré par la plateforme et pour lequel il n'existe pas de méthode simple de développement pour le modifier.</Etape>
+                    <Etape>Composant d'interface dont la couleur n'est pas nécessaire pour identifier le composant ou son état.</Etape>
+                    <Etape>Élément graphique ou parties d'élément graphique non porteur d'information ou ayant une alternative.</Etape>
+                    <Etape>Élément graphique ou parties d'élément graphique faisant partie d'un logo ou du nom de marque d'un organisme ou d'une société.</Etape>
+                    <Etape>Élément graphique ou parties d'élément graphique dont la présentation est essentielle à l'information véhiculée.</Etape>
+                    <Etape>Élément graphique ou parties d'élément graphique dynamique dont le contraste peut varier si d'autres éléments sont survolés.</Etape>
                 </Methodologie>
             </Test>
         </Tests>
     </Critere>
 
-    <Critere id="3.1">
-        <Titre>Le contenu est-il présenté sans perte d'information ou de fonctionnalité lors du redimensionnement ?</Titre>
+    <Critere id="2.4">
+        <Titre>Le rapport de contraste de chaque mécanisme de remplacement qui permet d'afficher l'écran avec un rapport de contraste conforme est-il suffisamment élevé ?</Titre>
         <NiveauWCAG>AA</NiveauWCAG>
         <Tests>
-            <Test id="3.1.1">
-                <Description>Le contenu reste-t-il consultable sans défilement horizontal à 320px de large ?</Description>
+            <Test id="2.4.1">
+                <Description>Le mécanisme de remplacement permettant d'afficher un rapport de contraste conforme a-t-il lui-même un rapport de contraste suffisant ?</Description>
                 <Methodologie>
-                    <Etape>Réduire la fenêtre à une largeur de 320 pixels</Etape>
-                    <Etape>Vérifier qu'aucun défilement horizontal n'est nécessaire</Etape>
-                    <Etape>Vérifier que tout le contenu reste accessible</Etape>
+                    <Etape>Vérifier que l'option Augmenter le contraste est désactivée.</Etape>
+                    <Etape>Repérer la présence d'un mécanisme de remplacement permettant d'afficher l'application avec un rapport de contraste suffisant.</Etape>
+                    <Etape>Vérifier qu'il n'est pas activé.</Etape>
+                    <Etape>Cas particuliers :</Etape>
+                    <Etape>Activer le logiciel Colour Contrast Analyser sur l'ordinateur et capturer les couleurs d'avant-plan et d'arrière-plan.</Etape>
+                    <Etape>Pour les textes en taille normale, vérifier que la valeur de contraste est de 4.5:1, au moins.</Etape>
+                    <Etape>Pour les textes en taille agrandie, vérifier que la valeur de contraste est de 3:1 au moins.</Etape>
+                    <Etape>Pour les éléments non textuels, identifier les couleurs nécessaires et vérifier un contraste de 3:1 au moins.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+    <Critere id="3.1">
+        <Titre>Dans chaque écran, l'information ne doit pas être donnée uniquement par la couleur. Cette règle est-elle respectée ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="3.1.1">
+                <Description>Dans chaque écran, chaque élément dont la mise en couleur est porteuse d'information respecte-t-il au moins une de ces conditions ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver les passages de texte en langue étrangère.</Etape>
+                    <Etape>Pour chaque passage de texte retenu, vérifier la présence d'une indication de langue (attribut lang et/ou xml:lang).</Etape>
+                    <Etape>Si c'est le cas pour chaque passage de texte, le test est validé.</Etape>
+                    <Etape>Cas particuliers :</Etape>
+                    <Etape>Des noms propres.</Etape>
+                    <Etape>Des mots d'origine étrangère, présents dans le dictionnaire de la langue du document.</Etape>
+                    <Etape>Des mots d'origine étrangère et d'usage courant dont la prononciation ne provoque pas d'incompréhension.</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <Critere id="3.2">
+        <Titre>Dans chaque écran, le contraste entre la couleur du texte et la couleur de son arrière-plan est-il suffisamment élevé ?</Titre>
+        <NiveauWCAG>AA</NiveauWCAG>
+        <Tests>
+            <Test id="3.2.1">
+                <Description>Dans chaque page web, le texte et le texte en image sans effet de graisse d'une taille restituée inférieure à 24px vérifient-ils une de ces conditions ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les textes et les textes en image sans effet de graisse d'une taille restituée inférieure à 24px qui pourraient poser des problèmes de contraste.</Etape>
+                    <Etape>Pour chacun de ces textes, vérifier que : Soit le rapport de contraste entre le texte et son arrière-plan est de 4.5:1, au moins.</Etape>
+                    <Etape>Soit un mécanisme permet à l'utilisateur d'afficher le texte avec un rapport de contraste de 4.5:1, au moins.</Etape>
+                    <Etape>Si c'est le cas pour chaque texte, le test est validé.</Etape>
+                </Methodologie>
+            </Test>
+            <Test id="3.2.2">
+                <Description>Dans chaque page web, le texte et le texte en image en gras d'une taille restituée inférieure à 18,5px vérifient-ils une de ces conditions ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les textes et les textes en image en gras d'une taille restituée inférieure à 18,5px qui pourraient poser des problèmes de contraste.</Etape>
+                    <Etape>Pour chacun de ces textes, vérifier que : Soit le rapport de contraste entre le texte et son arrière-plan est de 4.5:1, au moins.</Etape>
+                    <Etape>Soit un mécanisme permet à l'utilisateur d'afficher le texte avec un rapport de contraste de 4.5:1, au moins.</Etape>
+                    <Etape>Si c'est le cas pour chaque texte, le test est validé.</Etape>
+                </Methodologie>
+            </Test>
+            <Test id="3.2.3">
+                <Description>Dans chaque page web, le texte et le texte en image sans effet de graisse d'une taille restituée supérieure ou égale à 24px vérifient-ils une de ces conditions ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les textes et les textes en image sans effet de graisse d'une taille restituée supérieure ou égale à 24px qui pourraient poser des problèmes de contraste.</Etape>
+                    <Etape>Pour chacun de ces textes, vérifier que : Soit le rapport de contraste entre le texte et son arrière-plan est de 3:1, au moins.</Etape>
+                    <Etape>Soit un mécanisme permet à l'utilisateur d'afficher le texte avec un rapport de contraste de 3:1, au moins.</Etape>
+                    <Etape>Si c'est le cas pour chaque texte, le test est validé.</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+    <Critere id="3.3">
+        <Titre>Dans chaque page web, les couleurs utilisées dans les composants d'interface ou les éléments graphiques porteurs d'informations sont-elles suffisamment contrastées (hors cas particuliers) ?</Titre>
+        <NiveauWCAG>AA</NiveauWCAG>
+        <Tests>
+            <Test id="3.3.1">
+                <Description>Dans chaque page web, le rapport de contraste entre les couleurs d'un composant d'interface dans ses différents états et la couleur d'arrière-plan contiguë vérifie-t-il une de ces conditions ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les composants d'interface qui pourraient poser des problèmes de contraste.</Etape>
+                    <Etape>Pour chacun de ces composants, vérifier que : Soit le rapport de contraste entre les couleurs du composant dans ses différents états et la couleur d'arrière-plan contiguë est de 3:1, au moins.</Etape>
+                    <Etape>Soit un mécanisme permet à l'utilisateur d'afficher le composant avec un rapport de contraste de 3:1, au moins.</Etape>
+                    <Etape>Si c'est le cas pour chaque composant, le test est validé.</Etape>
+                </Methodologie>
+            </Test>
+            <Test id="3.3.2">
+                <Description>Dans chaque page web, le rapport de contraste des différentes couleurs composant un élément graphique, lorsqu'elles sont nécessaires à sa compréhension, et la couleur d'arrière-plan contiguë, vérifie-t-il une de ces conditions ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les éléments graphiques qui pourraient poser des problèmes de contraste.</Etape>
+                    <Etape>Pour chacun de ces éléments, vérifier que : Soit le rapport de contraste entre les couleurs de l'élément graphique nécessaires à sa compréhension et la couleur d'arrière-plan contiguë est de 3:1, au moins.</Etape>
+                    <Etape>Soit un mécanisme permet à l'utilisateur d'afficher l'élément graphique avec un rapport de contraste de 3:1, au moins.</Etape>
+                    <Etape>Si c'est le cas pour chaque composant, le test est validé.</Etape>
+                </Methodologie>
+            </Test>
+            <Test id="3.3.3">
+                <Description>Dans chaque page web, le rapport de contraste des différentes couleurs contiguës entre elles d'un élément graphique, lorsqu'elles sont nécessaires à sa compréhension, vérifie-t-il une de ces conditions ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les éléments graphiques qui pourraient poser des problèmes de contraste.</Etape>
+                    <Etape>Pour chacun de ces éléments, vérifier que : Soit le rapport de contraste des différentes couleurs contiguës de l'élément graphique entre elles, lorsqu'elles sont nécessaires à sa compréhension, est de 3:1, au moins.</Etape>
+                    <Etape>Soit un mécanisme permet à l'utilisateur d'afficher l'élément graphique avec un rapport de contraste de 3:1, au moins.</Etape>
+                    <Etape>Si c'est le cas pour chaque élément graphique, le test est validé.</Etape>
+                    <Etape>Cas particuliers :</Etape>
+                    <Etape>Composant d'interface inactif sur lequel aucune action n'est possible.</Etape>
+                    <Etape>Composant d'interface pour lequel l'apparence est gérée par la plateforme.</Etape>
+                    <Etape>Composant d'interface pour lequel la couleur n'est pas nécessaire à l'identification.</Etape>
+                    <Etape>Élément graphique ou parties d'élément graphique non porteur d'information.</Etape>
+                    <Etape>Élément graphique ou parties d'élément graphique faisant partie d'un logo ou du nom de marque.</Etape>
+                    <Etape>Élément graphique ou parties d'élément graphique dont la présentation est essentielle.</Etape>
+                    <Etape>Élément graphique ou parties d'élément graphique dynamique dont le contraste au survol/focus est suffisant.</Etape>
+                </Methodologie>
+            </Test>
+            <Test id="3.3.4">
+                <Description>Dans le mécanisme qui permet d'afficher un rapport de contraste conforme, les couleurs du composant ou des éléments graphiques porteurs d'informations qui le composent, sont-elles suffisamment contrastées ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les mécanismes qui permettent d'afficher un rapport de contraste conforme.</Etape>
+                    <Etape>Pour chacun de ces mécanismes, vérifier que le rapport de contraste entre les couleurs du composant ou des éléments graphiques porteurs d'informations qui le composent est suffisamment élevé.</Etape>
+                    <Etape>Si c'est le cas pour chaque mécanisme, le test est validé.</Etape>
                 </Methodologie>
             </Test>
         </Tests>
     </Critere>
 
     <Critere id="4.1">
-        <Titre>Les fonctionnalités sont-elles utilisables avec les gestes complexes et simples ?</Titre>
+        <Titre>Chaque média temporel pré-enregistré a-t-il, si nécessaire, une transcription textuelle ou une audiodescription ?</Titre>
         <NiveauWCAG>A</NiveauWCAG>
         <Tests>
             <Test id="4.1.1">
-                <Description>Chaque fonctionnalité utilisable avec un geste complexe peut-elle être utilisée avec un geste simple ?</Description>
+                <Description>Chaque média temporel pré-enregistré seulement audio vérifie-t-il une de ces conditions ?</Description>
                 <Methodologie>
-                    <Etape>Identifier les fonctionnalités utilisant des gestes complexes</Etape>
-                    <Etape>Vérifier qu'une alternative avec geste simple existe</Etape>
-                    <Etape>Tester les alternatives avec différents types d'interaction</Etape>
+                    <Etape>Retrouver dans le document les médias temporels seulement audio qui nécessitent une transcription textuelle.</Etape>
+                    <Etape>Pour chaque média temporel seulement audio, vérifier la présence d'une transcription textuelle soit accessible au moyen d'un bouton ou d'un lien adjacent, soit adjacente clairement identifiable.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
                 </Methodologie>
             </Test>
         </Tests>
     </Critere>
-
-    <Critere id="5.1">
-        <Titre>Les contenus sont-ils accessibles avec les lecteurs d'écran mobiles ?</Titre>
+    <Critere id="4.2">
+        <Titre>Pour chaque média temporel pré-enregistré ayant une transcription textuelle ou une audiodescription synchronisée, celles-ci sont-elles pertinentes ?</Titre>
         <NiveauWCAG>A</NiveauWCAG>
         <Tests>
-            <Test id="5.1.1">
-                <Description>Les contenus sont-ils correctement restitués par les lecteurs d'écran mobiles ?</Description>
+            <Test id="4.2.1">
+                <Description>Pour chaque média temporel pré-enregistré seulement audio, ayant une transcription textuelle, celle-ci est-elle pertinente ?</Description>
                 <Methodologie>
-                    <Etape>Tester avec VoiceOver sur iOS</Etape>
-                    <Etape>Tester avec TalkBack sur Android</Etape>
-                    <Etape>Vérifier que tous les contenus sont correctement vocalisés</Etape>
-                    <Etape>Vérifier que l'ordre de lecture est logique</Etape>
+                    <Etape>Retrouver dans le document les médias temporels pré-enregistrés seulement audio qui possèdent une transcription textuelle.</Etape>
+                    <Etape>Pour chaque média temporel seulement audio, vérifier que transcription textuelle est pertinente.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
+                </Methodologie>
+            </Test>
+            <Test id="4.2.2">
+                <Description>Chaque média temporel pré-enregistré seulement vidéo vérifie-t-il une de ces conditions ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les médias temporels pré-enregistrés seulement vidéo qui possèdent une transcription textuelle.</Etape>
+                    <Etape>Pour chaque média temporel seulement vidéo, vérifier la pertinence : Soit de la transcription textuelle.</Etape>
+                    <Etape>Soit de l'audiodescription synchronisée.</Etape>
+                    <Etape>Soit de l'audiodescription synchronisée de la version alternative.</Etape>
+                    <Etape>Soit de la version alternative audio seulement.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
+                </Methodologie>
+            </Test>
+            <Test id="4.2.3">
+                <Description>Chaque média temporel synchronisé pré-enregistré vérifie-t-il une de ces conditions ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les médias temporels pré-enregistrés synchronisés.</Etape>
+                    <Etape>Pour chaque média temporel synchronisé, vérifier la pertinence : Soit de la transcription textuelle.</Etape>
+                    <Etape>Soit de l'audiodescription synchronisée.</Etape>
+                    <Etape>Soit de l'audiodescription synchronisée de la version alternative.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
                 </Methodologie>
             </Test>
         </Tests>
     </Critere>
 
-    <Critere id="6.1">
-        <Titre>Les gestes essentiels de navigation sont-ils utilisables ?</Titre>
+    <Critere id="4.3">
+        <Titre>Chaque média temporel synchronisé pré-enregistré a-t-il, si nécessaire, des sous-titres synchronisés ?</Titre>
         <NiveauWCAG>A</NiveauWCAG>
         <Tests>
-            <Test id="6.1.1">
-                <Description>Les gestes de base de navigation sont-ils fonctionnels ?</Description>
+            <Test id="4.3.1">
+                <Description>Chaque média temporel synchronisé pré-enregistré vérifie-t-il l'une de ces conditions ?</Description>
                 <Methodologie>
-                    <Etape>Tester le balayage vertical</Etape>
-                    <Etape>Tester le balayage horizontal si nécessaire</Etape>
-                    <Etape>Vérifier le tap simple pour les activations</Etape>
-                    <Etape>Vérifier que les gestes sont fluides et réactifs</Etape>
+                    <Etape>Retrouver dans le document les médias temporels pré-enregistrés synchronisés.</Etape>
+                    <Etape>Pour chaque média temporel synchronisé, vérifier la présence : Soit de sous-titres synchronisés.</Etape>
+                    <Etape>Soit d'une version alternative possédant des sous-titres synchronisés accessible au moyen d'un lien ou d'un bouton adjacent.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
+                </Methodologie>
+            </Test>
+            <Test id="4.3.2">
+                <Description>Pour chaque média temporel synchronisé pré-enregistré possédant des sous-titres synchronisés diffusés via une balise track, la balise track possède-t-elle un attribut kind="captions" ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les médias temporels synchronisés possédant des sous-titres synchronisés au moyen d'un élément track.</Etape>
+                    <Etape>Pour chaque média temporel synchronisé, vérifier que la balise track possède un attribut kind="caption".</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel synchronisé, le test est validé.</Etape>
                 </Methodologie>
             </Test>
         </Tests>
     </Critere>
 
-    <Critere id="7.1">
-        <Titre>L'interface est-elle utilisable en conditions dégradées ?</Titre>
+    <Critere id="4.4">
+        <Titre>Pour chaque média temporel synchronisé pré-enregistré ayant des sous-titres synchronisés, ces sous-titres sont-ils pertinents ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="4.4.1">
+                <Description>Pour chaque média temporel synchronisé pré-enregistré ayant des sous-titres synchronisés, ces sous-titres sont-ils pertinents ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les médias temporels synchronisés possédant des sous-titres synchronisés.</Etape>
+                    <Etape>Pour chaque média temporel synchronisé, vérifier que les sous-titres sont : Pertinents (toutes les informations sonores importantes sont présentes, les dialogues notamment).</Etape>
+                    <Etape>Et correctement synchronisés.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel synchronisé, le test est validé.</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+    <Critere id="4.5">
+        <Titre>Chaque média temporel pré-enregistré a-t-il, si nécessaire, une audiodescription synchronisée ?</Titre>
         <NiveauWCAG>AA</NiveauWCAG>
         <Tests>
-            <Test id="7.1.1">
-                <Description>L'interface reste-t-elle fonctionnelle dans différentes conditions d'utilisation ?</Description>
+            <Test id="4.5.1">
+                <Description>Chaque média temporel pré-enregistré seulement vidéo vérifie-t-il, si nécessaire, une de ces conditions ?</Description>
                 <Methodologie>
-                    <Etape>Tester avec une connexion lente</Etape>
-                    <Etape>Tester avec différents niveaux de luminosité</Etape>
-                    <Etape>Vérifier le fonctionnement en mode économie d'énergie</Etape>
-                    <Etape>Tester avec différentes tailles de police système</Etape>
+                    <Etape>Retrouver dans le document les médias temporels pré-enregistrés seulement vidéo qui nécessitent une audiodescription.</Etape>
+                    <Etape>Pour chaque média temporel seulement vidéo, vérifier la présence : Soit d'une audiodescription synchronisée.</Etape>
+                    <Etape>Soit d'une version alternative avec une audiodescription synchronisée accessible au moyen d'un bouton ou d'un lien adjacent (une URL ou une ancre).</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel seulement vidéo, le test est validé.</Etape>
+                </Methodologie>
+            </Test>
+            <Test id="4.5.2">
+                <Description>Chaque média temporel synchronisé pré-enregistré vérifie-t-il, si nécessaire, une de ces conditions ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les médias temporels pré-enregistrés synchronisés qui nécessitent une audiodescription.</Etape>
+                    <Etape>Pour chaque média temporel synchronisé, vérifier la présence : Soit d'une audiodescription synchronisée.</Etape>
+                    <Etape>Soit d'une version alternative avec une audiodescription synchronisée accessible au moyen d'un bouton ou d'un lien adjacent (une URL ou une ancre).</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel synchronisé, le test est validé.</Etape>
                 </Methodologie>
             </Test>
         </Tests>
     </Critere>
 
-    <Critere id="8.1">
-        <Titre>Les notifications et retours d'information sont-ils accessibles ?</Titre>
-        <NiveauWCAG>A</NiveauWCAG>
-        <Tests>
-            <Test id="8.1.1">
-                <Description>Les notifications et messages sont-ils perceptibles par tous ?</Description>
-                <Methodologie>
-                    <Etape>Vérifier que les notifications sont visibles</Etape>
-                    <Etape>Vérifier qu'elles sont vocalisées par les lecteurs d'écran</Etape>
-                    <Etape>Vérifier la présence de retours haptiques si pertinent</Etape>
-                    <Etape>Vérifier que les messages d'erreur sont explicites</Etape>
-                </Methodologie>
-            </Test>
-        </Tests>
-    </Critere>
-
-    <Critere id="9.1">
-        <Titre>La navigation dans l'application est-elle cohérente ?</Titre>
+    <Critere id="4.6">
+        <Titre>Pour chaque média temporel pré-enregistré ayant une audiodescription synchronisée, celle-ci est-elle pertinente ?</Titre>
         <NiveauWCAG>AA</NiveauWCAG>
         <Tests>
-            <Test id="9.1.1">
-                <Description>Les mécanismes de navigation sont-ils cohérents dans l'application ?</Description>
+            <Test id="4.6.1">
+                <Description>Pour chaque média temporel pré-enregistré seulement vidéo ayant une audiodescription synchronisée, celle-ci est-elle pertinente ?</Description>
                 <Methodologie>
-                    <Etape>Vérifier la cohérence des menus de navigation</Etape>
-                    <Etape>Vérifier la présence de fil d'Ariane si nécessaire</Etape>
-                    <Etape>Vérifier que le retour en arrière fonctionne correctement</Etape>
-                    <Etape>Vérifier la cohérence des boutons d'action</Etape>
+                    <Etape>Retrouver dans le document les médias temporels seulement vidéo qui possèdent une audiodescription.</Etape>
+                    <Etape>Pour chaque média temporel, vérifier que l'audiodescription synchronisée est pertinente (toutes les informations visuelles qu'il est possible de vocaliser dans les blancs de la bande son principale sont présentes, les textes incrustés notamment).</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel seulement vidéo, le test est validé.</Etape>
+                </Methodologie>
+            </Test>
+            <Test id="4.6.2">
+                <Description>Pour chaque média temporel synchronisé ayant une audiodescription synchronisée, celle-ci est-elle pertinente ?</Description>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les médias temporels synchronisés qui possèdent une audiodescription.</Etape>
+                    <Etape>Pour chaque média temporel, vérifier que l'audiodescription synchronisée est pertinente (toutes les informations visuelles qu'il est possible de vocaliser dans les blancs de la bande son principale sont présentes, les textes incrustés notamment).</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel synchronisé, le test est validé.</Etape>
                 </Methodologie>
             </Test>
         </Tests>
     </Critere>
 
-    <Critere id="10.1">
-        <Titre>Les formulaires sont-ils accessibles sur mobile ?</Titre>
+    <Critere id="4.7">
+        <Titre>Chaque média temporel est-il clairement identifiable ?</Titre>
         <NiveauWCAG>A</NiveauWCAG>
         <Tests>
-            <Test id="10.1.1">
-                <Description>Les formulaires sont-ils facilement utilisables sur mobile ?</Description>
+            <Test id="4.7.1">
+                <Description>Pour chaque média temporel seulement son, seulement vidéo ou synchronisé, le contenu textuel adjacent permet-il d'identifier clairement le média temporel ?</Description>
                 <Methodologie>
-                    <Etape>Vérifier que les champs sont suffisamment grands</Etape>
-                    <Etape>Vérifier que le type de clavier est adapté à chaque champ</Etape>
-                    <Etape>Vérifier que les étiquettes sont correctement associées</Etape>
-                    <Etape>Tester la validation avec différents claviers virtuels</Etape>
+                    <Etape>Retrouver dans le document les médias temporels pré-enregistrés seulement vidéo, audio ou synchronisés.</Etape>
+                    <Etape>Pour chaque média temporel, vérifier qu'un passage de texte (un titre ou un paragraphe, par exemple) qui précède ou suit immédiatement le média temporel, permet de l'identifier.</Etape>
+                    <Etape>Et le passage de texte est situé à l'extérieur du lecteur de contenu multimédia si ce dernier fait appel à la technologie Flash.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
                 </Methodologie>
             </Test>
         </Tests>

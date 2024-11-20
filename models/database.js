@@ -232,7 +232,7 @@ class Database {
 
     // Ajouter cette méthode à la classe Database
     encodeHtml(str) {
-        if (!str) return '';
+        if (!str || typeof str !== 'string') return '';
         return str
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')

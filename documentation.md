@@ -70,6 +70,7 @@ npm run dev
 └── criteres_wcag.xml
 ```
 
+
 ## Fonctionnalités
 
 ### Gestion des projets
@@ -158,6 +159,30 @@ POST    /api/feedback
 - Validation des entrées utilisateur
 - Messages d'erreur contextuels
 - Logs des erreurs
+
+## Structure des XML et gestion des versions
+
+> ⚠️ La structure actuelle des XML est fonctionnelle mais pourrait être enrichie, notamment avec l'ajout de cas particuliers et de tests spécifiques.
+
+### Format des fichiers XML
+
+#### Structure générale
+```xml
+<CRITERES version="4.1">
+    <Critere id="1.1">
+        <Titre>Chaque image a-t-elle une alternative textuelle ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="1.1.1">
+                <Description>...</Description>
+                <Methodologie>
+                    <Etape>Repérer les images</Etape>
+                    <Etape>Vérifier la présence d'alternative</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+</CRITERES>
 
 ## Tests
 
