@@ -767,4 +767,89 @@
             </Test>
         </Tests>
     </Critere>
+        <!-- Critère 15.1 -->
+    <Critere id="15.1">
+        <Titre>Les contenus multimédias proposent-ils des descriptions alternatives ?</Titre>
+        <NiveauWCAG>AA</NiveauWCAG>
+        <Tests>
+            <Test id="15.1.1">
+                <Description>Les vidéos et autres contenus multimédias disposent-ils d’une audiodescription ou d’un équivalent textuel ?</Description>
+                <Methodologie>
+                    <Etape>Identifier les contenus multimédias nécessitant une audiodescription (vidéos, animations).</Etape>
+                    <Etape>Vérifier qu’une audiodescription ou une transcription textuelle est disponible.</Etape>
+                    <Etape>Tester leur accessibilité avec des technologies d’assistance.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <!-- Critère 15.2 -->
+    <Critere id="15.2">
+        <Titre>Les contenus interactifs ou dynamiques offrent-ils un mode d'emploi accessible ?</Titre>
+        <NiveauWCAG>AA</NiveauWCAG>
+        <Tests>
+            <Test id="15.2.1">
+                <Description>Un mode d’emploi ou une assistance est-il disponible pour les contenus complexes ?</Description>
+                <Methodologie>
+                    <Etape>Repérer les contenus interactifs ou dynamiques nécessitant des instructions spécifiques.</Etape>
+                    <Etape>Vérifier que des instructions claires et accessibles sont fournies.</Etape>
+                    <Etape>Tester ces instructions avec des technologies d’assistance.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <!-- Critère 15.3 -->
+    <Critere id="15.3">
+        <Titre>Les mécanismes de contrôle des médias (lecture, pause) sont-ils accessibles ?</Titre>
+        <NiveauWCAG>A</NiveauWCAG>
+        <Tests>
+            <Test id="15.3.1">
+                <Description>Les boutons de contrôle des médias sont-ils utilisables via clavier et accessibles ?</Description>
+                <Methodologie>
+                    <Etape>Tester les mécanismes de contrôle des médias (lecture, pause, volume) avec clavier.</Etape>
+                    <Etape>Vérifier leur compatibilité avec des technologies d’assistance.</Etape>
+                    <Etape>Tester leur fonctionnement dans différents navigateurs et dispositifs.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <!-- Critère 15.4 -->
+    <Critere id="15.4">
+        <Titre>Les paramètres utilisateur pour l'accessibilité sont-ils respectés ?</Titre>
+        <NiveauWCAG>AA</NiveauWCAG>
+        <Tests>
+            <Test id="15.4.1">
+                <Description>Les préférences d'accessibilité de l'utilisateur (polices, contrastes) sont-elles prises en compte ?</Description>
+                <Methodologie>
+                    <Etape>Configurer des paramètres d’accessibilité système (contrastes élevés, tailles de texte).</Etape>
+                    <Etape>Tester si l’application respecte ces paramètres sans impact sur l’expérience utilisateur.</Etape>
+                    <Etape>Vérifier que tous les contenus restent lisibles et utilisables.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
+    <!-- Critère 15.5 -->
+    <Critere id="15.5">
+        <Titre>Les contenus nécessitant une interaction complexe offrent-ils une alternative simple ?</Titre>
+        <NiveauWCAG>AA</NiveauWCAG>
+        <Tests>
+            <Test id="15.5.1">
+                <Description>Les interactions complexes disposent-elles d’alternatives simples et accessibles ?</Description>
+                <Methodologie>
+                    <Etape>Identifier les interactions complexes (glisser-déposer, multi-gestes).</Etape>
+                    <Etape>Vérifier qu’une alternative simple est disponible (boutons, menus).</Etape>
+                    <Etape>Tester l’accessibilité de ces alternatives avec clavier et technologies d’assistance.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Test>
+        </Tests>
+    </Critere>
+
 </CRITERES>

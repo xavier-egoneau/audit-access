@@ -162,7 +162,7 @@ POST    /api/feedback
 
 ## Structure des XML et gestion des versions
 
-> ⚠️ La structure actuelle des XML est fonctionnelle mais pourrait être enrichie, notamment avec l'ajout de cas particuliers et de tests spécifiques.
+> ⚠️ La structure actuelle du XML pour le RGAA est fonctionnelle mais celui du RAAM et celui du WCAG sont à revoir et tous pourraient être enrichis, notamment avec l'ajout de cas particuliers dans les tests spécifiques.
 
 ### Format des fichiers XML
 
