@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th>Critère</th>
-                <th>Niveau WCAG</th>
+                <th>Niveau <small>WCAG</small></th>
                 <th>Description</th>
                 <th>État</th>
                 <th>Actions</th>
@@ -108,7 +108,7 @@
         {% include 'partials/_nc-modal.twig' with {'criterion': criterion} %}
 
         
-        {# Modal pour édition de NC #}
+        {# Modal pour methodo #}
         <div class="modal" tabindex="-1" id="test-modal_{{criterion.id|replace({'.': '-'})}}" aria-labelledby="tests méthodologie" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -117,12 +117,20 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                    {% for test in criterion.tests %}
-                            <p><b>{{ test.id }}</b> {{ test.description }}</p>
-                            {% for etape in test.methodologie %}
+                    
+                            <h4>Méthodologie de tests</h4>
+                            {% for etape in criterion.methodologie %}
                             <p>{{etape}}</p>
                             {% endfor %}
-                    {% endfor %}
+                            <h4>Notes</h4>
+                            {% for note in criterion.notes %}
+                            <p>{{note}}</p>
+                            {% endfor %}
+                            <h4>Cas particuliers</h4>
+                            {% for casparticulier in criterion.casparticuliers %}
+                            <p>{{casparticulier}}</p>
+                            {% endfor %}
+                    
                     </div>
 
                 </div>

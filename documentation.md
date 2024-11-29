@@ -168,22 +168,22 @@ POST    /api/feedback
 
 #### Structure générale
 ```xml
-<CRITERES version="4.1">
-    <Critere id="1.1">
-        <Titre>Chaque image a-t-elle une alternative textuelle ?</Titre>
-        <NiveauWCAG>A</NiveauWCAG>
-        <Tests>
-            <Test id="1.1.1">
-                <Description>...</Description>
+<AUDIT norme="[RGAA/WCAG/RAAM]" version="x.x.x">
+    <section id="...">
+        <sousSection id="...">
+            <Critere id="...">
+                <titre>...</titre>
+                <NiveauWCAG>...</NiveauWCAG>
                 <Methodologie>
-                    <Etape>Repérer les images</Etape>
-                    <Etape>Vérifier la présence d'alternative</Etape>
+                    <Etape>...</Etape>
+                    ...
                 </Methodologie>
-            </Test>
-        </Tests>
-    </Critere>
-</CRITERES>
-
+                <Notes>...</Notes>
+            </Critere>
+        </sousSection>
+    </section>
+</AUDIT>
+```
 ## Tests
 
 Pour lancer les tests :

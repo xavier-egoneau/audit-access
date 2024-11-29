@@ -190,26 +190,30 @@ class Database {
                 });
             });
     
-            // Récupérer la version depuis le XML
-            const version = result.CRITERES.$.version;
-            
+            // Récupérer la version
+            const version = result.AUDIT.$.version;
+            let criteres = [];
+                
+            // Format unifié pour tous les référentiels
+            result.AUDIT.section.forEach(section => {
+                section.sousSection.forEach(sousSection => {
+                    sousSection.Critere.forEach(critere => {
+                        criteres.push({
+                            id: critere.$.id,
+                            titre: this.encodeHtml(critere.titre[0]),
+                            niveauWCAG: critere.NiveauWCAG[0],
+                            methodologie: critere.Methodologie[0].Etape.map(e => this.encodeHtml(e)),
+                            notes: critere.Notes ? this.encodeHtml(critere.Notes[0]) : '',
+                            casParticuliers: critere.CasParticuliers ? this.encodeHtml(critere.CasParticuliers[0]) : ''
+                        });
+                    });
+                });
+            });
+    
             // Mettre à jour la version dans la base de données
             await this.updateReferentialVersion(version);
             
-            return result.CRITERES.Critere.map(critere => {
-                return {
-                    id: critere.$.id,
-                    titre: this.encodeHtml(critere.Titre[0]),
-                    niveauWCAG: critere.NiveauWCAG[0],
-                    tests: critere.Tests[0].Test.map(test => ({
-                        id: test.$.id,
-                        description: this.encodeHtml(test.Description[0]),
-                        methodologie: Array.isArray(test.Methodologie[0].Etape) 
-                            ? test.Methodologie[0].Etape.map(e => this.encodeHtml(e))
-                            : []
-                    }))
-                };
-            });
+            return criteres;
             
         } catch (error) {
             console.error('Erreur lors du chargement des critères:', error);
@@ -255,7 +259,7 @@ class Database {
 
                     try {
                         // Nombre total de critères
-                        const allCriteria = await this.loadCriteria(path.join(__dirname, '..', 'criteres_rgaa.xml'));
+                        const allCriteria = await this.loadCriteria(path.join(__dirname, '..', 'criteres_raam.xml'));
                         
                         // Nombre de critères NA (Non Applicables)
                         const naCount = results.filter(r => r.status === 'NA').length;
@@ -330,7 +334,7 @@ class Database {
     async calculateGlobalRate() {
         return new Promise((resolve, reject) => {
             Promise.all([
-                this.loadCriteria(path.join(__dirname, '..', 'criteres_rgaa.xml')),
+                this.loadCriteria(path.join(__dirname, '..', 'criteres_raam.xml')),
                 new Promise((resolve, reject) => {
                     this.db.all('SELECT id FROM pages', (err, pages) => {
                         if (err) reject(err);
@@ -404,7 +408,7 @@ class Database {
     // calculer le nombre de critères
     async getTotalCriteria() {
         try {
-            const allCriteria = await this.loadCriteria(path.join(__dirname, '..', 'criteres_rgaa.xml'));
+            const allCriteria = await this.loadCriteria(path.join(__dirname, '..', 'criteres_raam.xml'));
             return allCriteria.length;
         } catch (error) {
             console.error("Erreur lors du comptage des critères:", error);

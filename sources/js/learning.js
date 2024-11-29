@@ -126,9 +126,15 @@ class LearningUI {
 
     async showSuggestions(criterionId) {
         this.currentCriterionId = criterionId;
-        const modal = new bootstrap.Modal(document.getElementById('learningModal'));
+        const modalElement = document.getElementById('learningModal');
+        modalElement.removeAttribute('inert'); // Retirer inert avant d'afficher
+        const modal = new bootstrap.Modal(modalElement);
         modal.show();
-
+    
+        modalElement.addEventListener('hidden.bs.modal', () => {
+            modalElement.setAttribute('inert', ''); // Remettre inert quand on ferme
+        }, { once: true });
+    
         try {
             // Charger les métriques
             const metricsResponse = await fetch(`/api/learning/metrics/${criterionId}`);
@@ -235,27 +241,50 @@ class LearningUI {
     }
 
     async useSuggestion(suggestion) {
-        // Remplir automatiquement le formulaire d'ajout de NC
-        const form = document.querySelector(`#ncForm-${this.currentCriterionId.replace('.', '-')}`);
-        if (!form) return;
-
+        // Convertir l'ID du critère en un sélecteur CSS valide
+        // Remplacer tous les points par des tirets
+        const formId = `ncForm-${this.currentCriterionId.replace(/\./g, '-')}`;
+        const form = document.querySelector(`#${formId}`);
+        
+        if (!form) {
+            console.warn(`Formulaire #${formId} non trouvé`);
+            return;
+        }
+    
         form.querySelector('[name="impact"]').value = suggestion.impact;
         form.querySelector('[name="description"]').value = suggestion.description;
         form.querySelector('[name="solution"]').value = suggestion.solution;
-
+    
         // Fermer la modale des suggestions
-        bootstrap.Modal.getInstance(document.getElementById('learningModal')).hide();
+        const learningModal = document.getElementById('learningModal');
+        const modalInstance = bootstrap.Modal.getInstance(learningModal);
+        modalInstance.hide();
+        learningModal.setAttribute('inert', '');
         
         // Ouvrir la modale d'ajout de NC
-        const ncModal = new bootstrap.Modal(document.getElementById(`addnc-${this.currentCriterionId.replace('.', '-')}`));
+        const ncModalId = `addnc-${this.currentCriterionId.replace(/\./g, '-')}`;
+        const ncModalElement = document.getElementById(ncModalId);
+        
+        if (!ncModalElement) {
+            console.warn(`Modal #${ncModalId} non trouvée`);
+            return;
+        }
+        
+        ncModalElement.removeAttribute('inert');
+        const ncModal = new bootstrap.Modal(ncModalElement);
         ncModal.show();
+    
+        ncModalElement.addEventListener('hidden.bs.modal', () => {
+            ncModalElement.setAttribute('inert', '');
+        }, { once: true });
     }
 
     async rateSuggestion(suggestionId, isHelpful) {
         try {
-            // Fermer la modale avant d'envoyer le feedback
-            const learningModal = bootstrap.Modal.getInstance(document.getElementById('learningModal'));
-            learningModal?.hide();
+            const learningModal = document.getElementById('learningModal');
+            const modalInstance = bootstrap.Modal.getInstance(learningModal);
+            modalInstance?.hide();
+            learningModal.setAttribute('inert', '');
     
             const response = await fetch('/api/feedback', {
                 method: 'POST',

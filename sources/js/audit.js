@@ -335,15 +335,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Dans audit.js, ajouter ceci
 // Dans audit.js, cherchez la partie qui ressemble à ceci :
 
+// Dans audit.js, modifiez la partie qui gère l'ouverture du collapse :
 document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(button => {
     const targetId = button.getAttribute('data-bs-target');
     const target = document.querySelector(targetId);
     if (!target) return;
 
     target.addEventListener('show.bs.collapse', async function() {
+        // Récupérer l'ID du critère et le formater correctement
         const criterionId = button.getAttribute('data-bs-target')
                               .replace('#collapse-', '')  
-                              .replace('-', '.'); 
+                              .replace('-', '.'); // Changement ici : on remplace le tiret par un point
         const pageId = document.getElementById('screenSelector')?.value;
         console.log('Chargement des NC pour', criterionId);
         
@@ -361,7 +363,7 @@ document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(button => {
                     <span class="visually-hidden">Chargement...</span>
                 </div>
             `;
-            wrapper.innerHTML = ''; 
+            wrapper.innerHTML = '';
             wrapper.appendChild(loadingSpinner);
 
             try {
@@ -384,16 +386,6 @@ document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(button => {
                         const templateResponse = await fetch(`/nc-template?data=${encodeURIComponent(JSON.stringify(nc))}`);
                         const html = await templateResponse.text();
                         wrapper.insertAdjacentHTML('beforeend', html);
-                    }
-
-                    if (window.FormHandler) {
-                        const deleteButtons = wrapper.querySelectorAll('.delete-nc');
-                        deleteButtons.forEach(button => {
-                            if (!button.dataset.handlerAttached) {
-                                const formHandler = new FormHandler(document.querySelector('form.nc-form'));
-                                formHandler.setupDeleteHandler(button);
-                            }
-                        });
                     }
                 }
             } catch (error) {

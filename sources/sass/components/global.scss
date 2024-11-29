@@ -39,9 +39,10 @@ html,body{
       margin-bottom: 1rem;
       
       .card-title {
-          font-size: 1rem;
+          font-size: 1.8rem;
           margin-bottom: 0.5rem;
           color: #666;
+          font-weight: bold;
       }
   }
 }
@@ -57,6 +58,15 @@ button.add-nc {
 }
 .table{
   tr{
+    th{
+      position: relative;
+      small{
+        position: absolute;
+        top: 15px;
+        right: 11px;
+        font-size: 1.2rem;
+      }
+    }
     th,td{
       border: 1px solid #000;
       vertical-align: middle;
@@ -125,6 +135,26 @@ h1{
       opacity: 1;
       transition: opacity 2s ease-in-out;
       transition-delay: 1s;
+    }
+  }
+} 
+
+.wrapper_ncs{
+  --bs-gutter-x: 0;
+  .card {
+    border: 1px solid #000;
+    border-radius: 0;
+    width: 20%;
+    min-width: 200px;
+    .card-header{
+      font-size: 1.8rem;
+      border-bottom: 1px solid #000;
+    }
+    &-text{
+      font-size: 1.8rem;
+    }
+    p{
+      font-size: 1.5rem;
     }
   }
 } 

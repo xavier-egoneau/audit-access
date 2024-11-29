@@ -100,43 +100,64 @@ app.get('/audit/:projectId', async (req, res) => {
       console.log('Premier critère chargé:', criteria[0]);
 
       // Pour chaque critère, récupérer son statut et ses non-conformités
-      for (const criterion of criteria) {
-          if (!req.query.pageId) {
-              // Pour "Tous les écrans", récupérer toutes les NC avec le nom des pages
-              const ncs = await new Promise((resolve, reject) => {
-                db.db.all(
-                    `SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
-                     FROM non_conformities nc 
-                     LEFT JOIN pages p ON EXISTS (
-                         SELECT 1 
-                         FROM json_each(nc.page_ids) 
-                         WHERE value = CAST(p.id AS TEXT)
-                     )
-                     WHERE nc.criterion_id = ?
-                     GROUP BY nc.id
-                     ORDER BY nc.created_at DESC`,
-                    [criterion.id],
-                    (err, rows) => {
-                        if (err) {
-                            console.error('Erreur SQL:', err);
-                            reject(err);
-                            return;
-                        }
-                        
-                        // Transformer les résultats pour inclure les page_ids comme tableau
-                        const transformedRows = rows ? rows.map(row => ({
-                            ...row,
-                            page_ids: JSON.parse(row.page_ids || '[]'),
-                            pages: row.page_names ? row.page_names.split(',') : []
-                        })) : [];
-                        
-                        resolve(transformedRows);
-                    }
-                );
+      // Remplacez par ce bloc
+    for (const criterion of criteria) {
+        // Récupérer les NC que ce soit pour une page spécifique ou toutes les pages
+        const ncs = await new Promise((resolve, reject) => {
+            let query;
+            const params = [];
+
+            if (req.query.pageId) {
+                // Pour une page spécifique
+                query = `
+                    SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
+                    FROM non_conformities nc 
+                    LEFT JOIN pages p ON EXISTS (
+                        SELECT 1 
+                        FROM json_each(nc.page_ids) 
+                        WHERE value = CAST(p.id AS TEXT)
+                    )
+                    WHERE nc.criterion_id = ?
+                    AND json_extract(nc.page_ids, '$') LIKE '%' || ? || '%'
+                    GROUP BY nc.id
+                    ORDER BY nc.created_at DESC`;
+                params.push(criterion.id, req.query.pageId);
+            } else {
+                // Pour toutes les pages
+                query = `
+                    SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
+                    FROM non_conformities nc 
+                    LEFT JOIN pages p ON EXISTS (
+                        SELECT 1 
+                        FROM json_each(nc.page_ids) 
+                        WHERE value = CAST(p.id AS TEXT)
+                    )
+                    WHERE nc.criterion_id = ?
+                    GROUP BY nc.id
+                    ORDER BY nc.created_at DESC`;
+                params.push(criterion.id);
+            }
+
+            db.db.all(query, params, (err, rows) => {
+                if (err) {
+                    console.error('Erreur SQL:', err);
+                    reject(err);
+                    return;
+                }
+                
+                // Transformer les résultats
+                const transformedRows = rows ? rows.map(row => ({
+                    ...row,
+                    page_ids: JSON.parse(row.page_ids || '[]'),
+                    pages: row.page_names ? row.page_names.split(',') : [],
+                    allPages: !row.page_ids || JSON.parse(row.page_ids || '[]').length === 0
+                })) : [];
+                
+                resolve(transformedRows);
             });
-              criterion.nonConformities = ncs;
-          }
-      }
+        });
+        criterion.nonConformities = ncs;
+    }
 
       // Calculer les différents taux
       const currentRate = req.query.pageId ? await db.calculatePageRate(req.query.pageId) : 0;
@@ -431,7 +452,8 @@ app.get('/nc-template', (req, res) => {
 // Dans la route GET /audit/:projectId/criterion/:criterionId/allnc
 
 app.get('/audit/:projectId/criterion/:criterionId/allnc', async (req, res) => {
-    const { projectId, criterionId } = req.params;
+    const { projectId } = req.params;
+    const criterionId = req.params.criterionId.replace('-', '.'); // On garde projectId et on formate criterionId
     const { pageId } = req.query;
 
     try {

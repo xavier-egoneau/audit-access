@@ -182,59 +182,59 @@ class FormHandler {
         errorContainer.textContent = message;
     }
 
-// Dans formHandler.js, modifier la méthode setupDeleteHandler :
+    // Dans formHandler.js, modifier la méthode setupDeleteHandler :
 
-setupDeleteHandler(button) {
-    if (button.dataset.handlerAttached) return;
-    
-    console.log("Configuration du handler de suppression pour la NC:", button.dataset.ncId);
-    
-    button.dataset.handlerAttached = 'true';
-    button.addEventListener('click', async (e) => {
-        console.log("Clic sur le bouton supprimer pour la NC:", button.dataset.ncId);
-        const ncId = button.dataset.ncId;
+    setupDeleteHandler(button) {
+        if (button.dataset.handlerAttached) return;
         
-        if (!ncId) {
-            console.error('ID de la NC manquant');
-            return;
-        }
-
-        if (!confirm('Êtes-vous sûr de vouloir supprimer cette non-conformité ?')) {
-            return;
-        }
-
-        try {
-            console.log("Tentative de suppression de la NC:", ncId);
-            const url = `/audit/${currentProjectId}/nc/${ncId}`;
-            console.log("URL de suppression:", url);
-
-            const response = await fetch(url, {
-                method: 'DELETE'
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP: ${response.status}`);
+        console.log("Configuration du handler de suppression pour la NC:", button.dataset.ncId);
+        
+        button.dataset.handlerAttached = 'true';
+        button.addEventListener('click', async (e) => {
+            console.log("Clic sur le bouton supprimer pour la NC:", button.dataset.ncId);
+            const ncId = button.dataset.ncId;
+            
+            if (!ncId) {
+                console.error('ID de la NC manquant');
+                return;
             }
 
-            const data = await response.json();
-            console.log("Réponse de la suppression:", data);
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cette non-conformité ?')) {
+                return;
+            }
 
-            if (data.success) {
-                const card = button.closest('.card');
-                if (card) {
-                    card.style.transition = 'opacity 0.3s ease';
-                    card.style.opacity = '0';
-                    setTimeout(() => card.remove(), 300);
+            try {
+                console.log("Tentative de suppression de la NC:", ncId);
+                const url = `/audit/${currentProjectId}/nc/${ncId}`;
+                console.log("URL de suppression:", url);
+
+                const response = await fetch(url, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
                 }
-            } else {
-                throw new Error(data.message || 'Erreur lors de la suppression');
+
+                const data = await response.json();
+                console.log("Réponse de la suppression:", data);
+
+                if (data.success) {
+                    const card = button.closest('.card');
+                    if (card) {
+                        card.style.transition = 'opacity 0.3s ease';
+                        card.style.opacity = '0';
+                        setTimeout(() => card.remove(), 300);
+                    }
+                } else {
+                    throw new Error(data.message || 'Erreur lors de la suppression');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la suppression:', error);
+                alert('Erreur lors de la suppression de la non-conformité: ' + error.message);
             }
-        } catch (error) {
-            console.error('Erreur lors de la suppression:', error);
-            alert('Erreur lors de la suppression de la non-conformité: ' + error.message);
-        }
-    });
-}
+        });
+    }
 
     // Fichier: formHandler.js
     // Modification partielle - Remplacer la méthode handleSuccess
@@ -242,45 +242,76 @@ setupDeleteHandler(button) {
     // Fichier: formHandler.js 
     // Fonction handleSuccess complète
 
-    async handleSuccess(response) {
-        if (!response.success) {
-            throw new Error(response.message || 'Une erreur est survenue');
-        }
-    
-        // Si c'est un formulaire de non-conformité
-        if (this.form.querySelector('[name="criterionId"]')) {
-            if (response.ncId) {  // Assurez-vous que ncId est bien transmis
-                const existingNc = document.querySelector(`#nc-${response.ncId}`);
-                if (!existingNc) {
-                    const criterionId = this.form.querySelector('[name="criterionId"]').value;
-                    const wrapper = document.querySelector(`#wrapper-${criterionId.replace('.', '-')}`);
-                    
-                    if (wrapper) {
-                        // Ajout des données d'ID dans l'objet transmis au template
-                        const templateResponse = await fetch(`/nc-template?data=${encodeURIComponent(JSON.stringify({
-                            ...response,
-                            id: response.ncId  // Ajouter explicitement l'ID
-                        }))}`);
+    // Fichier: formHandler.js
+// Méthode handleSuccess complète
+
+async handleSuccess(response) {
+    if (!response.success) {
+        throw new Error(response.message || 'Une erreur est survenue');
+    }
+
+    // Si c'est un formulaire de non-conformité
+    if (this.form.classList.contains('nc-form')) {
+        if (response.ncId) {
+            const existingNc = document.querySelector(`#nc-${response.ncId}`);
+            if (!existingNc) {
+                const criterionId = this.form.querySelector('[name="criterionId"]').value;
+                // Utiliser directement le format avec tirets
+                const wrapperId = `wrapper-${criterionId.replace(/\./g, '-')}`;
+                const wrapper = document.querySelector(`#${wrapperId}`);
+                
+                if (wrapper) {
+                    // Préparer les données pour le template
+                    let templateData = {
+                        ...response,
+                        id: response.ncId,
+                        // Transformer les objets pages en tableau de noms
+                        pages: response.pages ? response.pages.map(page => page.name) : [],
+                        allPages: response.allPages || false
+                    };
+
+                    try {
+                        // Récupérer et insérer le template
+                        const templateResponse = await fetch(`/nc-template?data=${encodeURIComponent(JSON.stringify(templateData))}`);
+                        
+                        if (!templateResponse.ok) {
+                            throw new Error('Erreur lors de la récupération du template');
+                        }
+                        
                         const html = await templateResponse.text();
+                        
+                        // Si c'est vide, retirer le message "Aucune NC"
+                        const emptyMessage = wrapper.querySelector('.alert-info');
+                        if (emptyMessage && emptyMessage.textContent.includes('Aucune non-conformité')) {
+                            emptyMessage.remove();
+                        }
                         
                         wrapper.insertAdjacentHTML('afterbegin', html);
                         
-                        // Réinitialiser les handlers après l'ajout
+                        // Réinitialiser les gestionnaires d'événements
                         FormHandler.initDeleteHandlers();
-                    }
-            
-                    const modal = bootstrap.Modal.getInstance(this.form.closest('.modal'));
-                    if (modal) {
-                        modal.hide();
+                        
+                        // Animer l'apparition
+                        const newNc = wrapper.querySelector(`#nc-${response.ncId}`);
+                        if (newNc) {
+                            newNc.style.opacity = '0';
+                            requestAnimationFrame(() => {
+                                newNc.style.transition = 'opacity 0.3s ease';
+                                newNc.style.opacity = '1';
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Erreur lors de l\'ajout de la NC:', error);
+                        throw new Error('Erreur lors de l\'ajout de la non-conformité');
                     }
                 }
+
+                // Fermer la modal si elle existe
+                const modal = bootstrap.Modal.getInstance(this.form.closest('.modal'));
+                if (modal) {
+                    modal.hide();
+                }
             }
-        } 
-        // Si c'est un formulaire de projet (nouveau ou édition)
-        else if (response.projectId) {
-            // Rediriger vers le projet
-            window.location.href = `/audit/${response.projectId}`;
-            return;
         }
         
         // Réinitialisation du formulaire
@@ -289,15 +320,20 @@ setupDeleteHandler(button) {
             this.filePreviewContainer.remove();
             this.filePreviewContainer = null;
         }
-    
-        // Gérer la redirection si spécifiée
-        const redirect = this.form.getAttribute('data-redirect');
-        if (redirect) {
-            window.location.href = redirect.replace(':id', response.projectId);
-            return;
-        }
+    } 
+    // Si c'est un formulaire de projet (nouveau ou édition)
+    else if (response.projectId) {
+        window.location.href = `/audit/${response.projectId}`;
+        return;
     }
 
+    // Gestion de la redirection si spécifiée
+    const redirect = this.form.getAttribute('data-redirect');
+    if (redirect) {
+        window.location.href = redirect.replace(':id', response.projectId);
+        return;
+    }
+}
 
     // Fichier: formHandler.js
     // Modification partielle - Dans la classe FormHandler - Méthode handleSubmit
@@ -341,21 +377,22 @@ setupDeleteHandler(button) {
                 }
             } 
             // Pour les formulaires de NC
-            else if (this.form.classList.contains('nc-form')) {
+            else // Pour les formulaires de NC
+            if (this.form.classList.contains('nc-form')) {
                 const formData = new FormData(this.form);
                 const pageIdInput = this.form.querySelector('[name="pageId"]');
                 const allPagesCheckbox = this.form.querySelector('input[name="allPages"]');
                 
-                // Si la checkbox est explicitement cochée OU si on est sur la vue "Toutes les pages" (pas de page sélectionnée dans le sélecteur principal)
+                // Détecter si nous sommes en vue "Toutes les pages"
                 const screenSelector = document.getElementById('screenSelector');
                 const isAllPagesView = screenSelector && !screenSelector.value;
                 
+                // Si la checkbox est cochée OU si on est en vue "Toutes les pages"
                 if (allPagesCheckbox?.checked || isAllPagesView) {
                     formData.set('allPages', 'true');
                     formData.delete('pageId');
                 } else {
                     formData.set('allPages', 'false');
-                    // S'assurer que le pageId est bien défini
                     if (!formData.get('pageId')) {
                         const currentPageId = document.getElementById('screenSelector')?.value;
                         if (currentPageId) {
