@@ -169,9 +169,11 @@ POST    /api/feedback
 #### Structure générale
 ```xml
 <AUDIT norme="[RGAA/WCAG/RAAM]" version="x.x.x">
-    <section id="...">
-        <sousSection id="...">
-            <Critere id="...">
+    <section id="1">
+        <Titre>...</Titre>
+        <sousSection id="1.1">
+            <Titre>...</Titre>
+            <Critere id="1.1.1">
                 <titre>...</titre>
                 <NiveauWCAG>...</NiveauWCAG>
                 <Methodologie>

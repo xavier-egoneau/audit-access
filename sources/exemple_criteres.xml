@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AUDIT norme="RAAM" version="2.0.0">
+    <section id="1">
+        <Titre>1. Couleurs</Titre>
+        <Note></Note>
+        <sousSection id="1.1">
+            <titre>Dans chaque écran, l'information ne doit pas être transmise uniquement par la couleur.</titre>
+            <Note>Exemple d'information relatives la sous section</Note>
+            <Critere id="1.1.1">
+                <titre>Pour chaque élément de l'interface dont la mise en couleur est porteuse d'information, l'information ne doit pas être donnée uniquement par la couleur</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les mots ou ensemble de mots, les textes, les éléments graphiques porteurs d'information et les médias temporels dont la mise en couleur est porteuse d'information.</Etape>
+                    <Etape>Vérifier qu'il existe un autre moyen visuel de récupérer cette information (présence d'une icône, effet graphique de forme ou de position, effet typographique, etc.).</Etape>
+                    <Etape>Avec le lecteur d'écran, accéder à l'information donnée par la couleur.</Etape>
+                    <Etape>Vérifier qu'une information équivalente est restituée par le lecteur d'écran (par exemple, l'état « sélectionné » d'un bouton vert).</Etape>
+                    <Etape>Si ces conditions sont respectées, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Dans ces situations, le critère est non applicable pour ces éléments:
+                    - Le texte fait partie d'un logo ou d'un nom de marque d'un organisme ou d'une société
+                    - Le texte ou l'image de texte est purement décoratif
+                    - Le texte fait partie d'une image véhiculant une information, mais le texte lui-même n'apporte aucune information essentielle
+                    - Le texte ou l'image de texte fait partie d'un élément d'interface sur lequel aucune action n'est possible
+                </CasParticuliers>
+                <Notes>
+                    L'arrêt ou la mise en pause via la prise de focus ou au toucher sur le contenu ne sont pas considérés comme des procédés conformes.
+                    Dans certains cas, le mouvement ne peut pas être arrêté, par exemple, une barre de progression, dans ce cas, le critère est non applicable.
+                </Notes>
+            </Critere>
+
+            <Critere id="1.1.2">
+                <titre>Pour chaque indication de couleur donnée par un texte (écrit ou vocalisé), l'information ne doit pas être donnée uniquement par la couleur.</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer chaque indication de couleur donnée par un texte (écrit ou vocalisé) porteuse d'information.</Etape>
+                    <Etape>Vérifier qu'il existe un autre moyen d'accéder à l'information.</Etape>
+                    <Etape>Si ces conditions sont respectées, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+        </sousSection>
+    </section>
+</AUDIT>
