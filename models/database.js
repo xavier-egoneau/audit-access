@@ -267,7 +267,7 @@ class Database {
             
             // validation XML détaillée
        
-            await this.analyzeXMLError(xmlData, 3679, 8);
+            //await this.analyzeXMLError(xmlData, 3679, 8);
 
             const parser = new xml2js.Parser();
             console.log('Parser XML créé');
