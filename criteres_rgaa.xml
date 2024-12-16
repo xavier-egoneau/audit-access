@@ -122,7 +122,7 @@
 
         <sousSection id="1.2">
             <titre>Chaque image de décoration est-elle correctement ignorée par les technologies d'assistance ?</titre>
-            <Note>Lorsqu'une image est associée à une légende, la note technique WCAG recommande de prévoir systématiquement une alternative textuelle (cf. critère 1.9). Dans ce cas le critère 1.2 est non applicable.<br>Dans le cas d'une image vectorielle (balise <svg>) de décoration qui serait affichée au travers d'un élément <use href="…"> enfant de l'élément <svg>, le test 1.2.4 s'appliquera également à l'élément <svg> associée par le biais de l'élément <use>.<br>Un attribut WAI-ARIA role="presentation" peut être utilisé sur les images de décoration et les zones non cliquables de décoration. Le rôle "none" introduit en ARIA 1.1 et synonyme du rôle "presentation" peut être aussi utilisé. Il reste préférable cependant d'utiliser le rôle "presentation" en attendant un support satisfaisant du rôle "none".</Note>
+            <Note>Lorsqu'une image est associée à une légende, la note technique WCAG recommande de prévoir systématiquement une alternative textuelle (cf. critère 1.9). Dans ce cas le critère 1.2 est non applicable.<![CDATA[<br>]]>Dans le cas d'une image vectorielle (balise &lt;svg&gt;) de décoration qui serait affichée au travers d'un élément &lt;use href="…"&gt; enfant de l'élément &lt;svg&gt;, le test 1.2.4 s'appliquera également à l'élément &lt;svg&gt; associée par le biais de l'élément &lt;use&gt;.<![CDATA[<br>]]>Un attribut WAI-ARIA role="presentation" peut être utilisé sur les images de décoration et les zones non cliquables de décoration. Le rôle "none" introduit en ARIA 1.1 et synonyme du rôle "presentation" peut être aussi utilisé. Il reste préférable cependant d'utiliser le rôle "presentation" en attendant un support satisfaisant du rôle "none".</Note>
             <Critere id="1.2.1">
                 <titre>Chaque image (balise &lt;img&gt;) de décoration, sans légende, vérifie-t-elle une de ces conditions ? La balise &lt;img&gt; possède un attribut alt vide (alt="") et est dépourvue de tout autre attribut permettant de fournir une alternative textuelle ; La balise &lt;img&gt; possède un attribut WAI-ARIA aria-hidden="true" ou role="presentation".</titre>
                 <NiveauWCAG>A</NiveauWCAG>
@@ -520,41 +520,41 @@
             </Critere>
 
             <Critere id="1.6.8">
-            <titre>Pour chaque image bitmap (balise &lt;canvas&gt;) porteuse d'information, qui implémente une référence à une description détaillée adjacente, cette référence est-elle correctement restituée par les technologies d'assistance ?</titre>
-            <NiveauWCAG>A</NiveauWCAG>
-            <Methodologie>
-                <Etape>Retrouver dans le document les éléments &lt;canvas&gt; porteurs d'information dont la description détaillée est fournie au moyen d'un attribut aria-label, aria-labelledby ou aria-describedby.</Etape>
-                <Etape>Pour chaque élément &lt;canvas&gt;, vérifier que le contenu de la description détaillée est correctement restitué par les technologies d'assistance.</Etape>
-                <Etape>Si c'est le cas pour chaque élément &lt;canvas&gt;, le test est validé.</Etape>
-            </Methodologie>
-            <CasParticuliers></CasParticuliers>
-            <Notes></Notes>
-        </Critere>
+                <titre>Pour chaque image bitmap (balise &lt;canvas&gt;) porteuse d'information, qui implémente une référence à une description détaillée adjacente, cette référence est-elle correctement restituée par les technologies d'assistance ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les éléments &lt;canvas&gt; porteurs d'information dont la description détaillée est fournie au moyen d'un attribut aria-label, aria-labelledby ou aria-describedby.</Etape>
+                    <Etape>Pour chaque élément &lt;canvas&gt;, vérifier que le contenu de la description détaillée est correctement restitué par les technologies d'assistance.</Etape>
+                    <Etape>Si c'est le cas pour chaque élément &lt;canvas&gt;, le test est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
 
-        <Critere id="1.6.9">
-            <titre>Pour chaque image (balise &lt;img&gt;, &lt;input&gt; avec l'attribut type="image", &lt;area&gt;, &lt;object&gt;, &lt;embed&gt;, &lt;svg&gt;, &lt;canvas&gt;, ou possédant un attribut WAI-ARIA role="img") porteuse d'information, qui est accompagnée d'une description détaillée et qui utilise un attribut WAI-ARIA aria-describedby, l'attribut WAI-ARIA aria-describedby associe-t-il la description détaillée ?</titre>
-            <NiveauWCAG>A</NiveauWCAG>
-            <Methodologie>
-                <Etape>Retrouver dans le document les images (éléments &lt;img&gt;, &lt;input&gt; avec l'attribut type="image", &lt;area&gt;, &lt;object&gt;, &lt;embed&gt;, &lt;svg&gt;, &lt;canvas&gt; ou possédant un attribut WAI-ARIA role="img") porteuses d'information dont la description détaillée utilise un attribut WAI-ARIA aria-describedby.</Etape>
-                <Etape>Pour chaque image, vérifier que le contenu de la description détaillée est correctement restitué par les technologies d'assistance.</Etape>
-                <Etape>Si c'est le cas pour chaque image, le test est validé.</Etape>
-            </Methodologie>
-            <CasParticuliers></CasParticuliers>
-            <Notes></Notes>
-        </Critere>
+            <Critere id="1.6.9">
+                <titre>Pour chaque image (balise &lt;img&gt;, &lt;input&gt; avec l'attribut type="image", &lt;area&gt;, &lt;object&gt;, &lt;embed&gt;, &lt;svg&gt;, &lt;canvas&gt;, ou possédant un attribut WAI-ARIA role="img") porteuse d'information, qui est accompagnée d'une description détaillée et qui utilise un attribut WAI-ARIA aria-describedby, l'attribut WAI-ARIA aria-describedby associe-t-il la description détaillée ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les images (éléments &lt;img&gt;, &lt;input&gt; avec l'attribut type="image", &lt;area&gt;, &lt;object&gt;, &lt;embed&gt;, &lt;svg&gt;, &lt;canvas&gt; ou possédant un attribut WAI-ARIA role="img") porteuses d'information dont la description détaillée utilise un attribut WAI-ARIA aria-describedby.</Etape>
+                    <Etape>Pour chaque image, vérifier que le contenu de la description détaillée est correctement restitué par les technologies d'assistance.</Etape>
+                    <Etape>Si c'est le cas pour chaque image, le test est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
 
-        <Critere id="1.6.10">
-            <titre>Chaque balise possédant un attribut WAI-ARIA role="img" porteuse d'information, qui nécessite une description détaillée, vérifie-t-elle une de ces conditions ? Il existe un attribut WAI-ARIA aria-label contenant l'alternative textuelle et une référence à une description détaillée adjacente ; Il existe un attribut WAI-ARIA aria-labelledby associant un passage de texte faisant office d'alternative textuelle et un autre faisant office de description détaillée ; Il existe un attribut WAI-ARIA aria-describedby associant un passage de texte faisant office de description détaillée ; Il existe un lien ou un bouton adjacent permettant d'accéder à la description détaillée.</titre>
-            <NiveauWCAG>A</NiveauWCAG>
-            <Methodologie>
-                <Etape>Retrouver dans le document les éléments pourvus d'un attribut WAI-ARIA role="img" porteurs d'information qui nécessitent une description détaillée.</Etape>
-                <Etape>Pour chaque élément role="img", vérifier qu'il existe soit un attribut WAI-ARIA aria-label contenant l'alternative textuelle et une référence à une description détaillée adjacente, soit un attribut WAI-ARIA aria-labelledby associant un passage de texte faisant office d'alternative textuelle et un autre faisant office de description détaillée, soit un attribut WAI-ARIA aria-describedby associant un passage de texte faisant office de description détaillée, soit un lien ou un bouton adjacent permettant d'accéder à la description détaillée.</Etape>
-                <Etape>Si c'est le cas pour chaque élément role="img", le test est validé.</Etape>
-            </Methodologie>
-            <CasParticuliers></CasParticuliers>
-            <Notes></Notes>
-        </Critere>
-
+            <Critere id="1.6.10">
+                <titre>Chaque balise possédant un attribut WAI-ARIA role="img" porteuse d'information, qui nécessite une description détaillée, vérifie-t-elle une de ces conditions ? Il existe un attribut WAI-ARIA aria-label contenant l'alternative textuelle et une référence à une description détaillée adjacente ; Il existe un attribut WAI-ARIA aria-labelledby associant un passage de texte faisant office d'alternative textuelle et un autre faisant office de description détaillée ; Il existe un attribut WAI-ARIA aria-describedby associant un passage de texte faisant office de description détaillée ; Il existe un lien ou un bouton adjacent permettant d'accéder à la description détaillée.</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les éléments pourvus d'un attribut WAI-ARIA role="img" porteurs d'information qui nécessitent une description détaillée.</Etape>
+                    <Etape>Pour chaque élément role="img", vérifier qu'il existe soit un attribut WAI-ARIA aria-label contenant l'alternative textuelle et une référence à une description détaillée adjacente, soit un attribut WAI-ARIA aria-labelledby associant un passage de texte faisant office d'alternative textuelle et un autre faisant office de description détaillée, soit un attribut WAI-ARIA aria-describedby associant un passage de texte faisant office de description détaillée, soit un lien ou un bouton adjacent permettant d'accéder à la description détaillée.</Etape>
+                    <Etape>Si c'est le cas pour chaque élément role="img", le test est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+        </sousSection>
         <!-- Début de la section 1.7 -->
         <sousSection id="1.7">
             <titre>Pour chaque image porteuse d'information ayant une description détaillée, cette description est-elle pertinente ?</titre>
@@ -714,7 +714,7 @@
         <sousSection id="1.9">
             <titre>Chaque légende d'image est-elle, si nécessaire, correctement reliée à l'image correspondante ?</titre>
 
-            <Notes>L'implémentation d'un attribut WAI-ARIA role="group" ou role="figure" sur l'élément parent &lt;figure&gt; est destiné à pallier le manque de support actuel des éléments &lt;figure&gt; par les technologies d'assistance. L'utilisation d'un élément &lt;figcaption&gt; pour associer une légende à une image impose au minimum l'utilisation d'un attribut WAI-ARIA aria-label sur l'élément parent &lt;figure&gt; dont le contenu sera identique au contenu de l'élément &lt;figcaption&gt;. Pour s'assurer d'un support optimal, il peut également être fait une association explicite entre le contenu de l'alternative textuelle de l'image et le contenu de l'élément &lt;figcaption&gt;, par exemple: &lt;img src="image.png" alt="Photo : soleil couchant" /&gt;&lt;figcaption&gt;Photo : crédit xxx&lt;/figcaption&gt;.<br>Les attributs WAI-ARIA aria-labelledby et aria-describedby ne peuvent pas être utilisés actuellement par manque de support par les technologies d'assistance.<br>Note : les images légendées doivent par ailleurs respecter le critère 1.1 et le critère 1.3 relatifs aux images porteuses d'information.</Notes>
+            <Notes>L'implémentation d'un attribut WAI-ARIA role="group" ou role="figure" sur l'élément parent &lt;figure&gt; est destiné à pallier le manque de support actuel des éléments &lt;figure&gt; par les technologies d'assistance. L'utilisation d'un élément &lt;figcaption&gt; pour associer une légende à une image impose au minimum l'utilisation d'un attribut WAI-ARIA aria-label sur l'élément parent &lt;figure&gt; dont le contenu sera identique au contenu de l'élément &lt;figcaption&gt;. Pour s'assurer d'un support optimal, il peut également être fait une association explicite entre le contenu de l'alternative textuelle de l'image et le contenu de l'élément &lt;figcaption&gt;, par exemple: &lt;img src="image.png" alt="Photo : soleil couchant" /&gt;&lt;figcaption&gt;Photo : crédit xxx&lt;/figcaption&gt;.<![CDATA[<br>]]>Les attributs WAI-ARIA aria-labelledby et aria-describedby ne peuvent pas être utilisés actuellement par manque de support par les technologies d'assistance.<![CDATA[<br>]]>Note : les images légendées doivent par ailleurs respecter le critère 1.1 et le critère 1.3 relatifs aux images porteuses d'information.</Notes>
             
             <Critere id="1.9.1">
                 <titre>Chaque image pourvue d'une légende (balise &lt;img&gt;, &lt;input&gt; avec l'attribut type="image" ou possédant un attribut WAI-ARIA role="img" associée à une légende adjacente), vérifie-t-elle, si nécessaire, ces conditions ? L'image et sa légende adjacente sont contenues dans une balise &lt;figure&gt; ; La balise &lt;figure&gt; possède un attribut WAI-ARIA role="figure" ou role="group" ; La balise &lt;figure&gt; possède un attribut WAI-ARIA aria-label dont le contenu est identique au contenu de la légende ; La légende est contenue dans une balise &lt;figcaption&gt;.</titre>
@@ -1832,7 +1832,7 @@
                 <titre>Pour chaque page web, le type de document (balise doctype) est-il présent ?</titre>
                 <NiveauWCAG>A</NiveauWCAG>
                 <Methodologie>
-                    <Etape>Retrouver dans le document la balise DOCTYPE (par exemple <!DOCTYPE html>)</Etape>
+                    <Etape>Retrouver dans le document la balise DOCTYPE (par exemple &lt;!DOCTYPE html&gt;)</Etape>
                     <Etape>Vérifier que : La balise DOCTYPE est placée avant la balise html ; Le type de document est valide.</Etape>
                     <Etape>Si c'est le cas, le test est validé.</Etape>
                 </Methodologie>
@@ -2773,10 +2773,10 @@
                 <NiveauWCAG>A</NiveauWCAG>
                 <Methodologie>
                     <Etape>Retrouver dans le document les champs de formulaire qui ne sont pas des éléments input de type checkbox ou de type radio ou des éléments ayant un attribut WAI-ARIA role="checkbox", role="radio" ou role="switch".</Etape>
-                    <Etape>Pour chaque champ de formulaire, vérifier que l'étiquette est visuellement accolée :<![CDATA[<br />]]>- Immédiatement au-dessus ou à gauche du champ de formulaire lorsque le sens de lecture de la langue de l'étiquette est de gauche à droite ;<![CDATA[<br />]]>- Immédiatement au-dessus ou à droite du champ de formulaire lorsque le sens de lecture de la langue de l'étiquette est de droite à gauche.</Etape>
+                    <Etape>Pour chaque champ de formulaire, vérifier que l'étiquette est visuellement accolée :<![CDATA[<br>]]>- Immédiatement au-dessus ou à gauche du champ de formulaire lorsque le sens de lecture de la langue de l'étiquette est de gauche à droite ;<![CDATA[<br>]]>- Immédiatement au-dessus ou à droite du champ de formulaire lorsque le sens de lecture de la langue de l'étiquette est de droite à gauche.</Etape>
                     <Etape>Si c'est le cas pour chaque champ de formulaire, le test est validé.</Etape>
                 </Methodologie>
-                <CasParticuliers>Les tests 11.4.2 et 11.4.3 seront considérés comme non applicables:<![CDATA[<br />]]>- Dans le cas où l'étiquette mélange une portion de texte qui se lit de droite à gauche avec une portion de texte qui se lit de gauche à droite;<![CDATA[<br />]]>- Dans le cas où un formulaire contient des labels de plusieurs langues qui se liraient de droite à gauche et inversement;<![CDATA[<br />]]>- Dans le cas où les champs de type radio ou checkbox et les balises ayant un attribut WAI-ARIA role="checkbox", role="radio" ou role="switch" ne sont pas visuellement présentés sous forme de bouton radio ou de case à cocher;<![CDATA[<br />]]>- Dans le cas où les champs seraient utilisés dans un contexte où il pourrait être légitime, du point de vue de l'expérience utilisateur, de placer les étiquettes de manière différente à celle requise dans les tests 11.4.2 et 11.4.3.</CasParticuliers>
+                <CasParticuliers>Les tests 11.4.2 et 11.4.3 seront considérés comme non applicables:<![CDATA[<br>]]>- Dans le cas où l'étiquette mélange une portion de texte qui se lit de droite à gauche avec une portion de texte qui se lit de gauche à droite;<![CDATA[<br>]]>- Dans le cas où un formulaire contient des labels de plusieurs langues qui se liraient de droite à gauche et inversement;<![CDATA[<br>]]>- Dans le cas où les champs de type radio ou checkbox et les balises ayant un attribut WAI-ARIA role="checkbox", role="radio" ou role="switch" ne sont pas visuellement présentés sous forme de bouton radio ou de case à cocher;<![CDATA[<br>]]>- Dans le cas où les champs seraient utilisés dans un contexte où il pourrait être légitime, du point de vue de l'expérience utilisateur, de placer les étiquettes de manière différente à celle requise dans les tests 11.4.2 et 11.4.3.</CasParticuliers>
                 <Notes></Notes>
             </Critere>
 
@@ -2785,7 +2785,7 @@
                 <NiveauWCAG>A</NiveauWCAG>
                 <Methodologie>
                     <Etape>Retrouver dans le document les champs de formulaire qui sont input de type checkbox ou de type radio ou des éléments ayant un attribut WAI-ARIA role="checkbox", role="radio" ou role="switch".</Etape>
-                    <Etape>Pour chaque champ de formulaire, vérifier que l'étiquette est visuellement accolée :<![CDATA[<br />]]>- Immédiatement au-dessous ou à droite du champ de formulaire lorsque le sens de lecture de la langue de l'étiquette est de gauche à droite;<![CDATA[<br />]]>- Immédiatement au-dessous ou à gauche du champ de formulaire lorsque le sens de lecture de la langue de l'étiquette est de droite à gauche.</Etape>
+                    <Etape>Pour chaque champ de formulaire, vérifier que l'étiquette est visuellement accolée :<![CDATA[<br>]]>- Immédiatement au-dessous ou à droite du champ de formulaire lorsque le sens de lecture de la langue de l'étiquette est de gauche à droite;<![CDATA[<br>]]>- Immédiatement au-dessous ou à gauche du champ de formulaire lorsque le sens de lecture de la langue de l'étiquette est de droite à gauche.</Etape>
                     <Etape>Si c'est le cas pour chaque champ de formulaire, le test est validé.</Etape>
                 </Methodologie>
                 <CasParticuliers>Voir cas particuliers critère 11.4.2</CasParticuliers>
@@ -2802,7 +2802,7 @@
                 <NiveauWCAG>A</NiveauWCAG>
                 <Methodologie>
                     <Etape>Retrouver dans le document les champs de formulaire de même nature (par exemple un groupe de saisie d'informations d'identité, une série de cases à cocher, une saisie de date sur plusieurs champs successifs…).</Etape>
-                    <Etape>Pour chaque groupe de champs de formulaire de même nature, vérifier que ces champs de même nature sont regroupés :<![CDATA[<br />]]>- Soit dans un élément fieldset ;<![CDATA[<br />]]>- Soit dans un élément possédant un attribut WAI-ARIA role="group" ;<![CDATA[<br />]]>- Soit dans un élément possédant un attribut WAI-ARIA role="radiogroup" ou "group", s'il s'agit d'éléments input de type radio (ou d'éléments possédant un attribut WAI-ARIA role="radio").</Etape>
+                    <Etape>Pour chaque groupe de champs de formulaire de même nature, vérifier que ces champs de même nature sont regroupés :<![CDATA[<br>]]>- Soit dans un élément fieldset ;<![CDATA[<br>]]>- Soit dans un élément possédant un attribut WAI-ARIA role="group" ;<![CDATA[<br>]]>- Soit dans un élément possédant un attribut WAI-ARIA role="radiogroup" ou "group", s'il s'agit d'éléments input de type radio (ou d'éléments possédant un attribut WAI-ARIA role="radio").</Etape>
                     <Etape>Si c'est le cas pour chaque groupe de champs de formulaire de même nature, le test est validé.</Etape>
                 </Methodologie>
                 <CasParticuliers></CasParticuliers>
@@ -3447,7 +3447,7 @@
                     <Etape>Si c'est le cas pour chaque fichier au format bureautique, le test est validé.</Etape>
                 </Methodologie>
                 <CasParticuliers>Il existe une gestion de cas particuliers : Pour les personnes de droit privé mentionnées aux 2° à 4° du I de l'article 47 de la loi du 11 février 2005 : si les fichiers bureautiques (ex : PDF, documents Microsoft ou LibreOffice, etc.) ont été publiés avant le 23 septembre 2018 (sauf si ce sont des documents nécessaires pour accomplir une démarche administrative relevant des tâches effectuées par l'organisme concerné), ils sont exemptés de l'obligation d'accessibilité.</CasParticuliers>
-                <Notes>Note au sujet de l'outil PAC : l'outil analyse le document PDF du point de vue de l'accessibilité mais également de critères de qualité (par exemple la norme PDF/UA). Seules les erreurs relatives à des critères présents dans la liste des critères "Liste document bureautique en téléchargement" rendent le critère "Non conforme". Par ailleurs, cet outil ne fonctionne que sur la plateforme Windows. Sur Mac, le contrôle doit se faire manuellement.<![CDATA[<br>]]>Note au sujet Microsoft Office : le logiciel offre un vérificateur d'accessibilité en standard, (accessible via le menu "Fichier > Informations > Vérifier la présence de problèmes > Vérifier l'accessibilité"). Ce vérificateur peut être considérablement amélioré via le plugin Word Accessibility Plug-in (voir dans la section Outils). Ce plugin ne fonctionne que sur Windows. Sur Mac, le contrôle doit se faire manuellement.<![CDATA[<br>]]>Note au sujet des documents au format .odt : OpenOffice et LibreOffice ne possèdent pas de vérificateur d'accessibilité. Une méthode plus rapide qu'une analyse manuelle peut consister à enregistrer le document au format .docx et le vérifier via le vérificateur d'accessibilité de Microsoft Office 2010. Attention cependant : cette méthode rapide est à réserver aux documents très simples car certaines informations liées à l'accessibilité ne sont pas correctement transcodées. C'est le cas des indications de langue, de certaines alternatives d'images ou d'en-têtes fusionnées sur les tableaux par exemple.<![CDATA[<br>]]>Note au sujet du format EPUB : l'utilitaire Ace by DAISY App permet d'effectuer le travail de validation d'un fichier EPUB 3 de manière efficace.<![CDATA[<br>]]>Note au sujet des documents dérogés : le référentiel propose un statut de dérogation dans certains cas (cf. guide d'accompagnement). Dans ce cas, les tests ne sont pas à réaliser, la version accessible étant fournie sur demande de l'utilisateur.</Notes>
+                <Notes>Note au sujet de l'outil PAC : l'outil analyse le document PDF du point de vue de l'accessibilité mais également de critères de qualité (par exemple la norme PDF/UA). Seules les erreurs relatives à des critères présents dans la liste des critères "Liste document bureautique en téléchargement" rendent le critère "Non conforme". Par ailleurs, cet outil ne fonctionne que sur la plateforme Windows. Sur Mac, le contrôle doit se faire manuellement.<![CDATA[<br>]]>Note au sujet Microsoft Office : le logiciel offre un vérificateur d'accessibilité en standard, (accessible via le menu "Fichier &gt; Informations &gt; Vérifier la présence de problèmes &gt; Vérifier l'accessibilité"). Ce vérificateur peut être considérablement amélioré via le plugin Word Accessibility Plug-in (voir dans la section Outils). Ce plugin ne fonctionne que sur Windows. Sur Mac, le contrôle doit se faire manuellement.<![CDATA[<br>]]>Note au sujet des documents au format .odt : OpenOffice et LibreOffice ne possèdent pas de vérificateur d'accessibilité. Une méthode plus rapide qu'une analyse manuelle peut consister à enregistrer le document au format .docx et le vérifier via le vérificateur d'accessibilité de Microsoft Office 2010. Attention cependant : cette méthode rapide est à réserver aux documents très simples car certaines informations liées à l'accessibilité ne sont pas correctement transcodées. C'est le cas des indications de langue, de certaines alternatives d'images ou d'en-têtes fusionnées sur les tableaux par exemple.<![CDATA[<br>]]>Note au sujet du format EPUB : l'utilitaire Ace by DAISY App permet d'effectuer le travail de validation d'un fichier EPUB 3 de manière efficace.<![CDATA[<br>]]>Note au sujet des documents dérogés : le référentiel propose un statut de dérogation dans certains cas (cf. guide d'accompagnement). Dans ce cas, les tests ne sont pas à réaliser, la version accessible étant fournie sur demande de l'utilisateur.</Notes>
             </Critere>
         </sousSection>
 
@@ -3587,21 +3587,95 @@
                 <Notes>Il existe des interfaces pour lesquelles l'orientation du périphérique est essentielle à leur utilisation. Dans ces situations, le critère est non applicable. Par exemple, les interfaces de jeu, de piano, de dépôt de chèques bancaires, etc. Si l'interface est le seul moyen d'accéder au service proposé, une alternative devrait être mise en place pour pallier cette carence.</Notes>
             </Critere>
         </sousSection>
-
+    </section>
+    <section id="13">
+        <Titre>13. Consultation</Titre>
+        <Note></Note>
         <sousSection id="13.10">
             <titre>Dans chaque page web, les fonctionnalités utilisables ou disponibles au moyen d'un geste complexe peuvent-elles être également disponibles au moyen d'un geste simple (hors cas particuliers) ?</titre>
             <Note></Note>
 
             <Critere id="13.10.1">
-                <titre>Dans chaque page web, chaque fonctionnalité utilisable ou disponible suite à un contact multipoint est-elle également utilisable ou disponible suite à un contact en un point unique de l'écran (hors cas particuliers).</titre>
+                <titre>Dans chaque page web, chaque fonctionnalité utilisable ou disponible suite à un contact multipoint est-elle également utilisable ou disponible suite à un contact en un point unique de l'écran (hors cas particuliers) ?</titre>
                 <NiveauWCAG>A</NiveauWCAG>
                 <Methodologie>
-                    <Etape>Retrouver dans le document les fonctionnalités utilisables ou disponibles au moyen d'une interaction au toucher de type contact multipoint.</Etape>
-                    <Etape>Pour chaque fonctionnalité, vérifier qu'elle reste disponible au moyen d'une interaction au toucher de type contact en un point unique de l'écran (par exemple, la possibilité de consulter les éléments d'une liste par un mouvement de balayage horizontal droit ou gauche doit aussi être disponible au moyen de boutons "précédent" et "suivant" ou encore un geste de pincer et zoomer qui peut être alternativement réalisé au moyen de boutons "plus" et "moins").</Etape>
-                    <Etape>Si c'est le cas pour chaque fonctionnalité utilisable ou disponible au moyen d'une interaction au toucher de type contact multipoint, le test est validé.</Etape>
+                    <Etape>Retrouver dans le document les fonctionnalités utilisables ou disponibles au moyen d'une interaction au toucher de type contact multipoint</Etape>
+                    <Etape>Pour chaque fonctionnalité, vérifier qu'elle reste disponible au moyen d'une interaction au toucher de type contact en un point unique de l'écran (par exemple, la possibilité de consulter les éléments d'une liste par un mouvement de balayage horizontal droit ou gauche doit aussi être disponible au moyen de boutons "précédent" et "suivant" ou encore un geste de pincer et zoomer qui peut être alternativement réalisé au moyen de boutons "plus" et "moins")</Etape>
+                    <Etape>Si c'est le cas pour chaque fonctionnalité utilisable ou disponible au moyen d'une interaction au toucher de type contact multipoint, le test est validé</Etape>
                 </Methodologie>
-                <CasParticuliers></CasParticuliers>
+                <CasParticuliers>Il existe une gestion de cas particulier lorsque :<![CDATA[<br>]]>- Le mouvement est essentiel à l'accomplissement de la fonctionnalité (ex. podomètre)<![CDATA[<br>]]>- La détection du mouvement est utilisée pour contrôler une fonctionnalité au travers d'une interface compatible avec l'accessibilité</CasParticuliers>
                 <Notes></Notes>
             </Critere>
-        
+
+            <Critere id="13.10.2">
+                <titre>Dans chaque page web, chaque fonctionnalité utilisable ou disponible suite à un geste basé sur le suivi d'une trajectoire sur l'écran est-elle également utilisable ou disponible suite à un contact en un point unique de l'écran (hors cas particuliers) ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les fonctionnalités utilisables ou disponibles au moyen d'une interaction au toucher qui implique le suivi d'une trajectoire sur l'écran</Etape>
+                    <Etape>Pour chaque fonctionnalité, vérifier qu'elle reste disponible au moyen d'une interaction au toucher de type contact en un point unique de l'écran (par exemple, la possibilité de composer son mot de passe en suivant une trajectoire sur un clavier virtuel doit aussi être disponible au moyen de pressions successives sur les touches du clavier)</Etape>
+                    <Etape>Si c'est le cas pour chaque fonctionnalité utilisable ou disponible au moyen d'une interaction au toucher qui implique le suivi d'une trajectoire sur l'écran, le test est validé</Etape>
+                </Methodologie>
+                <CasParticuliers>Il existe une gestion de cas particulier lorsque :<![CDATA[<br>]]>- Le mouvement est essentiel à l'accomplissement de la fonctionnalité (ex. podomètre)<![CDATA[<br>]]>- La détection du mouvement est utilisée pour contrôler une fonctionnalité au travers d'une interface compatible avec l'accessibilité</CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+        </sousSection>
+        <sousSection id="13.11">
+            <titre>Dans chaque page web, les actions déclenchées au moyen d'un dispositif de pointage sur un point unique de l'écran peuvent-elles faire l'objet d'une annulation (hors cas particuliers) ?</titre>
+            <Note></Note>
+
+            <Critere id="13.11.1">
+                <titre>Dans chaque page web, les actions déclenchées au moyen d'un dispositif de pointage sur un point unique de l'écran vérifient-elles l'une de ces conditions (hors cas particuliers) ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les actions déclenchées au moyen d'un dispositif de pointage sur un point unique de l'écran</Etape>
+                    <Etape>Pour chaque action, vérifier que : <![CDATA[<br>]]>- Soit l'action est déclenchée au moment où le dispositif de pointage est relâché ou relevé<![CDATA[<br>]]>- Soit l'action est déclenchée au moment où le dispositif de pointage est pressé ou posé puis annulée lorsque le dispositif de pointage est relâché ou relevé<![CDATA[<br>]]>- Soit il existe un mécanisme pour abandonner (avant achèvement de l'action) ou annuler (après achèvement) l'exécution de l'action</Etape>
+                    <Etape>Si c'est le cas pour chaque action déclenchée au moyen d'un dispositif de pointage sur un point unique de l'écran, le test est validé</Etape>
+                </Methodologie>
+                <CasParticuliers>Il existe une gestion de cas particulier lorsque la fonctionnalité nécessite que le comportement attendu soit réalisé lors d'un événement descendant, par exemple, un émulateur de clavier dont les touches doivent s'activer à la pression comme sur un clavier physique. Dans ces situations, le critère est non applicable.</CasParticuliers>
+                <Notes>Deux exemples de mécanisme mis en place pour annuler ou abandonner une action déclenchée au moyen d'un dispositif de pointage sur un point unique de l'écran :<![CDATA[<br>]]>- Une fenêtre modale permettant d'annuler l'action après son achèvement<![CDATA[<br>]]>- Pour une fonction de glisser/déposer, le fait d'abandonner l'action si l'utilisateur relâche l'élément en dehors de la zone cible</Notes>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="13.12">
+            <titre>Dans chaque page web, les fonctionnalités qui impliquent un mouvement de l'appareil ou vers l'appareil peuvent-elles être satisfaites de manière alternative (hors cas particuliers) ?</titre>
+            <Note></Note>
+
+            <Critere id="13.12.1">
+                <titre>Dans chaque page web, les fonctionnalités disponibles en bougeant l'appareil peuvent-elles être accomplies avec des composants d'interface utilisateur (hors cas particuliers) ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les fonctionnalités disponibles en bougeant l'appareil</Etape>
+                    <Etape>Pour chaque fonctionnalité, vérifier qu'elle peut être accomplie au moyen de composants d'interface utilisateur</Etape>
+                    <Etape>Si c'est le cas pour chaque fonctionnalité disponible en bougeant l'appareil, le test est validé</Etape>
+                </Methodologie>
+                <CasParticuliers>Il existe une gestion de cas particulier lorsque :<![CDATA[<br>]]>- Le mouvement est essentiel à l'accomplissement de la fonctionnalité (ex. podomètre)<![CDATA[<br>]]>- La détection du mouvement est utilisée pour contrôler une fonctionnalité au travers d'une interface compatible avec l'accessibilité</CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="13.12.2">
+                <titre>Dans chaque page web, les fonctionnalités disponibles en faisant un geste en direction de l'appareil peuvent-elles être accomplies avec des composants d'interface utilisateur (hors cas particuliers) ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les fonctionnalités disponibles en faisant un geste en direction de l'appareil</Etape>
+                    <Etape>Pour chaque fonctionnalité, vérifier qu'elle peut être accomplie au moyen de composants d'interface utilisateur</Etape>
+                    <Etape>Si c'est le cas pour chaque fonctionnalité disponible en faisant un geste en direction de l'appareil, le test est validé</Etape>
+                </Methodologie>
+                <CasParticuliers>Il existe une gestion de cas particulier lorsque :<![CDATA[<br>]]>- Le mouvement est essentiel à l'accomplissement de la fonctionnalité (ex. podomètre)<![CDATA[<br>]]>- La détection du mouvement est utilisée pour contrôler une fonctionnalité au travers d'une interface compatible avec l'accessibilité</CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="13.12.3">
+                <titre>L'utilisateur a-t-il la possibilité de désactiver la détection du mouvement pour éviter un déclenchement accidentel de la fonctionnalité (hors cas particuliers) ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les fonctionnalités disponibles en mettant en mouvement l'appareil</Etape>
+                    <Etape>Vérifier si l'utilisateur à la possibilité de désactiver la détection du mouvement</Etape>
+                    <Etape>Si c'est le cas, pour chaque fonctionnalité, vérifier qu'elle ne peut pas être déclenchée</Etape>
+                    <Etape>Si c'est le cas pour chaque fonctionnalité disponible en mettant en mouvement l'appareil, le test est validé</Etape>
+                </Methodologie>
+                <CasParticuliers>Il existe une gestion de cas particulier lorsque :<![CDATA[<br>]]>- Le mouvement est essentiel à l'accomplissement de la fonctionnalité (ex. podomètre)<![CDATA[<br>]]>- La détection du mouvement est utilisée pour contrôler une fonctionnalité au travers d'une interface compatible avec l'accessibilité</CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+        </sousSection>
+    </section>
 </AUDIT>

@@ -163,60 +163,178 @@ class Database {
     }
 
 
+
+
+    async analyzeXMLError(xmlData, errorLine, errorColumn, context = 50) {
+        console.log('\n=== Analyse détaillée de l\'erreur XML ===');
+        
+        // Diviser le XML en lignes
+        const lines = xmlData.split('\n');
+        
+        // Afficher les lignes autour de l'erreur
+        console.log('\nContexte de l\'erreur :');
+        for (let i = Math.max(0, errorLine - 3); i <= Math.min(lines.length - 1, errorLine + 1); i++) {
+            const lineNum = i + 1;
+            const line = lines[i];
+            
+            if (lineNum === errorLine) {
+                console.log(`>>> ${lineNum}: ${line}`);
+                // Marquer la position exacte de l'erreur
+                const marker = ' '.repeat(errorColumn + 4) + '^';
+                console.log(marker);
+                
+                // Analyser la structure des balises dans cette ligne
+                const tags = line.match(/<\/?[^>]+>/g) || [];
+                console.log('\nBalises trouvées dans la ligne d\'erreur :');
+                tags.forEach((tag, index) => {
+                    console.log(`  ${index + 1}: ${tag}`);
+                });
+    
+                // Vérifier les balises ouvrantes/fermantes
+                const stack = [];
+                let col = 0;
+                for (const tag of tags) {
+                    col = line.indexOf(tag, col);
+                    if (tag.startsWith('</')) {
+                        // Balise fermante
+                        const tagName = tag.match(/<\/([^>]+)>/)[1];
+                        const lastOpen = stack.pop();
+                        if (!lastOpen) {
+                            console.log(`\n⚠️ ERREUR: Balise fermante ${tagName} sans balise ouvrante correspondante à la colonne ${col}`);
+                        } else if (lastOpen !== tagName) {
+                            console.log(`\n⚠️ ERREUR: Balise fermante ${tagName} ne correspond pas à la dernière balise ouverte ${lastOpen} à la colonne ${col}`);
+                        }
+                    } else if (!tag.endsWith('/>')) {
+                        // Balise ouvrante
+                        const tagName = tag.match(/<([^>\s]+)/)[1];
+                        stack.push(tagName);
+                    }
+                    col += tag.length;
+                }
+                
+                if (stack.length > 0) {
+                    console.log(`\n⚠️ Balises non fermées : ${stack.join(', ')}`);
+                }
+            } else {
+                console.log(`   ${lineNum}: ${line}`);
+            }
+        }
+        
+        console.log('\n=== Fin de l\'analyse détaillée ===\n');
+    }
+
     // Méthode pour charger les critères depuis le XML
+    // Dans database.js, remplacer la méthode loadCriteria par celle-ci :
     async loadCriteria(referentialPath) {
         try {
+            console.log('Début du chargement des critères');
+            
             // Déterminer le bon fichier XML selon le référentiel
             const projectInfo = await new Promise((resolve, reject) => {
                 this.db.get('SELECT referential FROM project_info WHERE id = ?', [this.projectId], (err, row) => {
-                    if (err) reject(err);
+                    if (err) {
+                        console.error('Erreur lors de la récupération du référentiel:', err);
+                        reject(err);
+                    }
+                    if (!row) {
+                        console.error('Aucune information de projet trouvée pour l\'ID:', this.projectId);
+                        reject(new Error('Projet non trouvé'));
+                    }
+                    console.log('Référentiel trouvé:', row.referential);
                     resolve(row);
                 });
             });
-    
+
             // Choisir le fichier XML approprié
             const xmlFile = projectInfo.referential === 'WCAG' ? 'criteres_wcag.xml' : 
-                           projectInfo.referential === 'RAAM' ? 'criteres_raam.xml' : 
-                           'criteres_rgaa.xml';
+                        projectInfo.referential === 'RAAM' ? 'criteres_raam.xml' : 
+                        'criteres_rgaa.xml';
             const xmlPath = path.join(__dirname, '..', xmlFile);
-    
+            console.log('Chemin du fichier XML:', xmlPath);
+
+            // Vérifier l'existence du fichier
+            try {
+                await fsPromises.access(xmlPath);
+                console.log('Fichier XML trouvé');
+            } catch (error) {
+                console.error('Fichier XML non trouvé:', error);
+                throw new Error(`Fichier ${xmlFile} non trouvé`);
+            }
+
             const xmlData = await fsPromises.readFile(xmlPath, 'utf8');
-            const parser = new xml2js.Parser();
+            console.log('Fichier XML lu, taille:', xmlData.length, 'caractères');
+            console.log('Début du fichier XML:', xmlData.substring(0, 200)); // Afficher le début du XML
             
+            // validation XML détaillée
+       
+            await this.analyzeXMLError(xmlData, 3679, 8);
+
+            const parser = new xml2js.Parser();
+            console.log('Parser XML créé');
+
             const result = await new Promise((resolve, reject) => {
                 parser.parseString(xmlData, (err, result) => {
-                    if (err) reject(err);
-                    else resolve(result);
+                    if (err) {
+                        console.error('Erreur lors du parsing XML:', err);
+                        reject(err);
+                    } else {
+                        console.log('Structure du résultat:', Object.keys(result));
+                        if (!result.AUDIT) {
+                            console.error('Structure XML invalide - pas de nœud AUDIT');
+                            reject(new Error('Structure XML invalide'));
+                        }
+                        resolve(result);
+                    }
                 });
             });
-    
+
             // Récupérer la version
             const version = result.AUDIT.$.version;
+            console.log('Version du référentiel:', version);
+            
             let criteres = [];
-                
+
             // Format unifié pour tous les référentiels
-            result.AUDIT.section.forEach(section => {
-                section.sousSection.forEach(sousSection => {
-                    sousSection.Critere.forEach(critere => {
-                        criteres.push({
-                            id: critere.$.id,
-                            titre: this.encodeHtml(critere.titre[0]),
-                            niveauWCAG: critere.NiveauWCAG[0],
-                            methodologie: critere.Methodologie[0].Etape.map(e => this.encodeHtml(e)),
-                            notes: critere.Notes ? this.encodeHtml(critere.Notes[0]) : '',
-                            casParticuliers: critere.CasParticuliers ? this.encodeHtml(critere.CasParticuliers[0]) : ''
+            try {
+                result.AUDIT.section.forEach((section, sIndex) => {
+                    console.log(`Traitement de la section ${sIndex + 1}/${result.AUDIT.section.length}`);
+                    
+                    section.sousSection.forEach((sousSection, ssIndex) => {
+                        console.log(`  Traitement de la sous-section ${ssIndex + 1}/${section.sousSection.length}`);
+                        
+                        sousSection.Critere.forEach((critere, cIndex) => {
+                            console.log(`    Traitement du critère ${critere.$.id}`);
+                            try {
+                                criteres.push({
+                                    id: critere.$.id,
+                                    titre: this.encodeHtml(critere.titre[0]),
+                                    niveauWCAG: critere.NiveauWCAG[0],
+                                    methodologie: critere.Methodologie[0].Etape.map(e => this.encodeHtml(e)),
+                                    notes: critere.Notes ? this.encodeHtml(critere.Notes[0]) : '',
+                                    casParticuliers: critere.CasParticuliers ? this.encodeHtml(critere.CasParticuliers[0]) : ''
+                                });
+                            } catch (error) {
+                                console.error(`Erreur lors du traitement du critère ${critere.$.id}:`, error);
+                                console.log('Structure du critère problématique:', JSON.stringify(critere, null, 2));
+                            }
                         });
                     });
                 });
-            });
-    
+            } catch (error) {
+                console.error('Erreur lors du traitement des sections:', error);
+                throw error;
+            }
+
+            console.log(`Nombre total de critères chargés: ${criteres.length}`);
+
             // Mettre à jour la version dans la base de données
             await this.updateReferentialVersion(version);
-            
+
             return criteres;
-            
+
         } catch (error) {
             console.error('Erreur lors du chargement des critères:', error);
+            console.error('Stack trace:', error.stack);
             throw error;
         }
     }
