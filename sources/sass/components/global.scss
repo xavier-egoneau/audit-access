@@ -62,7 +62,7 @@ button.add-nc {
       position: relative;
       small{
         position: absolute;
-        top: 15px;
+        top: 7px;
         right: 11px;
         font-size: 1.2rem;
       }
@@ -71,7 +71,7 @@ button.add-nc {
       border: 1px solid #000;
       vertical-align: middle;
       padding: 1rem;
-      font-size: 3rem;
+      font-size: 2rem;
       &:nth-child(1),
       &:nth-child(2),
       &:nth-child(4),
@@ -186,3 +186,14 @@ h1{
     }
   }
 } 
+
+.modal-body{
+  h6{
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  li{
+    font-size: 2rem;
+    padding-bottom: 24px;
+  }
+}
