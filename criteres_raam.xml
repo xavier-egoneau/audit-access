@@ -1,0 +1,975 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AUDIT norme="RAAM" version="2.0.0">
+    <section id="1">
+        <Titre>1. Couleurs</Titre>
+        <sousSection id="1.1">
+            <titre>Dans chaque écran, l'information ne doit pas être transmise uniquement par la couleur.</titre>
+            
+            <Critere id="1.1.1">
+                <titre>Pour chaque élément de l'interface dont la mise en couleur est porteuse d'information, l'information ne doit pas être donnée uniquement par la couleur</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les mots ou ensemble de mots, les textes, les éléments graphiques porteurs d'information et les médias temporels dont la mise en couleur est porteuse d'information.</Etape>
+                    <Etape>Vérifier qu'il existe un autre moyen visuel de récupérer cette information (présence d'une icône, effet graphique de forme ou de position, effet typographique, etc.).</Etape>
+                    <Etape>Avec le lecteur d'écran, accéder à l'information donnée par la couleur.</Etape>
+                    <Etape>Vérifier qu'une information équivalente est restituée par le lecteur d'écran (par exemple, l'état « sélectionné » d'un bouton vert).</Etape>
+                    <Etape>Si ces conditions sont respectées, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+
+            <Critere id="1.1.2">
+                <titre>Pour chaque indication de couleur donnée par un texte (écrit ou vocalisé), l'information ne doit pas être donnée uniquement par la couleur.</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer chaque indication de couleur donnée par un texte (écrit ou vocalisé) porteuse d'information.</Etape>
+                    <Etape>Vérifier qu'il existe un autre moyen d'accéder à l'information.</Etape>
+                    <Etape>Si ces conditions sont respectées, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="1.2">
+            <titre>Dans chaque écran, le contraste entre la couleur du texte et la couleur de son arrière-plan est suffisamment élevé.</titre>
+            
+            <Critere id="1.2.1">
+                <titre>Pour chaque texte, le contraste entre la couleur du texte et la couleur de son arrière-plan respecte-t-il une de ces conditions ?</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>S'il existe dans l'application, activer le mécanisme de remplacement permettant d'afficher l'application avec un rapport de contraste suffisant.</Etape>
+                    <Etape>Repérer dans l'écran les textes, les textes contenus dans des éléments graphiques et les textes incrustés dans les vidéos qui pourraient poser des problèmes de contraste.</Etape>
+                    <Etape>Activer le logiciel Colour Contrast Analyser sur l'ordinateur et capturer les couleurs d'avant-plan et d'arrière-plan.</Etape>
+                    <Etape>Vérifier que la valeur de contraste est de 4.5:1 au moins pour les textes en taille normale.</Etape>
+                    <Etape>Vérifier que la valeur de contraste est de 3:1 au moins pour les textes de grande taille.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Dans ces situations, le critère est non applicable pour ces éléments:
+                    - Le texte fait partie d'un logo ou d'un nom de marque d'un organisme ou d'une société
+                    - Le texte ou l'image de texte est purement décoratif
+                    - Le texte fait partie d'une image véhiculant une information, mais le texte lui-même n'apporte aucune information essentielle
+                    - Le texte ou l'image de texte fait partie d'un élément d'interface sur lequel aucune action n'est possible
+                </CasParticuliers>
+                <Notes>
+                    Il est possible d'utiliser l'application Xcode Accessibility Inspector disponible sur macOS pour réaliser une évaluation rapide des contrastes des écrans. Le logiciel dispose d'une fonctionnalité « Audit » qui permet de faire des tests automatiques de certains éléments textes et graphiques des écrans. Cette fonctionnalité ne détecte pas l'ensemble des défauts de contraste, des tests complémentaires suivant la méthodologie décrite ci-avant seront nécessaires.
+                </Notes>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="1.3">
+            <titre>Dans chaque écran, les couleurs utilisées dans les composants d'interface ou les éléments graphiques porteurs d'informations sont suffisamment contrastées.</titre>
+            
+            <Critere id="1.3.1">
+                <titre>Dans chaque écran, le rapport de contraste entre les couleurs d'un composant d'interface dans ses différents états et les couleurs adjacentes.</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>S'il existe dans l'application, activer le mécanisme de remplacement de l'application permettant d'afficher les éléments graphiques avec un rapport de contraste suffisant.</Etape>
+                    <Etape>Repérer dans l'écran les éléments graphiques porteurs d'information.</Etape>
+                    <Etape>Identifier les couleurs nécessaires à l'identification et les couleurs adjacentes.</Etape> 
+                    <Etape>Activer le logiciel Colour Contrast Analyser et vérifier les contrastes.</Etape>
+                    <Etape>Vérifier que le rapport de contraste est de 3:1 au moins.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+
+            <Critere id="1.3.2">
+                <titre>Dans chaque écran, le rapport de contraste de chaque couleur nécessaire à la compréhension d'un élément graphique et les couleurs adjacentes.</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>S'il existe dans l'application, activer le mécanisme de remplacement de l'application permettant d'afficher les éléments graphiques avec un rapport de contraste suffisant.</Etape>
+                    <Etape>Repérer dans l'écran les éléments graphiques porteurs d'information.</Etape>
+                    <Etape>Identifier les couleurs nécessaires à l'identification et les couleurs adjacentes.</Etape>
+                    <Etape>Activer le logiciel Colour Contrast Analyser et vérifier les contrastes.</Etape>
+                    <Etape>Vérifier que le rapport de contraste est de 3:1 au moins.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Les cas suivants sont non applicables pour ce critère :
+                    - Composant d'interface inactif sur lequel aucune action n'est possible.
+                    - Composant d'interface pour lequel la couleur n'est pas nécessaire pour identifier le composant ou son état.
+                    - Élément graphique ou parties d'élément graphique non porteur d'information ou ayant une alternative.
+                    - Élément graphique ou parties d'élément graphique faisant partie d'un logo ou du nom de marque d'un organisme ou d'une société.
+                    - Élément graphique ou parties d'élément graphique dont la présentation est essentielle à l'information véhiculée.
+                    - Élément graphique ou parties d'élément graphique dynamiques dont le contraste au survol / focus est suffisant.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+    </section>
+    <section id="2">
+        <Titre>2. Multimédia</Titre>
+        <sousSection id="2.1">
+            <titre>Chaque média temporel est clairement identifiable.</titre>
+            
+            <Critere id="2.1.1">
+                <titre>Pour chaque média temporel, seulement son, seulement vidéo ou synchronisé, le contenu textuel adjacent permet-il d'identifier clairement le média temporel ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les médias temporels pré-enregistrés seulement vidéo, audio ou synchronisé.</Etape>
+                    <Etape>Pour chaque média temporel, vérifier qu'un passage de texte qui précède ou suit immédiatement le média temporel, permet de l'identifier.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Il existe une gestion de cas particulier lorsque le média temporel est utilisé à des fins décoratives (c'est-à-dire qu'il n'apporte aucune information). Dans cette situation, le critère est non applicable.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="2.2">
+            <titre>Chaque média temporel pré-enregistré a, si nécessaire, une transcription textuelle ou une audiodescription.</titre>
+            
+            <Critere id="2.2.1">
+                <titre>Chaque média temporel pré-enregistré seulement audio vérifie-t-il, si nécessaire, une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les médias temporels seulement audio qui nécessitent une transcription textuelle.</Etape>
+                    <Etape>Pour chaque média temporel seulement audio, vérifier la présence d'une transcription textuelle accessible au moyen d'un bouton ou d'un lien adjacent ou adjacente clairement identifiable.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+
+            <Critere id="2.2.2">
+                <titre>Chaque média temporel pré-enregistré seulement vidéo vérifie-t-il, si nécessaire, une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les médias temporels seulement vidéo qui nécessitent une transcription textuelle ou une audiodescription.</Etape>
+                    <Etape>Pour chaque média temporel seulement vidéo, vérifier la présence d'une version alternative audio, d'une transcription textuelle, d'une audiodescription synchronisée ou d'une version alternative avec audiodescription.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+
+            <Critere id="2.2.3">
+                <titre>Chaque média temporel synchronisé pré-enregistré vérifie-t-il, si nécessaire, une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les médias temporels synchronisés qui nécessitent une transcription textuelle ou une audiodescription.</Etape>
+                    <Etape>Pour chaque média temporel synchronisé, vérifier la présence d'une transcription textuelle adjacente ou une version alternative avec audiodescription.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Il existe une gestion de cas particulier lorsque :
+                    - Le média temporel est utilisé à des fins décoratives
+                    - Le média temporel est lui-même une alternative à un contenu de l'écran
+                    - Le média temporel est utilisé pour accéder à une version agrandie
+                    - Le média temporel est utilisé comme un CAPTCHA
+                    - Le média temporel fait partie d'un test qui deviendrait inutile si la transcription textuelle était communiquée
+                    - Pour les services de l'état, les collectivités territoriales et leurs établissements : si le média temporel a été publié entre le 23 septembre 2019 et le 23 septembre 2020
+                    - Pour les personnes de droit privé : si le média temporel a été publié avant le 23 septembre 2020
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="2.3">
+            <titre>Pour chaque média temporel pré-enregistré ayant une transcription textuelle ou une audiodescription synchronisée, celles-ci sont pertinentes.</titre>
+            
+            <Critere id="2.3.1">
+                <titre>Pour chaque média temporel pré-enregistré seulement audio, ayant une transcription textuelle, celle-ci est-elle pertinente ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les médias temporels pré-enregistrés seulement audio qui possèdent une transcription textuelle.</Etape>
+                    <Etape>Pour chaque média temporel seulement audio, vérifier que transcription textuelle est pertinente.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+
+            <Critere id="2.3.2">
+                <titre>Chaque média temporel pré-enregistré seulement vidéo vérifie-t-il une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les médias temporels pré-enregistrés seulement vidéo qui possèdent une transcription textuelle.</Etape>
+                    <Etape>Pour chaque média temporel seulement vidéo, vérifier la pertinence de la transcription textuelle, de l'audiodescription synchronisée ou de la version alternative.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+
+            <Critere id="2.3.3">
+                <titre>Chaque média temporel synchronisé pré-enregistré vérifie-t-il une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les médias temporels pré-enregistrés synchronisés.</Etape>
+                    <Etape>Pour chaque média temporel synchronisé, vérifier la pertinence de la transcription textuelle ou de l'audiodescription synchronisée.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Il existe une gestion de cas particulier identique au critère 2.2.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="2.4">
+            <titre>Chaque média temporel synchronisé pré-enregistré a, si nécessaire, des sous-titres synchronisés.</titre>
+            
+            <Critere id="2.4.1">
+                <titre>Chaque média temporel synchronisé pré-enregistré vérifie-t-il, si nécessaire, l'une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les médias temporels pré-enregistrés synchronisés.</Etape>
+                    <Etape>Pour chaque média temporel synchronisé, vérifier la présence de sous-titres synchronisés ou d'une version alternative avec sous-titres synchronisés.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel, le test est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Il existe une gestion de cas particulier identique au critère 2.2.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="2.5">
+            <titre>Pour chaque média temporel synchronisé pré-enregistré ayant des sous-titres synchronisés, ces sous-titres sont pertinents.</titre>
+            
+            <Critere id="2.5.1">
+                <titre>Pour chaque média temporel synchronisé pré-enregistré ayant des sous-titres synchronisés, ces sous-titres sont-ils pertinents ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les médias temporels synchronisés possédant des sous-titres synchronisés.</Etape>
+                    <Etape>Pour chaque média temporel synchronisé, vérifier que les sous-titres sont pertinents et correctement synchronisés.</Etape>
+                    <Etape>Si c'est le cas pour chaque média temporel synchronisé, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="2.6">
+            <titre>Chaque son déclenché automatiquement est contrôlable par l'utilisateur.</titre>
+            
+            <Critere id="2.6.1">
+                <titre>Chaque séquence sonore déclenchée automatiquement vérifie-t-elle une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Au chargement du document, si un son se déclenche automatiquement, vérifier que la séquence dure moins de 3 secondes, ou qu'il existe un mécanisme pour l'arrêter, ou que le volume peut être contrôlé.</Etape>
+                    <Etape>Si c'est le cas, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="2.7">
+            <titre>Chaque média temporel propose des fonctionnalités de contrôle de sa consultation.</titre>
+            
+            <Critere id="2.7.1">
+                <titre>Pour chaque média temporel, des fonctionnalités de contrôle de sa lecture sont-elles présentes ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les médias temporels pré-enregistrés.</Etape>
+                    <Etape>Vérifier la présence des fonctionnalités de lecture, pause, et contrôle du son.</Etape>
+                    <Etape>Vérifier la présence des contrôles pour l'audiodescription et les sous-titres si présents.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+    </section>
+
+    <section id="3">
+        <Titre>3. Tableaux</Titre>
+        <sousSection id="3.1">
+            <titre>Chaque tableau de données complexe a un résumé et celui-ci est pertinent.</titre>
+            
+            <Critere id="3.1.1">
+                <titre>Pour chaque tableau de données complexe, un résumé pertinent est-il disponible ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les tableaux de données complexe.</Etape>
+                    <Etape>Vérifier qu'un résumé est disponible avant le tableau, sous la forme d'un texte précédant le tableau.</Etape>
+                    <Etape>Vérifier que ce résumé est pertinent.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="3.2">
+            <titre>Chaque tableau de données a un titre, et celui-ci est pertinent.</titre>
+            
+            <Critere id="3.2.1">
+                <titre>Pour chaque tableau de données, un titre pertinent est-il disponible ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les tableaux de données.</Etape>
+                    <Etape>Vérifier qu'un titre est disponible avant le tableau, sous la forme d'un texte.</Etape>
+                    <Etape>Vérifier que ce titre est pertinent.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+          <sousSection id="3.3">
+            <titre>Pour chaque tableau de données, les entêtes de lignes et de colonnes sont correctement reliés aux cellules de données.</titre>
+            
+            <Critere id="3.3.1">
+                <titre>Pour chaque tableau de données, les entêtes de lignes et de colonnes sont-ils correctement reliés aux cellules de données ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les tableaux de données.</Etape>
+                    <Etape>Activer le lecteur d'écran et parcourir les cellules de données.</Etape>
+                    <Etape>Vérifier que les entêtes sont correctement restitués.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+    </section>
+    <section id="4">
+        <Titre>4. Présentation de l'information</Titre>
+        <sousSection id="4.1">
+            <titre>Dans chaque écran, l'information ne doit pas être transmise uniquement par une caractéristique sensorielle.</titre>
+            
+            <Critere id="4.1.1">
+                <titre>L'information transmise par une caractéristique sensorielle peut-elle être obtenue par un texte ou un message explicite ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les informations données par la forme, la taille, la position, l'orientation, le son ou la vibration dans un texte, un élément graphique, un média temporel ou non temporel.</Etape>
+                    <Etape>Vérifier qu'il existe un autre moyen de récupérer cette information dans l'écran.</Etape>
+                    <Etape>Si ce n'est pas le cas, activer le lecteur d'écran et vérifier qu'une information alternative est restituée.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="4.2">
+            <titre>Chaque lien dont la nature n'est pas évidente est visible par rapport au texte environnant.</titre>
+            
+            <Critere id="4.2.1">
+                <titre>Dans chaque page web, chaque lien texte signalé uniquement par la couleur, et dont la nature n'est pas évidente, vérifie-t-il ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les éléments de type lien.</Etape>
+                    <Etape>Pour chaque élément de type lien, s'il peut être confondu avec un texte normal lorsqu'il est signalé uniquement par la couleur, vérifier que le contraste entre la couleur de police du lien et la couleur de police du texte environnant est de 3:1, au moins.</Etape>
+                    <Etape>Cette vérification doit être faite pour les différents états du lien.</Etape>
+                    <Etape>Si c'est le cas pour chaque élément de type lien, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="4.3">
+            <titre>Dans chaque écran, le texte peut être agrandi sans perte de contenu ou de fonctionnalité.</titre>
+            
+            <Critere id="4.3.1">
+                <titre>Chaque écran vérifie-t-il ces conditions ?</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Pour iOS : Ouvrir le Centre de contrôle puis toucher le bouton « Taille du texte ».</Etape>
+                    <Etape>Faire glisser le curseur vers le haut ou le bas pour augmenter ou réduire la taille du texte jusqu'à 190 %.</Etape>
+                    <Etape>En bas de l'écran, vérifier que la modification s'applique uniquement à l'application.</Etape>
+                    <Etape>Redémarrer l'application pour s'assurer que le paramètre est pris en compte.</Etape>
+                    <Etape>Vérifier que tous les textes sont agrandis et restent lisibles, que les fonctionnalités restent utilisables et qu'aucun contenu ne disparaît.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Le critère est non applicable pour les éléments suivants :
+                    - Les éléments graphiques texte dont les effets ne peuvent être reproduits dans la technologie dans laquelle est développée l'interface
+                    - Le texte des logos
+                    - Les sous-titres de vidéo
+                </CasParticuliers>
+                <Notes>
+                    Il n'est pas recommandé d'utiliser des éléments graphiques contenant du texte. Lorsqu'il est possible de reproduire les mêmes effets avec la technologie dans laquelle est développée l'interface, il est nécessaire que le texte soit reproduit dans ce format ou qu'un mécanisme de remplacement permette à l'utilisateur de remplacer ces éléments graphiques par du texte stylé.
+                </Notes>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="4.4">
+            <titre>Dans chaque écran, la fonctionnalité de zoom des options d'accessibilité du terminal est utilisable et fonctionnelle.</titre>
+            
+            <Critere id="4.4.1">
+                <titre>L'utilisateur a-t-il la possibilité d'utiliser le zoom numérique fourni par les options d'accessibilité de l'appareil ?</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Pour iOS : Aller dans Réglages → Accessibilité → Zoom.</Etape>
+                    <Etape>Activer la fonctionnalité de zoom.</Etape>
+                    <Etape>Parcourir les écrans en touchant deux fois avec trois doigts pour zoomer.</Etape>
+                    <Etape>Vérifier que la fonctionnalité de zoom n'est pas bloquée.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+    </section>
+    <section id="5">
+        <Titre>5. Formulaires</Titre>
+        <sousSection id="5.1">
+            <titre>Chaque champ de formulaire a une étiquette visible.</titre>
+            
+            <Critere id="5.1.1">
+                <titre>Chaque champ de formulaire a-t-il une étiquette visible ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les champs de formulaire (champ de saisie, bouton radio, case à cocher).</Etape>
+                    <Etape>Vérifier la présence d'une étiquette visible.</Etape>
+                    <Etape>Activer le champ de formulaire (par exemple, saisir du texte).</Etape>
+                    <Etape>Vérifier que l'étiquette reste visible.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="5.2">
+            <titre>Pour chaque champ de formulaire ayant une étiquette visible, celle-ci est pertinente.</titre>
+            
+            <Critere id="5.2.1">
+                <titre>Chaque étiquette visible d'un champ de formulaire est-elle pertinente ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran tous les champs de formulaire.</Etape>
+                    <Etape>Pour chaque champ de formulaire ayant une étiquette visible, vérifier que l'étiquette visible est pertinente (elle permet de comprendre la nature de la saisie attendue).</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="5.3">
+            <titre>Dans chaque formulaire, chaque étiquette de champ et son champ associé sont accolés.</titre>
+            
+            <Critere id="5.3.1">
+                <titre>Chaque étiquette de champ et son champ associé sont-ils accolés ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran tous les champs de formulaire.</Etape>
+                    <Etape>Pour chaque champ de formulaire, vérifier que l'étiquette visible est visuellement proche du champ auquel elle est liée.</Etape>
+                    <Etape>Pour chaque champ de type bouton radio, case à cocher : vérifier le positionnement correct de l'étiquette selon le sens de lecture.</Etape>
+                    <Etape>Pour les autres types de champ : vérifier le positionnement correct de l'étiquette selon le sens de lecture.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="5.4">
+            <titre>Dans chaque formulaire, le contrôle de saisie est utilisé de manière pertinente.</titre>
+            
+            <Critere id="5.4.1">
+                <titre>Dans chaque formulaire, le contrôle de saisie vérifie-t-il ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Valider le formulaire sans saisir de données afin d'identifier les champs obligatoires.</Etape>
+                    <Etape>Pour chaque champ obligatoire, vérifier qu'un texte visible à proximité du champ indique le caractère obligatoire.</Etape>
+                    <Etape>Pour chaque champ où une suggestion d'un type ou d'un format est nécessaire, vérifier qu'un texte visible à proximité du champ indique le type de données et/ou le format attendu.</Etape>
+                    <Etape>Pour chaque champ en erreur, vérifier que le message d'erreur est visible à proximité du champ.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    L'indication du caractère obligatoire de la saisie sera considéré comme non applicable lorsque le formulaire comporte un seul champ de formulaire ou qu'il indique les champs optionnels de manière visible.
+                    Dans le cas où l'ensemble des champs d'un formulaire sont obligatoires, le test reste applicable.
+                </CasParticuliers>
+                <Notes>
+                    Dans un long formulaire dont la majorité des champs sont obligatoires, on pourrait constater que ce sont les quelques champs restés facultatifs qui sont explicitement signalés comme tels. Dans ce cas, il faudrait s'assurer que :
+                    - Un message précise visuellement en haut de formulaire que « tous les champs sont obligatoires sauf ceux indiqués comme étant facultatifs »
+                    - Une mention « facultatif » est présente visuellement dans le libellé des champs facultatifs
+                    - Un état « obligatoire » reste associé à chaque champ qui n'est pas concerné par ce caractère facultatif
+                </Notes>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="5.5">
+            <titre>Dans chaque formulaire, le contrôle de saisie est accompagné, si nécessaire, de suggestions facilitant la correction des erreurs de saisie.</titre>
+            
+            <Critere id="5.5.1">
+                <titre>Pour chaque erreur de saisie, les types et les formats de données, et des exemples de valeurs attendues, sont-ils suggérés, si nécessaire ?</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Remplir les champs de formulaire avec des valeurs susceptibles de provoquer des erreurs de saisie.</Etape>
+                    <Etape>Valider le formulaire.</Etape>
+                    <Etape>Pour chaque message d'erreur, vérifier que les types et les formats de données attendus sont suggérés.</Etape>
+                    <Etape>Pour chaque message d'erreur, vérifier que des exemples de valeurs attendues sont suggérés.</Etape>
+                    <Etape>Si c'est le cas pour chaque message d'erreur, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="5.6">
+            <titre>Pour chaque formulaire qui modifie ou supprime des données, ou qui transmet des réponses à un test ou à un examen, ou dont la validation a des conséquences financières ou juridiques, les données saisies peuvent être modifiées, mises à jour ou récupérées par l'utilisateur.</titre>
+            
+            <Critere id="5.6.1">
+                <titre>Pour chaque formulaire qui modifie ou supprime des données, ou qui transmet des réponses à un test ou un examen, ou dont la validation a des conséquences financières ou juridiques, la saisie des données vérifie-t-elle une de ces conditions ?</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Remplir le formulaire.</Etape>
+                    <Etape>Retrouver à l'écran les formulaires qui modifient ou suppriment des données, ou qui transmettent des réponses à un test ou un examen, ou dont la validation a des conséquences financières ou juridiques.</Etape>
+                    <Etape>Pour chaque formulaire, vérifier que l'utilisateur peut soit modifier/annuler les données après validation, soit vérifier/corriger avant validation, soit disposer d'un mécanisme de confirmation explicite.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+
+            <Critere id="5.6.2">
+                <titre>Chaque formulaire dont la validation modifie ou supprime des données à caractère financier, juridique ou personnel vérifie-t-il une de ces conditions ?</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Remplir le formulaire.</Etape>
+                    <Etape>Retrouver à l'écran les formulaires qui modifient ou suppriment des données à caractère financier, juridique ou personnel.</Etape>
+                    <Etape>Pour chaque formulaire, vérifier que l'utilisateur dispose soit d'un mécanisme de récupération des données, soit d'un mécanisme de confirmation explicite.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="5.7">
+            <titre>La finalité d'un champ de saisie peut être déduite pour faciliter le remplissage automatique des champs avec les données de l'utilisateur.</titre>
+            
+            <Critere id="5.7.1">
+                <titre>Chaque champ de formulaire dont l'objet se rapporte à une information concernant l'utilisateur vérifie-t-il ces conditions ?</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Accéder à chacun des champs de formulaire.</Etape>
+                    <Etape>Pour chaque champ qui attend une donnée personnelle sur l'utilisateur, vérifier que les contrôles natifs adéquats du système sont présentés.</Etape>
+                    <Etape>Vérifier que le formulaire est compatible avec un mécanisme de remplissage automatique.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+    </section>
+
+    <section id="6">
+        <Titre>6. Navigation générale</Titre>
+        <sousSection id="6.1">
+            <titre>Dans chaque ensemble d'écrans, les mécanismes de navigation sont présents et toujours à la même place.</titre>
+            
+            <Critere id="6.1.1">
+                <titre>Dans chaque ensemble d'écrans, les mécanismes de navigation sont-ils présents et toujours à la même place dans la présentation ?</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Parcourir les ensembles d'écrans.</Etape>
+                    <Etape>Pour chaque ensemble d'écrans, vérifier l'existence d'un ou plusieurs mécanismes de navigation et leur placement constant.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Il existe une gestion de cas particuliers lorsque :
+                    - L'écran est l'écran d'accueil de l'application
+                    - L'application est constituée d'un seul écran
+                    - Le changement fait suite à une modification initiée par l'utilisateur
+                    Dans ces situations, le critère est non applicable.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="6.2">
+            <titre>Chaque écran dispose d'un titre visible et pertinent.</titre>
+            
+            <Critere id="6.2.1">
+                <titre>Chaque écran dispose-t-il d'un titre visible et celui-ci est-il pertinent ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Parcourir les écrans de l'application.</Etape>
+                    <Etape>Vérifier que chaque écran dispose d'un titre visible.</Etape>
+                    <Etape>Pour chaque écran avec un titre visible, vérifier que ce titre est pertinent.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+    </section>
+    <section id="7">
+        <Titre>7. Navigation avec un lecteur d'écran</Titre>
+        <sousSection id="7.1">
+            <titre>Les éléments porteurs d'information sont vocalisés de façon pertinente.</titre>
+            
+            <Critere id="7.1.1">
+                <titre>La vocalisation de chaque élément porteur d'information permet-elle de comprendre l'information véhiculée ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Parcourir l'écran et vérifier que chaque contenu graphique et textuel porteur d'information est vocalisé de façon pertinente.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="7.2">
+            <titre>Les éléments décoratifs sont correctement ignorés.</titre>
+            
+            <Critere id="7.2.1">
+                <titre>Chaque élément à but décoratif est-il correctement ignoré par le lecteur d'écran ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Parcourir l'écran et repérer les éléments décoratifs.</Etape>
+                    <Etape>Vérifier qu'ils ne peuvent pas être atteints avec le lecteur d'écran et que leur contenu n'est pas restitué.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="7.3">
+            <titre>Les contenus cachés ont vocation à être ignorés.</titre>
+            
+            <Critere id="7.3.1">
+                <titre>Chaque contenu caché a-t-il vocation à être ignoré par le lecteur d'écran ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Parcourir l'écran.</Etape>
+                    <Etape>Vérifier que chaque contenu caché a vocation à être ignoré par le lecteur d'écran.</Etape>
+                    <Etape>Vérifier qu'aucun élément fantôme n'est restitué par le lecteur d'écran.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="7.4">
+            <titre>L'ordre de vocalisation des éléments est cohérent.</titre>
+            
+            <Critere id="7.4.1">
+                <titre>L'ordre de vocalisation des éléments de l'écran est-il logique et compréhensible ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Parcourir l'écran.</Etape>
+                    <Etape>Vérifier que l'ordre de vocalisation des éléments suit un ordre logique et permet de comprendre les informations véhiculées.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="7.5">
+            <titre>Chaque champ de saisie est vocalisé avec son étiquette au moment où le champ reçoit le focus.</titre>
+            
+            <Critere id="7.5.1">
+                <titre>Chaque champ de saisie recevant le focus est-il vocalisé en même temps que son étiquette associée ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Parcourir l'écran.</Etape>
+                    <Etape>Vérifier que chaque étiquette est vocalisée en même temps que son champ associé.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="7.6">
+            <titre>Les éléments liés entre eux sont groupés, de façon pertinente, au sein d'un même bloc d'annonce pour la vocalisation.</titre>
+            
+            <Critere id="7.6.1">
+                <titre>Tous les éléments d'un même groupe d'informations sont-ils vocalisés en une fois à la prise de focus du groupe ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Parcourir l'écran.</Etape>
+                    <Etape>Vérifier que les éléments reliés sont groupés au sein d'un même bloc d'annonce pour la vocalisation.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="7.7">
+            <titre>L'information est structurée par l'utilisation appropriée de titres de section.</titre>
+            
+            <Critere id="7.7.1">
+                <titre>Chaque écran possède-t-il au moins un titre ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Utiliser le rotor/menu des commandes de lecture et sélectionner « En-têtes/Titres ».</Etape>
+                    <Etape>Parcourir l'écran en glissant un doigt vers le haut ou vers le bas.</Etape>
+                    <Etape>Vérifier l'existence d'au moins un titre.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+
+            <Critere id="7.7.2">
+                <titre>Chaque passage de texte constituant un titre en possède-t-il la sémantique ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Utiliser le rotor/menu des commandes de lecture et sélectionner « En-têtes/Titres ».</Etape>
+                    <Etape>Parcourir les titres en glissant un doigt vers le haut ou vers le bas.</Etape>
+                    <Etape>Vérifier que chaque texte qui structure l'écran est atteint et restitué comme titre et que chaque titre est pertinent.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="7.8">
+            <titre>Chaque composant d'interface est, si nécessaire, compatible avec le lecteur d'écran.</titre>
+            
+            <Critere id="7.8.1">
+                <titre>Chaque composant d'interface vérifie-t-il, si nécessaire, une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Repérer dans l'écran les composants interactifs.</Etape>
+                    <Etape>Vérifier que pour chaque composant, le nom, le rôle, la valeur, le paramétrage et les changements d'états sont restitués ou qu'une alternative adjacente compatible permet d'accéder aux mêmes fonctionnalités.</Etape>
+                    <Etape>Si c'est le cas, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+
+            <Critere id="7.8.2">
+                <titre>Chaque composant d'interface vérifie-t-il ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Repérer dans l'écran les composants interactifs.</Etape>
+                    <Etape>Accéder à chaque composant interactif et vérifier la restitution correcte du rôle, du nom, de la valeur et de l'état.</Etape>
+                    <Etape>Si c'est le cas, le test est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    La ponctuation et les lettres majuscules présentes dans le texte de l'intitulé visible peuvent être ignorées dans le nom accessible.
+                    Le texte de l'intitulé visible servant de symbole ne doit pas être interprété littéralement au niveau du nom accessible.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="7.9">
+            <titre>L'utilisateur est averti ou a le contrôle des changements de contexte.</titre>
+            
+            <Critere id="7.9.1">
+                <titre>Chaque changement de contexte respecte-t-il une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran tous les événements qui initient un changement de contexte.</Etape>
+                    <Etape>Vérifier que l'utilisateur est averti par un texte du type de changement avant son déclenchement ou que le changement est initié par un bouton ou un lien explicite.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="7.10">
+            <titre>Les messages de statut sont correctement restitués.</titre>
+            
+            <Critere id="7.10.1">
+                <titre>Chaque message de statut est-il bien vocalisé par le lecteur d'écran ?</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Réaliser les actions nécessaires à l'apparition d'un message de statut.</Etape>
+                    <Etape>Vérifier que lorsque le statut apparaît, le lecteur d'écran restitue l'information de manière compréhensible.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="7.11">
+            <titre>L'application est clairement identifiable depuis l'écran de lancement.</titre>
+            
+            <Critere id="7.11.1">
+                <titre>Dans le lanceur d'application du terminal, l'application est-elle clairement identifiable ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Ouvrir le lanceur d'application du terminal.</Etape>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Vérifier que l'intitulé donné à l'exécutable de l'application permet de clairement l'identifier.</Etape>
+                    <Etape>Vérifier que cet intitulé est correctement vocalisé.</Etape>
+                    <Etape>Si c'est le cas, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+
+            <Critere id="7.11.2">
+                <titre>Dans le lanceur d'application du terminal, chaque raccourci de l'application possède-t-il un intitulé pertinent ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Ouvrir le lanceur d'application du terminal.</Etape>
+                    <Etape>Activer le lecteur d'écran.</Etape>
+                    <Etape>Positionner le focus sur l'exécutable de l'application.</Etape>
+                    <Etape>Appuyer deux fois et maintenir enfoncé.</Etape>
+                    <Etape>Vérifier que l'intitulé donné à chaque raccourci de l'application est pertinent et correctement vocalisé.</Etape>
+                    <Etape>Si c'est le cas, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+    </section>
+    <section id="8">
+        <Titre>8. Navigation au clavier</Titre>
+        <sousSection id="8.1">
+            <titre>Dans chaque écran, pour chaque élément recevant le focus, la prise de focus est visible.</titre>
+            
+            <Critere id="8.1.1">
+                <titre>Pour chaque élément recevant le focus, la prise de focus vérifie-t-elle une de ces conditions ?</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Connecter un clavier externe (et paramétrer la navigation au clavier).</Etape>
+                    <Etape>Naviguer dans l'application et évaluer si la visibilité du focus est préservée sur l'ensemble des éléments de l'application.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="8.2">
+            <titre>Dans chaque écran, l'ordre de tabulation est cohérent.</titre>
+            
+            <Critere id="8.2.1">
+                <titre>Dans chaque écran, l'ordre de tabulation dans le contenu est-il cohérent ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Connecter un clavier externe (et paramétrer la navigation au clavier).</Etape>
+                    <Etape>Naviguer sur l'ensemble des éléments de l'écran et vérifier que l'ordre de tabulation reste cohérent.</Etape>
+                    <Etape>Repérer et tester les composants qui actualisent un contenu pour vérifier que la tabulation reste cohérente après l'actualisation.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="8.3">
+            <titre>La navigation ne contient pas de piège au clavier.</titre>
+            
+            <Critere id="8.3.1">
+                <titre>Dans chaque page web, chaque élément recevant le focus vérifie-t-il une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver dans l'écran l'ensemble des éléments d'interface susceptibles de recevoir le focus.</Etape>
+                    <Etape>Pour chaque élément d'interface, vérifier que l'utilisateur peut atteindre l'élément suivant ou précédent soit au moyen de la tabulation, soit au moyen d'une autre interaction clavier documentée.</Etape>
+                    <Etape>Si c'est le cas pour chaque élément d'interface, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="8.4">
+            <titre>Chaque fonctionnalité de l'interface est contrôlable au clavier.</titre>
+            
+            <Critere id="8.4.1">
+                <titre>Chaque composant d'interface vérifie-t-il une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Connecter un clavier externe (et paramétrer la navigation au clavier).</Etape>
+                    <Etape>Parcourir l'ensemble des composants interactifs.</Etape>
+                    <Etape>Vérifier l'accessibilité, le contrôle et la modification possible au clavier.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Il existe une gestion de cas particulier lorsque la fonctionnalité dépend de l'utilisation d'un gestionnaire d'événement sans équivalent universel. Dans ces situations, le critère est non applicable.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+    </section>
+
+    <section id="9">
+        <Titre>9. Consultation</Titre>
+        <sousSection id="9.1">
+            <titre>L'utilisateur a le contrôle de chaque limite de temps modifiant le contenu.</titre>
+            
+            <Critere id="9.1.1">
+                <titre>Chaque limite de temps respecte-t-elle une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer les procédés limitant le temps d'une session.</Etape>
+                    <Etape>Vérifier la présence d'un mécanisme pour supprimer la limite de temps, l'augmenter, ou être averti avant la fin.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Il existe une gestion de cas particuliers lorsque la limite de temps est essentielle, notamment lorsqu'elle ne pourra pas être supprimée sans changer fondamentalement le contenu ou les fonctionnalités liées au contenu.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="9.2">
+            <titre>Chaque document bureautique en téléchargement possède, si nécessaire, une version accessible.</titre>
+            
+            <Critere id="9.2.1">
+                <titre>Chaque document bureautique vérifie-t-il une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les liens et les contrôles de formulaire permettant de télécharger un fichier au format bureautique.</Etape>
+                    <Etape>Pour chaque fichier, vérifier la présence d'une version alternative accessible et l'analyser avec les outils appropriés.</Etape>
+                    <Etape>Si c'est le cas pour chaque fichier au format bureautique, le test est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Il existe une gestion de cas particuliers pour les documents bureautiques publiés avant le 23 septembre 2018 (sauf documents administratifs) par les personnes de droit privé. Dans cette situation, le critère est non applicable.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="9.3">
+            <titre>Pour chaque document bureautique ayant une version accessible, cette version offre la même information.</titre>
+            
+            <Critere id="9.3.1">
+                <titre>La version accessible ou alternative offre-t-elle la même information ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver à l'écran les fichiers en téléchargement au format bureautique accompagné de leur version alternative accessible.</Etape>
+                    <Etape>Pour chaque couple de fichiers, vérifier que les deux documents apportent la même information.</Etape>
+                    <Etape>Si c'est le cas pour chaque couple de fichiers, le test est validé.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="9.4">
+            <titre>Les changements brusques de luminosité ou les effets de flash sont correctement utilisés.</titre>
+            
+            <Critere id="9.4.1">
+                <titre>Les changements brusques de luminosité ou les effets de flash vérifient-ils une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les contenus clignotants ou qui provoquent des effets de flash.</Etape>
+                    <Etape>Vérifier que la fréquence est inférieure à 3 flashs par seconde ou que la surface cumulée est inférieure à 21824 pixels.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <Notes>
+                    L'évaluation de ce critère peut être complexe. Lorsque l'effet est géré par un script ou au moyen de CSS, l'analyse du code est suffisante. L'outil PEAT permet d'analyser les vidéos au format .avi.
+                </Notes>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="9.5">
+            <titre>Chaque contenu en mouvement ou clignotant est contrôlable par l'utilisateur.</titre>
+            
+            <Critere id="9.5.1">
+                <titre>Chaque contenu en mouvement ou clignotant respecte-t-il une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les contenus en mouvement ou clignotants déclenchés automatiquement.</Etape>
+                    <Etape>Vérifier la présence d'un mécanisme de contrôle ou une durée limitée.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <Notes>
+                    L'arrêt ou la mise en pause via la prise de focus ou au toucher sur le contenu ne sont pas considérés comme des procédés conformes.
+                    Dans certains cas, le mouvement ne peut pas être arrêté, par exemple, une barre de progression, dans ce cas, le critère est non applicable.
+                </Notes>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="9.6">
+            <titre>Le contenu proposé est consultable quelle que soit l'orientation de l'écran.</titre>
+            
+            <Critere id="9.6.1">
+                <titre>Dans chaque page écran, chaque contenu vérifie-t-il ces conditions ?</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Vérifier que l'orientation de l'écran n'est pas verrouillée dans les paramètres du système.</Etape>
+                    <Etape>Afficher l'application et basculer le terminal alternativement en mode paysage et portrait.</Etape>
+                    <Etape>Vérifier que l'application est utilisable dans les deux orientations et que les contenus restent disponibles.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Il existe des interfaces pour lesquelles l'orientation du périphérique est essentielle à leur utilisation. Dans ces situations, le critère est non applicable.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="9.7">
+            <titre>Les fonctionnalités utilisables ou disponibles au moyen d'un geste complexe peuvent également être disponibles au moyen d'un geste simple.</titre>
+            
+            <Critere id="9.7.1">
+                <titre>Dans chaque page web, chaque fonctionnalité utilisable ou disponible suite à un contact multipoint ou un geste complexe est-elle également utilisable suite à un contact simple ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les fonctionnalités qui nécessitent des gestes complexes.</Etape>
+                    <Etape>Vérifier qu'il existe une méthode alternative pour réaliser l'action avec un geste simple.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Le critère ne s'applique qu'à des fonctionnalités mises en place par l'auteur de l'application et ne s'applique pas aux fonctionnalités dont la réalisation d'un geste complexe est essentielle.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="9.8">
+            <titre>Les actions déclenchées au moyen d'un dispositif de pointage sur un point unique de l'écran peuvent faire l'objet d'une annulation.</titre>
+            
+            <Critere id="9.8.1">
+                <titre>Dans chaque écran, les actions déclenchées au moyen d'un dispositif de pointage sur un point unique de l'écran vérifient-elles l'une de ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les composants interactifs.</Etape>
+                    <Etape>Pour chaque composant interactif, effectuer un appui simple et conserver la pression.</Etape>
+                    <Etape>Déplacer le dispositif de pointage et vérifier que l'action n'est pas déclenchée.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Le critère est non applicable pour les actions requises par la plateforme.
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+        <sousSection id="9.9">
+            <titre>Les fonctionnalités qui impliquent un mouvement de l'appareil ou vers l'appareil peuvent être satisfaites de manière alternative.</titre>
+            
+            <Critere id="9.9.1">
+                <titre>Chaque fonctionnalité qui implique un mouvement de l'appareil ou vers l'appareil respecte-t-elle ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Repérer dans l'écran les fonctionnalités qui se déclenchent au moyen d'un mouvement de l'appareil ou d'un geste vers l'appareil.</Etape>
+                    <Etape>Vérifier la présence d'une alternative sans mouvement et d'une option pour désactiver la détection du mouvement.</Etape>
+                    <Etape>Si c'est le cas, le critère est validé.</Etape>
+                </Methodologie>
+                <CasParticuliers>
+                    Il existe une gestion de cas particulier lorsque :
+                    - Le mouvement est essentiel à l'accomplissement de la fonctionnalité (ex. podomètre)
+                    - La détection du mouvement est utilisée pour contrôler une fonctionnalité au travers d'une interface compatible avec l'accessibilité
+                </CasParticuliers>
+            </Critere>
+        </sousSection>
+    </section>
+</AUDIT>

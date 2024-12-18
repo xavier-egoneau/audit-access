@@ -1,24 +1,11 @@
 @charset "UTF-8";
 
-/* VENDORS */
-//@import "bootstrap/bootstrap.scss";
-//@import "vendors/*.scss";
-
-
-/* lutece */
-//@import "page_template_styles_admin.scss";
-//@import "theme_lutece.scss";
-//@import "debug_theme.scss";
 
 /* project */
-
 @use "common/variables.scss";
 @use "components/global.scss";
-
 
 /* responsive */
 @use "common/responsive.scss";
 
-.hide{
-    display: none;
-}
+

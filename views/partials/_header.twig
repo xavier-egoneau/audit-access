@@ -1,14 +1,14 @@
 <div class="container-fluid mb-4">
-    <div class="row align-items-center">
+    <div class="row align-items-center head">
         {# Titre éditable #}
         <div class="col">
-            <h1 id="titre" class="pb-4" contenteditable="true">{{ currentProject.name }}</h1>
+            <h1 id="titre"  contenteditable="true">{{ currentProject.name }}</h1>
         </div>
 
         {# Sélecteur d'écran #}
         <div class="col-auto">
             <select class="form-select" id="screenSelector">
-                <option value="">Tous les écrans</option>
+
                 {% if pages %}
                     {% for page in pages %}
                         <option value="{{ page.id }}" {% if currentPage and currentPage.id == page.id %}selected{% endif %}>
@@ -21,7 +21,7 @@
 
         {# Statistiques #}
         <div class="col-auto">
-            <div class="d-flex gap-3">
+            <div class="d-flex gap-3 taux">
                 <div>
                     Page actuelle: 
                     <span id="taux_conform_pa" class="badge bg-primary">{{ currentRate|default('0') }}%</span>

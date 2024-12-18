@@ -77,6 +77,11 @@ app.get('/audit/:projectId', async (req, res) => {
           });
       });
 
+      if (!req.query.pageId && pages.length > 0) {
+        // Rediriger vers la même URL avec la première page sélectionnée
+        return res.redirect(`/audit/${projectId}?pageId=${pages[0].id}`);
+    }
+
       // Récupérer les informations du projet
       const projectInfo = await new Promise((resolve, reject) => {
           db.db.get('SELECT * FROM project_info WHERE id = ?', [projectId], (err, row) => {
@@ -100,43 +105,65 @@ app.get('/audit/:projectId', async (req, res) => {
       console.log('Premier critère chargé:', criteria[0]);
 
       // Pour chaque critère, récupérer son statut et ses non-conformités
-      for (const criterion of criteria) {
-          if (!req.query.pageId) {
-              // Pour "Tous les écrans", récupérer toutes les NC avec le nom des pages
-              const ncs = await new Promise((resolve, reject) => {
-                db.db.all(
-                    `SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
-                     FROM non_conformities nc 
-                     LEFT JOIN pages p ON EXISTS (
-                         SELECT 1 
-                         FROM json_each(nc.page_ids) 
-                         WHERE value = CAST(p.id AS TEXT)
-                     )
-                     WHERE nc.criterion_id = ?
-                     GROUP BY nc.id
-                     ORDER BY nc.created_at DESC`,
-                    [criterion.id],
-                    (err, rows) => {
-                        if (err) {
-                            console.error('Erreur SQL:', err);
-                            reject(err);
-                            return;
-                        }
-                        
-                        // Transformer les résultats pour inclure les page_ids comme tableau
-                        const transformedRows = rows ? rows.map(row => ({
-                            ...row,
-                            page_ids: JSON.parse(row.page_ids || '[]'),
-                            pages: row.page_names ? row.page_names.split(',') : []
-                        })) : [];
-                        
-                        resolve(transformedRows);
-                    }
-                );
+      // Remplacez par ce bloc
+    for (const criterion of criteria) {
+        // Récupérer les NC que ce soit pour une page spécifique ou toutes les pages
+        const ncs = await new Promise((resolve, reject) => {
+            let query;
+            const params = [];
+
+            if (req.query.pageId) {
+                // Pour une page spécifique - pas de changement
+                query = `
+                    SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
+                    FROM non_conformities nc 
+                    LEFT JOIN pages p ON EXISTS (
+                        SELECT 1 
+                        FROM json_each(nc.page_ids) 
+                        WHERE value = CAST(p.id AS TEXT)
+                    )
+                    WHERE nc.criterion_id = ?
+                    AND json_extract(nc.page_ids, '$') LIKE '%' || ? || '%'
+                    GROUP BY nc.id
+                    ORDER BY nc.created_at DESC`;
+                params.push(criterion.id, req.query.pageId);
+            } else {
+                // Pour toutes les pages - afficher les NC qui ont plusieurs pages
+                query = `
+                    SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
+                    FROM non_conformities nc 
+                    LEFT JOIN pages p ON EXISTS (
+                        SELECT 1 
+                        FROM json_each(nc.page_ids) 
+                        WHERE value = CAST(p.id AS TEXT)
+                    )
+                    WHERE nc.criterion_id = ?
+                    GROUP BY nc.id
+                    HAVING json_array_length(nc.page_ids) > 1
+                    ORDER BY nc.created_at DESC`;
+                params.push(criterion.id);
+            }
+
+            db.db.all(query, params, (err, rows) => {
+                if (err) {
+                    console.error('Erreur SQL:', err);
+                    reject(err);
+                    return;
+                }
+                
+                // Transformer les résultats
+                const transformedRows = rows ? rows.map(row => ({
+                    ...row,
+                    page_ids: JSON.parse(row.page_ids || '[]'),
+                    pages: row.page_names ? row.page_names.split(',') : [],
+                    allPages: !row.page_ids || JSON.parse(row.page_ids || '[]').length === 0
+                })) : [];
+                
+                resolve(transformedRows);
             });
-              criterion.nonConformities = ncs;
-          }
-      }
+        });
+        criterion.nonConformities = ncs;
+    }
 
       // Calculer les différents taux
       const currentRate = req.query.pageId ? await db.calculatePageRate(req.query.pageId) : 0;
@@ -416,13 +443,14 @@ app.get('/nc-template', (req, res) => {
   const data = JSON.parse(req.query.data);
   res.render('partials/_nc-template', {
       nc: {
-        id: data.id,  // Assurez-vous que c'est bien transmis
+        id: data.id,
         impact: data.impact,
         description: data.description,
         solution: data.solution,
         screenshot_path: data.screenshot_path,
         pages: data.pages,
-        allPages: data.allPages
+        allPages: data.allPages,
+        criterion_id: data.criterion_id  // Ajout de l'ID du critère
       }
   });
 });
@@ -431,7 +459,8 @@ app.get('/nc-template', (req, res) => {
 // Dans la route GET /audit/:projectId/criterion/:criterionId/allnc
 
 app.get('/audit/:projectId/criterion/:criterionId/allnc', async (req, res) => {
-    const { projectId, criterionId } = req.params;
+    const { projectId } = req.params;
+    const criterionId = req.params.criterionId.replace('-', '.'); // On garde projectId et on formate criterionId
     const { pageId } = req.query;
 
     try {
@@ -521,9 +550,26 @@ app.post('/audit/:projectId/nc/:ncId/edit', upload.single('screenshot'), async (
         // Si une nouvelle image est fournie
         if (req.file) {
             updateData.screenshot_path = `/uploads/${projectId}/${req.file.filename}`;
+
+            // Optionnel : Supprimer l'ancienne image
+            try {
+                const oldNC = await new Promise((resolve, reject) => {
+                    db.db.get('SELECT screenshot_path FROM non_conformities WHERE id = ?', [ncId], (err, row) => {
+                        if (err) reject(err);
+                        resolve(row);
+                    });
+                });
+
+                if (oldNC && oldNC.screenshot_path) {
+                    const oldImagePath = path.join(__dirname, 'public', oldNC.screenshot_path);
+                    await fs.unlink(oldImagePath).catch(err => console.warn('Erreur lors de la suppression de l\'ancienne image:', err));
+                }
+            } catch (error) {
+                console.warn('Erreur lors de la récupération/suppression de l\'ancienne image:', error);
+            }
         }
 
-        // Mettre à jour la NC
+        // Mise à jour de la NC
         await new Promise((resolve, reject) => {
             const fields = Object.keys(updateData);
             const values = Object.values(updateData);
@@ -541,11 +587,46 @@ app.post('/audit/:projectId/nc/:ncId/edit', upload.single('screenshot'), async (
             );
         });
 
+        // Récupérer la NC mise à jour
+        const updatedNC = await new Promise((resolve, reject) => {
+            db.db.get(
+                `SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
+                 FROM non_conformities nc
+                 LEFT JOIN pages p ON EXISTS (
+                     SELECT 1 
+                     FROM json_each(nc.page_ids) 
+                     WHERE value = CAST(p.id AS TEXT)
+                 )
+                 WHERE nc.id = ?
+                 GROUP BY nc.id`,
+                [ncId],
+                (err, row) => {
+                    if (err) reject(err);
+                    resolve(row);
+                }
+            );
+        });
+
         db.close();
-        res.json({ success: true });
+
+        // Format de réponse adapté pour l'édition
+        res.json({ 
+            success: true,
+            ncId: Number(ncId),
+            impact: updateData.impact,
+            description: updateData.description,
+            solution: updateData.solution,
+            screenshot_path: updateData.screenshot_path || updatedNC.screenshot_path,
+            pages: updatedNC.page_names ? updatedNC.page_names.split(',') : [],
+            allPages: false
+        });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, error: error.message });
+        console.error('Erreur lors de la mise à jour de la NC:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: error.message || 'Erreur lors de la mise à jour de la non-conformité'
+        });
     }
 });
 
@@ -554,17 +635,27 @@ app.post('/audit/new', async (req, res) => {
     try {
         console.log("Données reçues:", req.body);
         
-        // Vérification du nom du projet
-        if (!req.body.name || req.body.name.trim() === '') {
+        // Nettoyage et validation des données reçues
+        const projectData = {
+            name: req.body.name ? req.body.name.trim() : '',
+            url: req.body.url || '',
+            referential: req.body.referential,
+            screens: Array.isArray(req.body.screens) ? req.body.screens : []
+        };
+
+        if (!projectData.name) {
             throw new Error('Le nom du projet est requis');
         }
-  
+
+        const validReferentials = ['RGAA', 'WCAG', 'RAAM'];
+        if (!validReferentials.includes(projectData.referential)) {
+            throw new Error('Référentiel invalide');
+        }
+
         const projectId = uuidv4();
-        console.log("Création du projet:", projectId);
-  
         const db = new Database(projectId);
-  
-        // Créer le projet
+
+        // Création du projet
         await new Promise((resolve, reject) => {
             db.db.run(
                 `INSERT INTO project_info (
@@ -572,27 +663,24 @@ app.post('/audit/new', async (req, res) => {
                     name, 
                     url,
                     referential, 
-                    referential_version,
                     created_at
-                ) VALUES (?, ?, ?, ?, ?, datetime('now'))`,
+                ) VALUES (?, ?, ?, ?, datetime('now'))`,
                 [
                     projectId,
-                    req.body.name,
-                    req.body.url || '',
-                    req.body.referential || 'RGAA',
-                    req.body.referentialVersion || '4.1'
+                    projectData.name,
+                    projectData.url,
+                    projectData.referential
                 ],
                 function(err) {
                     if (err) reject(err);
-                    console.log("Projet créé dans la base");
                     resolve();
                 }
             );
         });
-  
-        // Créer les pages
-        if (req.body.screens && Array.isArray(req.body.screens)) {
-            await Promise.all(req.body.screens.map(screen => {
+
+        // Création des pages
+        if (projectData.screens.length > 0) {
+            await Promise.all(projectData.screens.map(screen => {
                 return new Promise((resolve, reject) => {
                     db.db.run(
                         'INSERT INTO pages (name, created_at) VALUES (?, datetime("now"))',
@@ -605,12 +693,13 @@ app.post('/audit/new', async (req, res) => {
                 });
             }));
         }
-  
+
         db.close();
         res.json({ 
             success: true, 
             projectId
         });
+
     } catch (error) {
         console.error("Erreur lors de la création du projet:", error);
         res.status(500).json({ 
@@ -618,7 +707,7 @@ app.post('/audit/new', async (req, res) => {
             message: error.message || 'Erreur lors de la création du projet'
         });
     }
-  });
+});
 
 // Route pour mettre à jour le statut d'un critère
 app.post('/audit/:projectId/criterion/:criterionId', async (req, res) => {
@@ -724,90 +813,172 @@ app.post('/audit/:projectId/criterion/:criterionId', async (req, res) => {
 app.post('/audit/:projectId/nc', upload.single('screenshot'), async (req, res) => {
     const { projectId } = req.params;
     const { criterionId, pageId, impact, description, solution, allPages } = req.body;
+    let db = null;
+
+    console.log("Données reçues:", {
+        criterionId,
+        pageId,
+        impact,
+        description,
+        solution,
+        allPages
+    });
 
     try {
-        const db = new Database(projectId);
-        let pageIds = [];
+        db = new Database(projectId);
+        let pages = [];
 
-        // Apprentissage IA à partir de la nouvelle NC
-        // Apprentissage avec contexte
-        await learningService.learnFromNC({
-            criterionId,
-            impact,
-            description,
-            solution,
-            projectId: req.params.projectId
-        }, {
-            currentPage: req.body.pageId,
-            timestamp: new Date(),
-            // Autres informations contextuelles pertinentes
-        });
-
-        if (allPages === 'true') {
-            // Récupérer toutes les pages
-            const pages = await new Promise((resolve, reject) => {
-                db.db.all('SELECT id FROM pages', [], (err, rows) => {
-                    if (err) reject(err);
-                    resolve(rows);
+        if (allPages === 'on' || allPages === true) {
+            pages = await new Promise((resolve, reject) => {
+                db.db.all('SELECT id, name FROM pages ORDER BY id', [], (err, rows) => {
+                    if (err) {
+                        console.error('Erreur lors de la récupération des pages:', err);
+                        reject(err);
+                        return;
+                    }
+                    console.log("Pages récupérées pour toutes les pages:", rows);
+                    resolve(rows || []);
                 });
             });
-            pageIds = pages.map(page => page.id);
         } else {
-            pageIds = [pageId];
+            const page = await new Promise((resolve, reject) => {
+                db.db.get('SELECT id, name FROM pages WHERE id = ?', [pageId], (err, row) => {
+                    if (err) reject(err);
+                    resolve(row);
+                });
+            });
+            pages = page ? [page] : [];
+            console.log("Page unique récupérée:", pages);
         }
 
-        const screenshotPath = req.file ? `/uploads/${projectId}/${req.file.filename}` : null;
+        if (pages.length === 0) {
+            throw new Error('Aucune page valide spécifiée');
+        }
 
-        // Insérer une seule NC avec le tableau des page_ids
-        const newNcId = await new Promise((resolve, reject) => {
-            db.db.run(
-                `INSERT INTO non_conformities 
-                 (criterion_id, impact, description, screenshot_path, solution, page_ids) 
-                 VALUES (?, ?, ?, ?, ?, ?)`,
-                [
-                    criterionId,
-                    impact,
-                    description,
-                    screenshotPath,
-                    solution,
-                    JSON.stringify(pageIds)
-                ],
-                function(err) {
-                    if (err) reject(err);
-                    resolve(this.lastID);
+        // Gestion des screenshots pour chaque page
+        let screenshotPaths = {};
+        if (req.file) {
+            try {
+                const uploadPath = path.join(__dirname, 'public', 'uploads', projectId);
+                const originalFileName = req.file.filename;
+                const fileExtension = path.extname(originalFileName);
+                const baseFileName = path.basename(originalFileName, fileExtension);
+                
+                // S'assurer que le dossier existe
+                await fs.mkdir(uploadPath, { recursive: true });
+
+                const originalFilePath = path.join(uploadPath, originalFileName);
+
+                if (allPages === 'on' || allPages === true) {
+                    // Pour chaque page, créer une copie du screenshot
+                    for (const page of pages) {
+                        const newFileName = `${baseFileName}_page${page.id}${fileExtension}`;
+                        const newFilePath = path.join(uploadPath, newFileName);
+                        
+                        await fs.copyFile(originalFilePath, newFilePath);
+                        screenshotPaths[page.id] = `/uploads/${projectId}/${newFileName}`;
+                    }
+                    
+                    // Supprimer l'original après les copies
+                    await fs.unlink(originalFilePath);
+                } else {
+                    screenshotPaths[pages[0].id] = `/uploads/${projectId}/${originalFileName}`;
                 }
-            );
+            } catch (error) {
+                console.error('Erreur lors de la gestion des fichiers:', error);
+                throw new Error('Erreur lors de la gestion des fichiers');
+            }
+        }
+
+        // Début de la transaction
+        await new Promise((resolve, reject) => {
+            db.db.run('BEGIN TRANSACTION', err => {
+                if (err) reject(err);
+                else resolve();
+            });
         });
 
-        // Récupérer les noms des pages pour l'affichage
-        const pageNames = await new Promise((resolve, reject) => {
-            db.db.all(
-                'SELECT id, name FROM pages WHERE id IN (' + pageIds.join(',') + ')',
-                [],
-                (err, rows) => {
+        try {
+            const insertedNCs = [];
+            for (const page of pages) {
+                console.log(`Création NC pour page ${page.id} (${page.name})`);
+                const result = await new Promise((resolve, reject) => {
+                    db.db.run(
+                        `INSERT INTO non_conformities 
+                         (criterion_id, impact, description, screenshot_path, solution, page_ids) 
+                         VALUES (?, ?, ?, ?, ?, ?)`,
+                        [
+                            criterionId,
+                            impact,
+                            description,
+                            screenshotPaths[page.id] || null,
+                            solution,
+                            JSON.stringify([page.id])
+                        ],
+                        function(err) {
+                            if (err) {
+                                console.error(`Erreur insertion NC pour page ${page.id}:`, err);
+                                reject(err);
+                            }
+                            resolve({
+                                id: this.lastID,
+                                page: page
+                            });
+                        }
+                    );
+                });
+                insertedNCs.push(result);
+            }
+
+            await new Promise((resolve, reject) => {
+                db.db.run('COMMIT', err => {
                     if (err) reject(err);
-                    resolve(rows);
-                }
-            );
-        });
+                    else resolve();
+                });
+            });
 
-        db.close();
+            console.log(`${insertedNCs.length} NC(s) créée(s) avec succès`);
 
-        res.json({ 
-            success: true,
-            ncId: newNcId,    // Assurez-vous que cet ID est bien envoyé
-            id: newNcId,      // Ajoutez également l'ID sous cette forme
-            impact,
-            description,
-            solution,
-            screenshot_path: screenshotPath,
-            pages: pageNames,
-            allPages: allPages === 'true'
-        });
+            const firstNC = insertedNCs[0];
+            res.json({ 
+                success: true,
+                ncId: firstNC.id,
+                id: firstNC.id,
+                impact,
+                description,
+                solution,
+                screenshot_path: screenshotPaths[firstNC.page.id] || null,
+                pages: pages.map(p => p.name),
+                allPages: false
+            });
+
+            db.close();
+
+        } catch (error) {
+            console.error('Erreur pendant les insertions:', error);
+            await new Promise(resolve => {
+                db.db.run('ROLLBACK', () => resolve());
+            });
+            db.close();
+            throw error;
+        }
 
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, error: error.message });
+        console.error('Erreur lors de l\'ajout des NC:', error);
+        if (db) {
+            try {
+                await new Promise(resolve => {
+                    db.db.run('ROLLBACK', () => resolve());
+                });
+                db.close();
+            } catch (rollbackError) {
+                console.error('Erreur lors du rollback:', rollbackError);
+            }
+        }
+        res.status(500).json({ 
+            success: false, 
+            error: error.message || 'Erreur lors de l\'ajout des non-conformités'
+        });
     }
 });
 
@@ -1038,16 +1209,30 @@ app.post('/audit/:projectId/edit', async (req, res) => {
 
             // Gestion des pages
             if (Array.isArray(screens)) {
-                // Supprimer toutes les anciennes pages
-                await new Promise((resolve, reject) => {
-                    db.db.run('DELETE FROM pages', [], (err) => {
+                // Récupérer d'abord les pages existantes
+                const existingPages = await new Promise((resolve, reject) => {
+                    db.db.all('SELECT id, name FROM pages', [], (err, rows) => {
                         if (err) reject(err);
-                        resolve();
+                        resolve(rows || []);
                     });
                 });
-
-                // Ajouter les nouvelles pages
-                for (const screenName of screens) {
+            
+                const existingNames = existingPages.map(p => p.name);
+                const newScreens = screens.filter(name => !existingNames.includes(name));
+                const removedPages = existingPages.filter(p => !screens.includes(p.name));
+            
+                // Supprimer uniquement les pages qui ne sont plus présentes
+                for (const page of removedPages) {
+                    await new Promise((resolve, reject) => {
+                        db.db.run('DELETE FROM pages WHERE id = ?', [page.id], (err) => {
+                            if (err) reject(err);
+                            resolve();
+                        });
+                    });
+                }
+            
+                // Ajouter uniquement les nouvelles pages
+                for (const screenName of newScreens) {
                     await new Promise((resolve, reject) => {
                         db.db.run(
                             'INSERT INTO pages (name, created_at) VALUES (?, datetime("now"))',
@@ -1087,53 +1272,67 @@ app.post('/audit/:projectId/edit', async (req, res) => {
 
 // Route pour supprimer une non-conformité
 app.delete('/audit/:projectId/nc/:ncId', async (req, res) => {
-  const { projectId, ncId } = req.params;
+    const { projectId, ncId } = req.params;
 
-  try {
-      const db = new Database(projectId);
+    try {
+        const db = new Database(projectId);
 
-      // Récupérer le chemin de l'image avant la suppression
-      const nc = await new Promise((resolve, reject) => {
-          db.db.get('SELECT screenshot_path FROM non_conformities WHERE id = ?', [ncId], (err, row) => {
-              if (err) reject(err);
-              resolve(row);
-          });
-      });
+        // Récupérer le chemin de l'image avant la suppression
+        const nc = await new Promise((resolve, reject) => {
+            db.db.get('SELECT screenshot_path FROM non_conformities WHERE id = ?', [ncId], (err, row) => {
+                if (err) reject(err);
+                resolve(row);
+            });
+        });
 
-      // Supprimer l'entrée de la base de données
-      await new Promise((resolve, reject) => {
-          db.db.run('DELETE FROM non_conformities WHERE id = ?', [ncId], (err) => {
-              if (err) reject(err);
-              resolve();
-          });
-      });
+        // Supprimer l'entrée de la base de données
+        await new Promise((resolve, reject) => {
+            db.db.run('DELETE FROM non_conformities WHERE id = ?', [ncId], (err) => {
+                if (err) reject(err);
+                resolve();
+            });
+        });
 
-      // Si une image était associée, la supprimer
-      if (nc && nc.screenshot_path) {
-          const imagePath = path.join(__dirname, 'public', nc.screenshot_path);
-          try {
-              await fs.unlink(imagePath);
-          } catch (error) {
-              console.warn('Erreur lors de la suppression de l\'image:', error);
-              // On continue même si la suppression de l'image échoue
-          }
-      }
+        // Si une image était associée, vérifier qu'elle n'est pas utilisée par d'autres NC
+        if (nc && nc.screenshot_path) {
+            const otherNCs = await new Promise((resolve, reject) => {
+                db.db.get(
+                    'SELECT COUNT(*) as count FROM non_conformities WHERE screenshot_path = ? AND id != ?',
+                    [nc.screenshot_path, ncId],
+                    (err, row) => {
+                        if (err) reject(err);
+                        resolve(row);
+                    }
+                );
+            });
 
-      db.close();
+            // Ne supprimer le fichier que s'il n'est plus utilisé
+            if (otherNCs.count === 0) {
+                const imagePath = path.join(__dirname, 'public', nc.screenshot_path);
+                try {
+                    await fs.unlink(imagePath);
+                } catch (error) {
+                    console.warn('Erreur lors de la suppression de l\'image:', error);
+                    // On continue même si la suppression de l'image échoue
+                }
+            }
+        }
 
-      res.json({
-          success: true,
-          message: 'Non-conformité supprimée avec succès'
-      });
-  } catch (error) {
-      console.error('Erreur lors de la suppression de la NC:', error);
-      res.status(500).json({
-          success: false,
-          message: 'Erreur lors de la suppression de la non-conformité'
-      });
-  }
+        db.close();
+        res.json({
+            success: true,
+            message: 'Non-conformité supprimée avec succès'
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de la suppression de la NC:', error);
+        if (db) db.close();
+        res.status(500).json({
+            success: false,
+            message: 'Erreur lors de la suppression de la non-conformité'
+        });
+    }
 });
-
 
 
 // Route pour supprimer un projet

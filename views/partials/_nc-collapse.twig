@@ -1,0 +1,44 @@
+<tr>
+                    <td colspan="5" class="collapse_container" id="accordion-detail-{{ criterion.id|replace({'.': '-'}) }}">
+                        <div id="collapse-{{ criterion.id|replace({'.': '-'}) }}" 
+                             class="accordion-collapse collapse" 
+                             aria-labelledby="heading-{{ criterion.id|replace({'.': '-'}) }}" 
+                             data-bs-parent="#accordion-{{ criterion.id|replace({'.': '-'}) }}">
+                            <div class="accordion-body">
+                                <div class="container2">
+                                    <div class="row">
+                                        <div id="wrapper-{{ criterion.id|replace({'.': '-'}) }}" class="wrapper_ncs row" data-criterion-id="{{ criterion.id }}">
+                                            {% if criterion.nonConformities|length > 0 %}
+                                                {% for nc in criterion.nonConformities %}
+                                            
+                                                    {% include 'partials/_nc-template.twig' with { 
+                                                        'nc': nc,
+                                                        'criterion': criterion
+                                                    } %}
+                                                    
+                                                {% endfor %}
+                                            {% else %}
+                                            <div class="alert alert-info">
+                                                Aucune non-conformité trouvée pour ce critère
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-12 mt-4 mb-4">
+                                            <button class="btn btn-primary add-nc" 
+                                                    data-criterion="{{ criterion.id }}"
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#nc-modal-{{ criterion.id|replace({'.': '-'}) }}">
+                                                Ajouter une non-conformité
+                                            </button>
+                                            {% if currentPage %}
+                                                <button class="btn btn-secondary seeall">
+                                                    Voir tous les écrans
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>

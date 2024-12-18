@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <AUDIT norme="RGAA" version="4.1.0">
     <section id="1">
-        <Titre>Images</Titre>
+        <Titre>1. Images</Titre>
         <sousSection id="1.1">
             <titre>Chaque image porteuse d'information a-t-elle une alternative textuelle ?</titre>
             
@@ -780,7 +780,7 @@
     </section>
 
     <section id="2">
-        <Titre>Cadres</Titre>
+        <Titre>2. Cadres</Titre>
         <sousSection id="2.1">
             <titre>Chaque cadre a-t-il un titre de cadre ?</titre>
             
@@ -815,7 +815,7 @@
     </section>
 
     <section id="3">
-        <Titre>Couleurs</Titre>
+        <Titre>3. Couleurs</Titre>
 
         <sousSection id="3.1">
             <titre>Dans chaque page web, l'information ne doit pas être donnée uniquement par la couleur. Cette règle est-elle respectée ?</titre>
@@ -1025,7 +1025,7 @@
         </sousSection>
     </section>
     <section id="4">
-        <Titre>Multimédia</Titre>
+        <Titre>4. Multimédia</Titre>
         <Note></Note>
         <sousSection id="4.1">
             <titre>Chaque média temporel pré-enregistré a-t-il, si nécessaire, une transcription textuelle ou une audiodescription (hors cas particuliers) ?</titre>
@@ -1388,7 +1388,7 @@
         </sousSection>
     </section>
     <section id="5">
-        <Titre>Tableaux</Titre>
+        <Titre>5. Tableaux</Titre>
 
         <sousSection id="5.1">
             <titre>Chaque tableau de données complexe a-t-il un résumé ?</titre>
@@ -1585,7 +1585,7 @@
         </sousSection>
     </section>
     <section id="6">
-        <Titre>Liens</Titre>
+        <Titre>6. Liens</Titre>
 
         <sousSection id="6.1">
             <titre>Chaque lien est-il explicite (hors cas particuliers) ?</titre>
@@ -1675,7 +1675,7 @@
         </sousSection>
     </section>
     <section id="7">
-        <Titre>Scripts</Titre>
+        <Titre>7. Scripts</Titre>
 
         <sousSection id="7.1">
             <titre>Chaque script est-il, si nécessaire, compatible avec les technologies d'assistance ?</titre>
@@ -1823,7 +1823,7 @@
         </sousSection>
     </section>
     <section id="8">
-        <Titre>Éléments obligatoires</Titre>
+        <Titre>8. Éléments obligatoires</Titre>
 
         <sousSection id="8.1">
             <titre>Chaque page web est-elle définie par un type de document ?</titre>
@@ -2001,7 +2001,7 @@
         </sousSection>
     </section>
     <section id="9"> 
-        <Titre>Structuration de l'information</Titre>
+        <Titre>9. Structuration de l'information</Titre>
 
         <sousSection id="9.1">
             <titre>Dans chaque page web, l'information est-elle structurée par l'utilisation appropriée de titres ?</titre>
@@ -2122,7 +2122,7 @@
         </sousSection>
     </section>
     <section id="10">
-        <Titre>Présentation de l'information</Titre>
+        <Titre>10. Présentation de l'information</Titre>
 
         <sousSection id="10.1">
             <titre>Dans le site web, des feuilles de styles sont-elles utilisées pour contrôler la présentation de l'information ?</titre>
@@ -2574,7 +2574,7 @@
         </sousSection>
     </section>
     <section id="11">
-        <Titre>Formulaires</Titre>
+        <Titre>11. Formulaires</Titre>
         <sousSection id="11.1">
             <titre>Chaque champ de formulaire a-t-il une étiquette ?</titre>
 
@@ -3078,7 +3078,7 @@
         </sousSection>
     </section>
     <section id="12">
-        <Titre>Navigation</Titre>
+        <Titre>12. Navigation</Titre>
         <Note></Note>
 
         <sousSection id="12.1">
@@ -3362,7 +3362,7 @@
         </sousSection>
     </section>
     <section id="13">
-        <Titre>Consultation</Titre>
+        <Titre>13. Consultation</Titre>
         <Note></Note>
         
         <sousSection id="13.1">
@@ -3587,7 +3587,10 @@
                 <Notes>Il existe des interfaces pour lesquelles l'orientation du périphérique est essentielle à leur utilisation. Dans ces situations, le critère est non applicable. Par exemple, les interfaces de jeu, de piano, de dépôt de chèques bancaires, etc. Si l'interface est le seul moyen d'accéder au service proposé, une alternative devrait être mise en place pour pallier cette carence.</Notes>
             </Critere>
         </sousSection>
-
+    </section>
+    <section id="13">
+        <Titre>13. Consultation</Titre>
+        <Note></Note>
         <sousSection id="13.10">
             <titre>Dans chaque page web, les fonctionnalités utilisables ou disponibles au moyen d'un geste complexe peuvent-elles être également disponibles au moyen d'un geste simple (hors cas particuliers) ?</titre>
             <Note></Note>
