@@ -13,12 +13,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Dans audit.js - gestionnaires d'événements pour modifier et supprimer
     document.addEventListener('click', async function(e) {
         // Gestion du bouton supprimer
-        if (e.target.matches('.delete-nc')) {
+        if (e.target.matches('.delete-nc') && !e.target.dataset.handlerAttached) {
             console.log("Clic sur supprimer détecté");
             const ncId = e.target.dataset.ncId;
             console.log("NC ID:", ncId);
+            e.target.dataset.handlerAttached = 'true'; // Marquer le gestionnaire comme attaché
             
             if (!ncId) {
                 console.error('ID de la NC manquant');
@@ -42,9 +44,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     const card = e.target.closest('.card');
                     if (card) {
-                        card.style.transition = 'opacity 0.3s ease';
+                        // Animation de suppression
+                        card.style.transition = 'all 0.3s ease';
                         card.style.opacity = '0';
-                        setTimeout(() => card.remove(), 300);
+                        card.style.transform = 'translateX(-20px)';
+                        
+                        setTimeout(() => {
+                            card.remove();
+                            
+                            // Nettoyage manuel du backdrop et restauration du scroll
+                            const backdrop = document.querySelector('.modal-backdrop');
+                            if (backdrop) {
+                                backdrop.remove();
+                            }
+                            document.body.classList.remove('modal-open');
+                            document.body.style.overflow = '';
+                            document.body.style.paddingRight = '';
+                            
+                            // Vérifier s'il reste des NC
+                            const wrapper = card.closest('.wrapper_ncs');
+                            if (wrapper && !wrapper.querySelector('.card')) {
+                                wrapper.innerHTML = `
+                                    <div class="alert alert-info">
+                                        Aucune non-conformité trouvée pour ce critère
+                                    </div>
+                                `;
+                            }
+                        }, 300);
                     }
                 } else {
                     throw new Error(data.message || 'Erreur lors de la suppression');
@@ -52,47 +78,133 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (error) {
                 console.error('Erreur lors de la suppression:', error);
                 alert('Erreur lors de la suppression: ' + error.message);
+                
+                // Nettoyage en cas d'erreur
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
             }
         }
-    
+
         // Gestion du bouton modifier
-        // Dans audit.js, dans la gestion du clic
-        if (e.target.matches('.card-link.btn.btn-outline-primary')) {
+        if (e.target.matches('.btn-modifier')) {
             console.log("Clic sur modifier détecté");
-            const card = e.target.closest('.card');
-            if (!card) return;
+            const button = e.target;
+            const card = button.closest('.card');
+            const ncId = button.dataset.ncId;
+            const criterionId = button.dataset.criterionId;
             
-            const ncId = e.target.dataset.ncId;
-            console.log("NC ID pour modification:", ncId);
+            console.log("Données du bouton:", {
+                ncId,
+                criterionId,
+                card: !!card
+            });
             
-            // Récupérer les données actuelles de la NC
-            const impactEl = card.querySelector('h5.card-title + p');
-            const descriptionEl = card.querySelector('h5.card-text + p');
-            const solutionEl = card.querySelector('h5.card-title:last-of-type + p');
-            const screenshotEl = card.querySelector('img.card-img-top');
-            const wrapper = card.closest('[data-criterion-id]');
-            const criterionId = wrapper ? wrapper.dataset.criterionId : null;
-
-            // Remplir le formulaire
-            document.getElementById('editNcId').value = ncId;
-            document.getElementById('editCriterionId').value = criterionId;
-            document.getElementById('edit-impact').value = impactEl ? impactEl.textContent.trim() : '';
-            document.getElementById('edit-description').value = descriptionEl ? descriptionEl.textContent.trim() : '';
-            document.getElementById('edit-solution').value = solutionEl ? solutionEl.textContent.trim() : '';
-
-            // Afficher l'image actuelle si elle existe
-            const currentScreenshot = document.getElementById('current-screenshot');
-            currentScreenshot.innerHTML = '';
-            if (screenshotEl) {
-                currentScreenshot.innerHTML = `
-                    <img src="${screenshotEl.src}" class="img-fluid mb-2" alt="Capture d'écran actuelle">
-                    <small class="text-muted d-block">Capture d'écran actuelle</small>
-                `;
+            if (!ncId || !card || !criterionId) {
+                console.error('Données manquantes pour l\'édition');
+                return;
             }
+        
+            const modalId = `nc-modal-${criterionId.replace(/\./g, '-')}`;
+            console.log("Recherche modal avec ID:", modalId);
+            
+            const modal = document.getElementById(modalId);
+            if (!modal) {
+                console.error('Modal non trouvée. Modales disponibles:', 
+                    Array.from(document.querySelectorAll('.modal')).map(m => m.id)
+                );
+                return;
+            }
+        
+            const form = modal.querySelector('form');
+            if (!form) {
+                console.error('Formulaire non trouvé dans la modal');
+                return;
+            }
+            // Vérifions que tous les champs nécessaires existent
+            const fields = {
+                ncId: form.querySelector('[name="ncId"]'),
+                criterionId: form.querySelector('[name="criterionId"]')
+            };
+            // Log de debug pour voir quels champs sont trouvés
+            console.log("Champs trouvés dans le formulaire:", {
+                ncId: !!fields.ncId,
+                criterionId: !!fields.criterionId
+            });
 
-            // Ouvrir la modale
-            const editModal = new bootstrap.Modal(document.getElementById('editnc'));
-            editModal.show();
+            // Vérification avant assignation
+            if (!fields.ncId || !fields.criterionId) {
+                console.error('Champs manquants dans le formulaire');
+                return;
+            }
+            fields.ncId.value = ncId;
+            fields.criterionId.value = criterionId;
+
+            // Configuration de la modal pour l'édition
+            modal.querySelectorAll('.mode-create').forEach(el => el.style.display = 'none');
+            modal.querySelectorAll('.mode-edit').forEach(el => el.style.display = 'inline');
+            modal.querySelectorAll('.create-mode-field').forEach(el => el.style.display = 'none');
+    
+            // Récupérer toutes les données de la carte
+            const ncData = {
+                impact: card.querySelector('h5.card-title + p')?.textContent?.trim(),
+                description: card.querySelector('h5.card-text + p')?.textContent?.trim(),
+                solution: card.querySelector('h5.card-title:last-of-type + p')?.textContent?.trim(),
+                screenshot: card.querySelector('img.card-img-top')?.src
+            };
+            console.log("Données de la NC à éditer:", ncData);
+    
+            try {
+                // Remplir les champs cachés
+                const ncIdInput = form.querySelector('[name="ncId"]');
+                const criterionIdInput = form.querySelector('[name="criterionId"]');
+                const impactInput = form.querySelector('[name="impact"]');
+                const descriptionInput = form.querySelector('[name="description"]');
+                const solutionInput = form.querySelector('[name="solution"]');
+    
+                console.log("Champs trouvés:", {
+                    ncId: !!ncIdInput,
+                    criterionId: !!criterionIdInput,
+                    impact: !!impactInput,
+                    description: !!descriptionInput,
+                    solution: !!solutionInput
+                });
+    
+                if (ncIdInput) ncIdInput.value = ncId;
+                if (criterionIdInput) criterionIdInput.value = button.dataset.criterionId;
+                if (impactInput) impactInput.value = ncData.impact || '';
+                if (descriptionInput) descriptionInput.value = ncData.description || '';
+                if (solutionInput) solutionInput.value = ncData.solution || '';
+    
+                // Gérer la capture d'écran
+                const currentScreenshot = form.querySelector('#current-screenshot');
+                if (currentScreenshot && ncData.screenshot) {
+                    currentScreenshot.innerHTML = `
+                        <img src="${ncData.screenshot}" class="img-fluid mb-2" alt="Capture d'écran actuelle">
+                        <small class="text-muted d-block">Capture d'écran actuelle</small>
+                    `;
+                }
+    
+                // Afficher la modal
+                const modalInstance = new bootstrap.Modal(modal);
+                modalInstance.show();
+                modal.addEventListener('hidden.bs.modal', () => {
+                    document.body.classList.remove('modal-open');
+                    document.body.style.paddingRight = '';
+                    document.body.style.overflow = '';
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                }, { once: true }); // L'option once:true fait que l'événement se supprime automatiquement après utilisation
+    
+            } catch (error) {
+                console.error("Erreur lors du remplissage du formulaire:", error);
+            }
         }
     });
 
@@ -103,13 +215,29 @@ document.addEventListener('DOMContentLoaded', function() {
         new bootstrap.Dropdown(dropdownToggleEl)
     );
 
-    document.querySelectorAll('.modal').forEach(modalElement => {
-        new bootstrap.Modal(modalElement, {
-            backdrop: true,
-            keyboard: true,
-            focus: true
-        });
+    // Initialisation des modales pour la méthodologie
+    document.querySelectorAll('button[data-bs-target^="#test-modal_"]').forEach(button => {
+        const targetId = button.getAttribute('data-bs-target');
+        const modalElement = document.querySelector(targetId);
+        if (modalElement && !modalElement.initialized) {
+            new bootstrap.Modal(modalElement, {
+                backdrop: true,
+                keyboard: true
+            });
+            modalElement.initialized = true;
+
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                if (modal) {
+                    modal.show();
+                }
+            });
+        }
     });
+
+
+    
     
     // Ajoutez également ce gestionnaire pour les boutons qui ouvrent les modales
     document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
@@ -125,6 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
 
     function updateRates(rates) {
         if (rates.currentRate !== undefined) {

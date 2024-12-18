@@ -8,7 +8,7 @@
         {# Sélecteur d'écran #}
         <div class="col-auto">
             <select class="form-select" id="screenSelector">
-                <option value="">Tous les écrans</option>
+
                 {% if pages %}
                     {% for page in pages %}
                         <option value="{{ page.id }}" {% if currentPage and currentPage.id == page.id %}selected{% endif %}>

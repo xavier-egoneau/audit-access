@@ -160,7 +160,18 @@ class ProjectHandler {
                 throw new Error(data.message || 'Erreur lors de la mise à jour');
             }
 
-            window.location.reload();
+            if (data.success) {
+                // Récupérer le paramètre pageId de l'URL actuelle
+                const urlParams = new URLSearchParams(window.location.search);
+                const pageId = urlParams.get('pageId');
+                
+                // Recharger la page en préservant le paramètre pageId
+                if (pageId) {
+                    window.location.href = `${window.location.pathname}?pageId=${pageId}`;
+                } else {
+                    window.location.reload();
+                }
+            }
 
         } catch (error) {
             console.error('Erreur lors de la soumission:', error);

@@ -11,37 +11,54 @@
 {% block content %}
 <main id="main" class="main" role="main">
     <div id="app">
-        {# Header avec les statistiques #}
         {% include 'partials/_header.twig' %}
 
-        {# Alert pour les NT restants #}
         {% if hasNT %}
         <div id="alert" class="alert alert-warning d-flex align-items-center mt-4 show" role="alert">
             Attention, il reste des Non-Testé!
         </div>
         {% endif %}
 
-        {# Grille des critères #}
         {% include 'partials/_criteria-grid.twig' %}
 
-        {# Modales #}
-        {% include 'partials/_modals.twig' %}
-
-        {# Loader global #}
         <div id="loaderglobal" class="spinner-border" role="status" style="display: none;">
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 </main>
+    {% for section in criteria %}
+    {% for sousSection in section.sousSections %}
+        {% for criterion in sousSection.criteres %}
+            {# Une seule modal par critère pour création et édition #}
+            {% include 'partials/_nc-modal.twig' with {'criterion': criterion} %}                
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
+
+{% include 'partials/_modals.twig' %}
+
 {% endblock %}
 
 {% block js_footer %}
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/all.js"></script>
 <script>
     console.log("audit.twig");
     const currentProjectId = '{{ currentProjectId }}';
     const pages = {{ pages|json_encode|raw }};
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialiser toutes les modales au chargement
+        document.querySelectorAll('.modal').forEach(modalEl => {
+            const options = {
+                backdrop: true,
+                keyboard: true,
+                focus: true
+            };
+            new bootstrap.Modal(modalEl, options);
+        });
+    });
 
     document.addEventListener('DOMContentLoaded', function() {
         const forms = document.querySelectorAll('form.senddata, form[id^="ncForm-"]');

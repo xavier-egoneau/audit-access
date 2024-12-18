@@ -85,7 +85,8 @@ class Database {
                         screenshot_path TEXT,
                         solution TEXT,
                         page_ids TEXT, /* Stockage JSON des IDs des pages concernées */
-                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
                     )
                 `, err => {
                     if (err) reject(err);
@@ -227,114 +228,106 @@ class Database {
     // Dans database.js, remplacer la méthode loadCriteria par celle-ci :
     async loadCriteria(referentialPath) {
         try {
-            console.log('Début du chargement des critères');
-            
             // Déterminer le bon fichier XML selon le référentiel
             const projectInfo = await new Promise((resolve, reject) => {
                 this.db.get('SELECT referential FROM project_info WHERE id = ?', [this.projectId], (err, row) => {
                     if (err) {
-                        console.error('Erreur lors de la récupération du référentiel:', err);
+                        console.error('Erreur lors de la récupération des informations du projet:', err);
                         reject(err);
                     }
-                    if (!row) {
-                        console.error('Aucune information de projet trouvée pour l\'ID:', this.projectId);
-                        reject(new Error('Projet non trouvé'));
-                    }
-                    console.log('Référentiel trouvé:', row.referential);
                     resolve(row);
                 });
             });
-
+    
             // Choisir le fichier XML approprié
             const xmlFile = projectInfo.referential === 'WCAG' ? 'criteres_wcag.xml' : 
-                        projectInfo.referential === 'RAAM' ? 'criteres_raam.xml' : 
-                        'criteres_rgaa.xml';
+                           projectInfo.referential === 'RAAM' ? 'criteres_raam.xml' : 
+                           'criteres_rgaa.xml';
             const xmlPath = path.join(__dirname, '..', xmlFile);
-            console.log('Chemin du fichier XML:', xmlPath);
-
-            // Vérifier l'existence du fichier
+    
             try {
-                await fsPromises.access(xmlPath);
-                console.log('Fichier XML trouvé');
-            } catch (error) {
-                console.error('Fichier XML non trouvé:', error);
-                throw new Error(`Fichier ${xmlFile} non trouvé`);
-            }
-
-            const xmlData = await fsPromises.readFile(xmlPath, 'utf8');
-            console.log('Fichier XML lu, taille:', xmlData.length, 'caractères');
-            console.log('Début du fichier XML:', xmlData.substring(0, 200)); // Afficher le début du XML
-            
-            // validation XML détaillée
-       
-            //await this.analyzeXMLError(xmlData, 3679, 8);
-
-            const parser = new xml2js.Parser();
-            console.log('Parser XML créé');
-
-            const result = await new Promise((resolve, reject) => {
-                parser.parseString(xmlData, (err, result) => {
-                    if (err) {
-                        console.error('Erreur lors du parsing XML:', err);
-                        reject(err);
-                    } else {
-                        console.log('Structure du résultat:', Object.keys(result));
-                        if (!result.AUDIT) {
-                            console.error('Structure XML invalide - pas de nœud AUDIT');
-                            reject(new Error('Structure XML invalide'));
+                const xmlData = await fsPromises.readFile(xmlPath, 'utf8');
+                const parser = new xml2js.Parser();
+                
+                const result = await new Promise((resolve, reject) => {
+                    parser.parseString(xmlData, (err, result) => {
+                        if (err) {
+                            console.error('Erreur lors du parsing XML:', err);
+                            reject(err);
                         }
-                        resolve(result);
-                    }
-                });
-            });
-
-            // Récupérer la version
-            const version = result.AUDIT.$.version;
-            console.log('Version du référentiel:', version);
-            
-            let criteres = [];
-
-            // Format unifié pour tous les référentiels
-            try {
-                result.AUDIT.section.forEach((section, sIndex) => {
-                    console.log(`Traitement de la section ${sIndex + 1}/${result.AUDIT.section.length}`);
-                    
-                    section.sousSection.forEach((sousSection, ssIndex) => {
-                        console.log(`  Traitement de la sous-section ${ssIndex + 1}/${section.sousSection.length}`);
-                        
-                        sousSection.Critere.forEach((critere, cIndex) => {
-                            console.log(`    Traitement du critère ${critere.$.id}`);
-                            try {
-                                criteres.push({
-                                    id: critere.$.id,
-                                    titre: this.encodeHtml(critere.titre[0]),
-                                    niveauWCAG: critere.NiveauWCAG[0],
-                                    methodologie: critere.Methodologie[0].Etape.map(e => this.encodeHtml(e)),
-                                    notes: critere.Notes ? this.encodeHtml(critere.Notes[0]) : '',
-                                    casParticuliers: critere.CasParticuliers ? this.encodeHtml(critere.CasParticuliers[0]) : ''
-                                });
-                            } catch (error) {
-                                console.error(`Erreur lors du traitement du critère ${critere.$.id}:`, error);
-                                console.log('Structure du critère problématique:', JSON.stringify(critere, null, 2));
-                            }
-                        });
+                        else resolve(result);
                     });
                 });
-            } catch (error) {
-                console.error('Erreur lors du traitement des sections:', error);
-                throw error;
+    
+                // Récupérer la version
+                const version = result.AUDIT.$.version;
+                let criteres = [];
+                   
+                try {
+                    // Format unifié pour tous les référentiels
+                    result.AUDIT.section.forEach(section => {
+                        try {
+                            // Créer un objet section
+                            const sectionObj = {
+                                id: section.$.id,
+                                titre: this.encodeHtml(section.Titre[0]),
+                                sousSections: []
+                            };
+    
+                            section.sousSection.forEach(sousSection => {
+                                try {
+                                    // Créer un objet sous-section
+                                    const sousSectionObj = {
+                                        id: sousSection.$.id,
+                                        titre: this.encodeHtml(sousSection.titre[0]),
+                                        notes: sousSection.Note ? this.encodeHtml(sousSection.Note[0]) : '',
+                                        criteres: []
+                                    };
+    
+                                    sousSection.Critere.forEach(critere => {
+                                        try {
+                                            sousSectionObj.criteres.push({
+                                                id: critere.$.id,
+                                                titre: this.encodeHtml(critere.titre[0]),
+                                                niveauWCAG: critere.NiveauWCAG[0],
+                                                methodologie: critere.Methodologie[0].Etape.map(e => this.encodeHtml(e)),
+                                                notes: critere.Notes ? this.encodeHtml(critere.Notes[0]) : '',
+                                                casParticuliers: critere.CasParticuliers ? this.encodeHtml(critere.CasParticuliers[0]) : ''
+                                            });
+                                        } catch (critereError) {
+                                            console.error(`Erreur lors du traitement du critère ${critere.$.id}:`, critereError);
+                                        }
+                                    });
+    
+                                    sectionObj.sousSections.push(sousSectionObj);
+                                } catch (sousSectionError) {
+                                    console.error(`Erreur lors du traitement de la sous-section ${sousSection.$.id}:`, sousSectionError);
+                                }
+                            });
+    
+                            criteres.push(sectionObj);
+                        } catch (sectionError) {
+                            console.error(`Erreur lors du traitement de la section ${section.$.id}:`, sectionError);
+                        }
+                    });
+    
+                    // Mettre à jour la version dans la base de données
+                    await this.updateReferentialVersion(version);
+                    
+                    return criteres;
+                    
+                } catch (processingError) {
+                    console.error('Erreur lors du traitement des données XML:', processingError);
+                    throw processingError;
+                }
+                
+            } catch (xmlError) {
+                console.error('Erreur lors de la lecture ou du parsing du fichier XML:', xmlError);
+                throw xmlError;
             }
-
-            console.log(`Nombre total de critères chargés: ${criteres.length}`);
-
-            // Mettre à jour la version dans la base de données
-            await this.updateReferentialVersion(version);
-
-            return criteres;
-
+            
         } catch (error) {
-            console.error('Erreur lors du chargement des critères:', error);
-            console.error('Stack trace:', error.stack);
+            console.error('Erreur générale lors du chargement des critères:', error);
             throw error;
         }
     }
@@ -374,30 +367,33 @@ class Database {
                         reject(err);
                         return;
                     }
-
+    
                     try {
-                        // Nombre total de critères
-                        const allCriteria = await this.loadCriteria(path.join(__dirname, '..', 'criteres_raam.xml'));
+                        const allCriteria = await this.loadCriteria(path.join(__dirname, '..', 'criteres_rgaa.xml'));
                         
-                        // Nombre de critères NA (Non Applicables)
+                        // Calculer le nombre total de critères
+                        let totalCriteres = 0;
+                        allCriteria.forEach(section => {
+                            section.sousSections.forEach(sousSection => {
+                                totalCriteres += sousSection.criteres.length;
+                            });
+                        });
+                        
                         const naCount = results.filter(r => r.status === 'NA').length;
-                        
-                        // Nombre de critères conformes
                         const validResults = results.filter(r => r.status === 'C').length;
                         
-                        // Application de la formule
-                        const applicableCriteria = allCriteria.length - naCount;
+                        const applicableCriteria = totalCriteres - naCount;
                         const rate = Math.round((100 / applicableCriteria) * validResults);
                         
                         console.log('--- Calcul du taux pour la page ---');
                         console.log('Page ID:', pageId);
-                        console.log('Nombre total de critères:', allCriteria.length);
+                        console.log('Nombre total de critères:', totalCriteres);
                         console.log('Nombre de NA:', naCount);
                         console.log('Critères applicables:', applicableCriteria);
                         console.log('Nombre de conformes:', validResults);
                         console.log('Taux calculé:', rate);
                         console.log('--------------------------------');
-
+    
                         resolve(rate);
                     } catch (error) {
                         reject(error);
@@ -452,7 +448,7 @@ class Database {
     async calculateGlobalRate() {
         return new Promise((resolve, reject) => {
             Promise.all([
-                this.loadCriteria(path.join(__dirname, '..', 'criteres_raam.xml')),
+                this.loadCriteria(path.join(__dirname, '..', 'criteres_rgaa.xml')),
                 new Promise((resolve, reject) => {
                     this.db.all('SELECT id FROM pages', (err, pages) => {
                         if (err) reject(err);
@@ -462,12 +458,20 @@ class Database {
             ]).then(async ([allCriteria, pages]) => {
                 try {
                     if (!pages || pages.length === 0) {
-                        resolve(0); // Retourne 0 s'il n'y a pas de pages
+                        resolve(0);
                         return;
                     }
-
+    
+                    // Récupérer tous les critères dans un tableau plat
+                    let flatCriteria = [];
+                    allCriteria.forEach(section => {
+                        section.sousSections.forEach(sousSection => {
+                            flatCriteria = flatCriteria.concat(sousSection.criteres);
+                        });
+                    });
+    
                     const globalStatuses = await Promise.all(
-                        allCriteria.map(async (criterion) => {
+                        flatCriteria.map(async (criterion) => {
                             const results = await new Promise((resolve, reject) => {
                                 this.db.all(
                                     `SELECT status FROM audit_results 
@@ -479,7 +483,7 @@ class Database {
                                     }
                                 );
                             });
-
+    
                             if (results.length === pages.length && 
                                 results.every(r => r.status === 'NA')) {
                                 return 'NA';
@@ -489,32 +493,31 @@ class Database {
                                 results.every(r => r.status === 'C')) {
                                 return 'C';
                             }
-
+    
                             return 'NC';
                         })
                     );
-
+    
                     const naCount = globalStatuses.filter(status => status === 'NA').length;
                     const conformCount = globalStatuses.filter(status => status === 'C').length;
-
-                    const applicableCriteria = allCriteria.length - naCount;
+    
+                    const applicableCriteria = flatCriteria.length - naCount;
                     
-                    // Si aucun critère applicable, retourner 0
                     if (applicableCriteria === 0) {
                         resolve(0);
                         return;
                     }
-
+    
                     const rate = Math.round((100 / applicableCriteria) * conformCount);
                     
                     console.log('--- Calcul du taux global ---');
-                    console.log('Nombre total de critères:', allCriteria.length);
+                    console.log('Nombre total de critères:', flatCriteria.length);
                     console.log('Nombre de NA global:', naCount);
                     console.log('Critères applicables:', applicableCriteria);
                     console.log('Nombre de conformes global:', conformCount);
                     console.log('Taux global calculé:', rate);
                     console.log('--------------------------------');
-
+    
                     resolve(rate);
                 } catch (error) {
                     reject(error);
@@ -526,8 +529,17 @@ class Database {
     // calculer le nombre de critères
     async getTotalCriteria() {
         try {
-            const allCriteria = await this.loadCriteria(path.join(__dirname, '..', 'criteres_raam.xml'));
-            return allCriteria.length;
+            const allCriteria = await this.loadCriteria(path.join(__dirname, '..', 'criteres_rgaa.xml'));
+            
+            // Calculer le nombre total de critères en parcourant la structure
+            let totalCriteres = 0;
+            allCriteria.forEach(section => {
+                section.sousSections.forEach(sousSection => {
+                    totalCriteres += sousSection.criteres.length;
+                });
+            });
+            
+            return totalCriteres;
         } catch (error) {
             console.error("Erreur lors du comptage des critères:", error);
             throw error;

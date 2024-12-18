@@ -114,10 +114,38 @@ button.add-nc {
 h1{
   margin: 0;
   padding: 0;
-  display: flex
-;
+  display: flex;
   align-items: center;
 }
+.modal{
+  background-color: rgba($color: #000000, $alpha: .3);
+}
+.modal-backdrop {
+      display: none;
+}
+.modal-backdrop.show {
+  display: none;
+}
+.section {
+  h2 {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #eee;
+  }
+}
+
+.sous-section {
+  h3 {
+      font-size: 1.25rem;
+      color: #34495e;
+      margin-bottom: 1rem;
+      padding-left: 1rem;
+      border-left: 3px solid #3498db;
+  }
+}
+
 .audit-actions{
 
   button{
