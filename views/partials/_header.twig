@@ -34,10 +34,7 @@
                     Taux Global:
                     <span id="taux_conform" class="badge bg-primary">{{ globalRate|default('0') }}%</span>
                 </div>
-                <div>
-                    Critères totaux:
-                    <span class="badge bg-secondary">{{ totalCriteria }}</span>
-                </div>
+                
             </div>
         </div>
 
@@ -61,3 +58,18 @@
         </div>
     </div>
 </div>
+
+<span class="debug">
+            {{ criteria|length }} sections,<br>
+            {% set totalSousSections = 0 %}
+            {% set debug = [] %}
+            {% for section in criteria %}
+                {% set totalSousSections = totalSousSections + section.sousSections|length %}
+                {% set debug = debug|merge([{
+                    'section': section.id,
+                    'nbSousSection': section.sousSections|length
+                }]) %}
+            {% endfor %}
+            {{ totalSousSections }} critère<br>
+            {{ totalCriteria }} sous-critères
+        </span>

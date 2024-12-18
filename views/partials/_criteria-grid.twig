@@ -37,12 +37,17 @@
                                     <td>{{ criterion.id }}</td>
                                     <td>{{ criterion.niveauWCAG }}</td>
                                     <td>{{ criterion.titre }}</td>
-                                    
+                                    <!--
+                                    status : {{criterion.status}}
+                                    {% for crit in criterion %}
+                                    {{ crit }}
+                                    {% endfor %}
+                                    -->
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <select class="form-select form-select-sm criterion-status me-2"
+                                            <select class="form-select form-select-sm criterion-status me-2" 
                                                     data-criterion="{{ criterion.id }}">
-                                                <option value="NT" {% if criterion.status == 'NT' %}selected{% endif %}>Non Testé</option>
+                                                <option value="NT" {% if criterion.status is not defined or criterion.status == 'NT' %}selected{% endif %}>Non Testé</option>
                                                 <option value="NA" {% if criterion.status == 'NA' %}selected{% endif %}>Non Applicable</option>
                                                 <option value="C" {% if criterion.status == 'C' %}selected{% endif %}>Conforme</option>
                                                 <option value="NC" {% if criterion.status == 'NC' %}selected{% endif %}>Non Conforme</option>

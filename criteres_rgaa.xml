@@ -1583,6 +1583,21 @@
                 <CasParticuliers>Voir cas particuliers critère 5.7.1</CasParticuliers>
             </Critere>
         </sousSection>
+        <sousSection id="5.8">
+            <titre>Chaque tableau de mise en forme ne doit pas utiliser d’éléments propres aux tableaux de données. Cette règle est-elle respectée ?</titre>
+            
+            <Critere id="5.8.1">
+                <titre>Chaque tableau de mise en forme (balise &lt;table&gt;) vérifie-t-il ces conditions ?</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Retrouver dans le document les tableaux de mise en forme ;</Etape>
+                    <Etape>Pour chaque tableau de mise en forme, vérifier que :<![CDATA[<br>]]>L’élément &lt;table&gt; ne possède pas d’attribut summary, d’éléments enfant &lt;caption&gt;, &lt;thead&gt;, &lt;th&gt;, &lt;tfoot&gt; ou d’éléments pourvus d’un attribut WAI-ARIA role=“rowheader” ou role=“columnheader” ;<![CDATA[<br>]]>Les éléments &lt;td&gt; ne possèdent pas d’attributs scope, headers et axis.</Etape>
+                    <Etape>Si c'est le cas pour chaque tableau de mise en forme, le test est validé.</Etape>
+                </Methodologie>
+                <Notes></Notes>
+                <CasParticuliers></CasParticuliers>
+            </Critere>
+        </sousSection>
     </section>
     <section id="6">
         <Titre>Liens</Titre>

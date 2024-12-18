@@ -1,4 +1,5 @@
 const LearningDatabase = require('../models/learningDatabase');
+const logger = require('../utils/logger');
 
 class LearningService {
     constructor() {
@@ -20,12 +21,12 @@ class LearningService {
             interaction: ['impossible de cliquer', 'non activable', 'bloqué']
         };
 
-        console.log('Service d\'apprentissage initialisé');
+        logger.log('Service d\'apprentissage initialisé');
     }
 
     // Méthode principale pour apprendre d'une nouvelle NC
     async learnFromNC(nonConformity) {
-        console.log("NC reçue:", nonConformity); // Debug
+        logger.log("NC reçue:", nonConformity); // Debug
     
         const { criterionId, impact, description, solution, projectId } = nonConformity;
     

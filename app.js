@@ -9,6 +9,7 @@ const Database = require('./models/database');
 const { v4: uuidv4 } = require('uuid');
 const cookieParser = require('cookie-parser');
 const fs = require('fs/promises');
+const logger = require('./utils/logger');
 
 // IA
 const LearningService = require('./services/learningService');
@@ -61,152 +62,175 @@ app.get('/project/new', (req, res) => {
 // Modification de la route principale
 // Dans app.js, modifiez la route GET /audit/:projectId
 app.get('/audit/:projectId', async (req, res) => {
-  try {
-      const projectId = req.params.projectId;
-      const db = new Database(projectId);
-
-      // Récupérer les pages du projet
-      const pages = await new Promise((resolve, reject) => {
-          db.db.all('SELECT * FROM pages ORDER BY created_at', [], (err, rows) => {
-              if (err) {
-                  reject(err);
-                  return;
-              }
-              console.log("Pages récupérées:", rows);
-              resolve(rows || []);
-          });
-      });
-
-      if (!req.query.pageId && pages.length > 0) {
-        // Rediriger vers la même URL avec la première page sélectionnée
-        return res.redirect(`/audit/${projectId}?pageId=${pages[0].id}`);
-    }
-
-      // Récupérer les informations du projet
-      const projectInfo = await new Promise((resolve, reject) => {
-          db.db.get('SELECT * FROM project_info WHERE id = ?', [projectId], (err, row) => {
-              if (err) reject(err);
-              if (!row) {
-                  reject(new Error("Projet non trouvé"));
-              }
-              resolve(row);
-          });
-      });
-
-      // Si on arrive ici, le projet existe
-      // Sauvegarder le projectId dans un cookie (expire dans 30 jours)
-      res.cookie('lastProjectId', projectId, { 
-          maxAge: 30 * 24 * 60 * 60 * 1000,
-          httpOnly: true
-      });
-
-      // Charger les critères depuis le XML
-      const criteria = await db.loadCriteria();
-      console.log('Premier critère chargé:', criteria[0]);
-
-      // Pour chaque critère, récupérer son statut et ses non-conformités
-      // Remplacez par ce bloc
-    for (const criterion of criteria) {
-        // Récupérer les NC que ce soit pour une page spécifique ou toutes les pages
-        const ncs = await new Promise((resolve, reject) => {
-            let query;
-            const params = [];
-
-            if (req.query.pageId) {
-                // Pour une page spécifique - pas de changement
-                query = `
-                    SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
-                    FROM non_conformities nc 
-                    LEFT JOIN pages p ON EXISTS (
-                        SELECT 1 
-                        FROM json_each(nc.page_ids) 
-                        WHERE value = CAST(p.id AS TEXT)
-                    )
-                    WHERE nc.criterion_id = ?
-                    AND json_extract(nc.page_ids, '$') LIKE '%' || ? || '%'
-                    GROUP BY nc.id
-                    ORDER BY nc.created_at DESC`;
-                params.push(criterion.id, req.query.pageId);
-            } else {
-                // Pour toutes les pages - afficher les NC qui ont plusieurs pages
-                query = `
-                    SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
-                    FROM non_conformities nc 
-                    LEFT JOIN pages p ON EXISTS (
-                        SELECT 1 
-                        FROM json_each(nc.page_ids) 
-                        WHERE value = CAST(p.id AS TEXT)
-                    )
-                    WHERE nc.criterion_id = ?
-                    GROUP BY nc.id
-                    HAVING json_array_length(nc.page_ids) > 1
-                    ORDER BY nc.created_at DESC`;
-                params.push(criterion.id);
-            }
-
-            db.db.all(query, params, (err, rows) => {
+    try {
+        const projectId = req.params.projectId;
+        const db = new Database(projectId);
+      
+        // Vérifier si le projet existe
+        const projectExists = await Database.projectExists(projectId);
+        if (!projectExists) {
+            return res.status(404).json({
+                success: false,
+                message: 'Projet non trouvé'
+            });
+        }
+  
+        // Récupérer les pages du projet
+        const pages = await new Promise((resolve, reject) => {
+            db.db.all('SELECT * FROM pages ORDER BY created_at', [], (err, rows) => {
                 if (err) {
-                    console.error('Erreur SQL:', err);
                     reject(err);
                     return;
                 }
-                
-                // Transformer les résultats
-                const transformedRows = rows ? rows.map(row => ({
-                    ...row,
-                    page_ids: JSON.parse(row.page_ids || '[]'),
-                    pages: row.page_names ? row.page_names.split(',') : [],
-                    allPages: !row.page_ids || JSON.parse(row.page_ids || '[]').length === 0
-                })) : [];
-                
-                resolve(transformedRows);
+                logger.log("Pages récupérées:", rows);
+                resolve(rows || []);
             });
         });
-        criterion.nonConformities = ncs;
+  
+        if (!req.query.pageId && pages.length > 0) {
+            // Rediriger vers la même URL avec la première page sélectionnée
+            return res.redirect(`/audit/${projectId}?pageId=${pages[0].id}`);
+        }
+  
+        // Récupérer les informations du projet
+        const projectInfo = await new Promise((resolve, reject) => {
+            db.db.get('SELECT * FROM project_info WHERE id = ?', [projectId], (err, row) => {
+                if (err) reject(err);
+                if (!row) {
+                    reject(new Error("Projet non trouvé"));
+                }
+                resolve(row);
+            });
+        });
+  
+        // Si on arrive ici, le projet existe
+        // Sauvegarder le projectId dans un cookie (expire dans 30 jours)
+        res.cookie('lastProjectId', projectId, { 
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            httpOnly: true
+        });
+  
+        // Charger les critères depuis le XML
+        // Charger les critères depuis le XML
+        const criteria = await db.loadCriteria();
+        //gger.log('Premier critère chargé:', criteria[0]);
+
+        // Récupérer tous les statuts en une seule fois
+        const statuses = await db.getCriteriaStatuses(req.query.pageId);
+        //gger.log('Statuts récupérés:', statuses);
+
+        // Pour chaque section
+        for (const section of criteria) {
+            // Pour chaque sous-section
+            for (const sousSection of section.sousSections) {
+                // Pour chaque critère
+                for (const criterion of sousSection.criteres) {
+                    // Assigner le statut
+                    criterion.status = statuses[criterion.id] || 'NT';
+                    criterion.hasDifferentStatuses = statuses[criterion.id] === 'MULTIPLE';
+
+                    // Récupérer les NC
+                    const ncs = await new Promise((resolve, reject) => {
+                        let query;
+                        const params = [];
+
+                        if (req.query.pageId) {
+                            query = `
+                                SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
+                                FROM non_conformities nc 
+                                LEFT JOIN pages p ON EXISTS (
+                                    SELECT 1 
+                                    FROM json_each(nc.page_ids) 
+                                    WHERE value = CAST(p.id AS TEXT)
+                                )
+                                WHERE nc.criterion_id = ?
+                                AND json_extract(nc.page_ids, '$') LIKE '%' || ? || '%'
+                                GROUP BY nc.id
+                                ORDER BY nc.created_at DESC`;
+                            params.push(criterion.id, req.query.pageId);
+                        } else {
+                            query = `
+                                SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
+                                FROM non_conformities nc 
+                                LEFT JOIN pages p ON EXISTS (
+                                    SELECT 1 
+                                    FROM json_each(nc.page_ids) 
+                                    WHERE value = CAST(p.id AS TEXT)
+                                )
+                                WHERE nc.criterion_id = ?
+                                GROUP BY nc.id
+                                HAVING json_array_length(nc.page_ids) > 1
+                                ORDER BY nc.created_at DESC`;
+                            params.push(criterion.id);
+                        }
+
+                        db.db.all(query, params, (err, rows) => {
+                            if (err) {
+                                console.error('Erreur SQL:', err);
+                                reject(err);
+                                return;
+                            }
+                            
+                            const transformedRows = rows ? rows.map(row => ({
+                                ...row,
+                                page_ids: JSON.parse(row.page_ids || '[]'),
+                                pages: row.page_names ? row.page_names.split(',') : [],
+                                allPages: !row.page_ids || JSON.parse(row.page_ids || '[]').length === 0
+                            })) : [];
+                            
+                            resolve(transformedRows);
+                        });
+                    });
+                    criterion.nonConformities = ncs;
+                }
+            }
+        }
+
+
+        // Log pour vérification
+       //ogger.log("Exemple de section après traitement:", JSON.stringify(criteria[0], null, 2));
+  
+        // Calculer les différents taux
+        const currentRate = req.query.pageId ? await db.calculatePageRate(req.query.pageId) : 0;
+        const averageRate = await db.calculateAverageRate() || 0;
+        const globalRate = await db.calculateGlobalRate() || 0;
+  
+        // Vérifier s'il reste des critères non testés
+        const hasNT = criteria.some(section => 
+            section.sousSections.some(sousSection => 
+                sousSection.criteres.some(c => c.status === 'NT')
+            )
+        );
+  
+        
+        // Log pour vérification
+       ///gger.log("Exemple de section après traitement:", JSON.stringify(criteria[0], null, 2));
+  
+        const totalCriteria = await db.getTotalCriteria();
+  
+        db.close();
+  
+        res.render('audit', {
+            currentProject: projectInfo,
+            currentProjectId: projectId,
+            pages: pages || [],
+            criteria: criteria,
+            currentPage: req.query.pageId ? pages.find(p => p.id === parseInt(req.query.pageId)) : null,
+            currentRate: currentRate,
+            averageRate: averageRate,
+            globalRate: globalRate,
+            hasNT: hasNT,
+            title: `Audit - ${projectInfo.name}`,
+            totalCriteria: totalCriteria
+        });
+  
+    } catch (error) {
+        console.error(error);
+        res.status(500).render('error', {
+            message: 'Erreur lors du chargement de l\'audit',
+            error: process.env.NODE_ENV === 'development' ? error : {}
+        });
     }
-
-      // Calculer les différents taux
-      const currentRate = req.query.pageId ? await db.calculatePageRate(req.query.pageId) : 0;
-      const averageRate = await db.calculateAverageRate() || 0; // Ajout du || 0
-      const globalRate = await db.calculateGlobalRate() || 0;   // Ajout du || 0
-
-      // Vérifier s'il reste des critères non testés
-      const hasNT = criteria.some(c => c.status === 'NT');
-
-      // Récupérer les statuts des critères
-      const statuses = await db.getCriteriaStatuses(req.query.pageId);
-
-      // Pour chaque critère, ajouter son statut
-      for (const criterion of criteria) {
-          criterion.status = statuses[criterion.id] || 'NT';
-          criterion.hasDifferentStatuses = statuses[criterion.id] === 'MULTIPLE';
-      }
-
-      const totalCriteria = await db.getTotalCriteria();
-
-      db.close();
-
-      res.render('audit', {
-        currentProject: projectInfo,
-        currentProjectId: projectId,
-        pages: pages || [], // Assurez-vous que pages est toujours un tableau
-        criteria: criteria,
-        currentPage: req.query.pageId ? pages.find(p => p.id === parseInt(req.query.pageId)) : null,
-        currentRate: currentRate,
-        averageRate: averageRate,
-        globalRate: globalRate,
-        hasNT: hasNT,
-        title: `Audit - ${projectInfo.name}`,
-        totalCriteria: totalCriteria
-    });
-
-  } catch (error) {
-      console.error(error);
-      res.status(500).render('error', { 
-          message: 'Erreur lors du chargement de l\'audit',
-          error: process.env.NODE_ENV === 'development' ? error : {}
-      });
-  }
 });
 
 
@@ -467,7 +491,7 @@ app.get('/audit/:projectId/criterion/:criterionId/allnc', async (req, res) => {
         const db = new Database(projectId);
         
         // Debug
-        console.log("Recherche des NC pour - critère:", criterionId, "page:", pageId);
+        logger.log("Recherche des NC pour - critère:", criterionId, "page:", pageId);
 
         const query = `
             SELECT nc.*, GROUP_CONCAT(p.name) as page_names
@@ -493,13 +517,13 @@ app.get('/audit/:projectId/criterion/:criterionId/allnc', async (req, res) => {
                 }
                 
                 // Debug
-                console.log("Résultats bruts:", rows);
+                logger.log("Résultats bruts:", rows);
                 
                 // Transformer les données
                 if (rows) {
                     rows = rows.map(row => {
                         const pageIdsArray = JSON.parse(row.page_ids || '[]');
-                        console.log("Page IDs pour NC", row.id, ":", pageIdsArray);
+                        logger.log("Page IDs pour NC", row.id, ":", pageIdsArray);
                         return {
                             id: row.id,  // Assurez-vous que l'ID est bien passé
                             criterion_id: row.criterion_id,
@@ -515,7 +539,7 @@ app.get('/audit/:projectId/criterion/:criterionId/allnc', async (req, res) => {
                 }
                 
                 // Debug
-                console.log("Résultats transformés:", rows);
+                logger.log("Résultats transformés:", rows);
                 
                 resolve(rows || []);
             });
@@ -633,7 +657,7 @@ app.post('/audit/:projectId/nc/:ncId/edit', upload.single('screenshot'), async (
 // Dans app.js, modifiez la route POST /audit/new :
 app.post('/audit/new', async (req, res) => {
     try {
-        console.log("Données reçues:", req.body);
+        logger.log("Données reçues:", req.body);
         
         // Nettoyage et validation des données reçues
         const projectData = {
@@ -815,7 +839,7 @@ app.post('/audit/:projectId/nc', upload.single('screenshot'), async (req, res) =
     const { criterionId, pageId, impact, description, solution, allPages } = req.body;
     let db = null;
 
-    console.log("Données reçues:", {
+    logger.log("Données reçues:", {
         criterionId,
         pageId,
         impact,
@@ -836,7 +860,7 @@ app.post('/audit/:projectId/nc', upload.single('screenshot'), async (req, res) =
                         reject(err);
                         return;
                     }
-                    console.log("Pages récupérées pour toutes les pages:", rows);
+                    logger.log("Pages récupérées pour toutes les pages:", rows);
                     resolve(rows || []);
                 });
             });
@@ -848,7 +872,7 @@ app.post('/audit/:projectId/nc', upload.single('screenshot'), async (req, res) =
                 });
             });
             pages = page ? [page] : [];
-            console.log("Page unique récupérée:", pages);
+            logger.log("Page unique récupérée:", pages);
         }
 
         if (pages.length === 0) {
@@ -901,7 +925,7 @@ app.post('/audit/:projectId/nc', upload.single('screenshot'), async (req, res) =
         try {
             const insertedNCs = [];
             for (const page of pages) {
-                console.log(`Création NC pour page ${page.id} (${page.name})`);
+                logger.log(`Création NC pour page ${page.id} (${page.name})`);
                 const result = await new Promise((resolve, reject) => {
                     db.db.run(
                         `INSERT INTO non_conformities 
@@ -937,7 +961,7 @@ app.post('/audit/:projectId/nc', upload.single('screenshot'), async (req, res) =
                 });
             });
 
-            console.log(`${insertedNCs.length} NC(s) créée(s) avec succès`);
+            logger.log(`${insertedNCs.length} NC(s) créée(s) avec succès`);
 
             const firstNC = insertedNCs[0];
             res.json({ 
@@ -1058,77 +1082,6 @@ app.get('/api/suggestions/:criterionId', async (req, res) => {
     }
 });
 
-// Route pour créer un nouveau projet
-/*app.post('/audit/new', async (req, res) => {
-    try {
-        console.log("Données reçues:", req.body);
-        
-        // Vérification du nom du projet
-        if (!req.body.name || req.body.name.trim() === '') {
-            throw new Error('Le nom du projet est requis');
-        }
-  
-        const projectId = uuidv4();
-        console.log("Création du projet:", projectId);
-  
-        const db = new Database(projectId);
-
-        // Créer le projet avec tous les champs requis
-        await new Promise((resolve, reject) => {
-            db.db.run(
-                `INSERT INTO project_info (
-                    id, 
-                    name, 
-                    url,
-                    referential, 
-                    referential_version,
-                    created_at
-                ) VALUES (?, ?, ?, ?, ?, datetime('now'))`,
-                [
-                    projectId,
-                    req.body.name,
-                    req.body.url || '',  // URL optionnelle
-                    'RGAA',              // Valeur par défaut
-                    '4.1',               // Version par défaut
-                ],
-                (err) => {
-                    if (err) reject(err);
-                    resolve();
-                }
-            );
-        });
-
-        // Créer les pages
-        if (req.body.screens && req.body.screens.length > 0) {
-            await Promise.all(req.body.screens.map(screen => {
-                return new Promise((resolve, reject) => {
-                    db.db.run(
-                        'INSERT INTO pages (name, created_at) VALUES (?, datetime("now"))',
-                        [screen],
-                        (err) => {
-                            if (err) reject(err);
-                            resolve();
-                        }
-                    );
-                });
-            }));
-        }
-
-        db.close();
-            res.json({ 
-                success: true, 
-                projectId,  // Ajouter le projectId dans la réponse
-                message: 'Projet créé avec succès'
-            });
-        } catch (error) {
-            console.error("Erreur lors de la création du projet:", error);
-            res.status(500).json({ 
-                success: false, 
-                message: error.message || 'Erreur lors de la création du projet'
-            });
-        }
-    });
-*/
 // Route pour créer une nouvelle page
 app.post('/project/:id/page/new', async (req, res) => {
   try {
@@ -1159,8 +1112,8 @@ app.post('/project/:id/page/new', async (req, res) => {
 // Modification partielle - Route d'édition
 
 app.post('/audit/:projectId/edit', async (req, res) => {
-    console.log('Headers reçus:', req.headers);
-    console.log('Body brut:', req.body);
+    logger.log('Headers reçus:', req.headers);
+    logger.log('Body brut:', req.body);
     
     try {
         const projectId = req.params.projectId;
@@ -1169,7 +1122,7 @@ app.post('/audit/:projectId/edit', async (req, res) => {
         const { name, url, referential, referentialVersion, screens } = req.body;
         
         if (!name || name.trim() === '') {
-            console.log('Nom manquant dans:', req.body);
+            logger.log('Nom manquant dans:', req.body);
             return res.status(400).json({
                 success: false,
                 message: 'Le nom du projet est requis'
@@ -1195,7 +1148,7 @@ app.post('/audit/:projectId/edit', async (req, res) => {
                     projectId
                 ];
 
-                console.log('Exécution de la requête:', query, params);
+                logger.log('Exécution de la requête:', query, params);
                 
                 db.db.run(query, params, function(err) {
                     if (err) {
@@ -1203,7 +1156,7 @@ app.post('/audit/:projectId/edit', async (req, res) => {
                         reject(err);
                         return;
                     }
-                    console.log('Projet mis à jour, changes:', this.changes);
+                    logger.log('Projet mis à jour, changes:', this.changes);
                     resolve();
                 });
             });
@@ -1401,9 +1354,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Démarrage du serveur
-app.listen(port, async () => {
-    console.log(`Application démarrée sur http://localhost:${port}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, async () => {
+        logger.log(`Application démarrée sur http://localhost:${port}`);
+    });
+}
 
 module.exports = app;

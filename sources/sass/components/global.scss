@@ -56,6 +56,16 @@ button.add-nc {
     width: 200px;
   }
 }
+.debug{
+  background-color: #000;
+  opacity: .6;
+  position: fixed;
+  top: 30px;
+  left:30px;
+  padding: 30px;
+  color: #fff;
+  z-index: 2;
+}
 .table{
   tr{
     th{

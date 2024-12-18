@@ -3,6 +3,7 @@ const path = require('path');
 const xml2js = require('xml2js');
 const fs = require('fs');
 const fsPromises = require('fs').promises;
+const logger = require('../utils/logger');
 
 class Database {
     constructor(projectId) {
@@ -167,28 +168,28 @@ class Database {
 
 
     async analyzeXMLError(xmlData, errorLine, errorColumn, context = 50) {
-        console.log('\n=== Analyse détaillée de l\'erreur XML ===');
+        logger.log('\n=== Analyse détaillée de l\'erreur XML ===');
         
         // Diviser le XML en lignes
         const lines = xmlData.split('\n');
         
         // Afficher les lignes autour de l'erreur
-        console.log('\nContexte de l\'erreur :');
+        logger.log('\nContexte de l\'erreur :');
         for (let i = Math.max(0, errorLine - 3); i <= Math.min(lines.length - 1, errorLine + 1); i++) {
             const lineNum = i + 1;
             const line = lines[i];
             
             if (lineNum === errorLine) {
-                console.log(`>>> ${lineNum}: ${line}`);
+                logger.log(`>>> ${lineNum}: ${line}`);
                 // Marquer la position exacte de l'erreur
                 const marker = ' '.repeat(errorColumn + 4) + '^';
-                console.log(marker);
+                logger.log(marker);
                 
                 // Analyser la structure des balises dans cette ligne
                 const tags = line.match(/<\/?[^>]+>/g) || [];
-                console.log('\nBalises trouvées dans la ligne d\'erreur :');
+                logger.log('\nBalises trouvées dans la ligne d\'erreur :');
                 tags.forEach((tag, index) => {
-                    console.log(`  ${index + 1}: ${tag}`);
+                    logger.log(`  ${index + 1}: ${tag}`);
                 });
     
                 // Vérifier les balises ouvrantes/fermantes
@@ -201,9 +202,9 @@ class Database {
                         const tagName = tag.match(/<\/([^>]+)>/)[1];
                         const lastOpen = stack.pop();
                         if (!lastOpen) {
-                            console.log(`\n⚠️ ERREUR: Balise fermante ${tagName} sans balise ouvrante correspondante à la colonne ${col}`);
+                            logger.log(`\n⚠️ ERREUR: Balise fermante ${tagName} sans balise ouvrante correspondante à la colonne ${col}`);
                         } else if (lastOpen !== tagName) {
-                            console.log(`\n⚠️ ERREUR: Balise fermante ${tagName} ne correspond pas à la dernière balise ouverte ${lastOpen} à la colonne ${col}`);
+                            logger.log(`\n⚠️ ERREUR: Balise fermante ${tagName} ne correspond pas à la dernière balise ouverte ${lastOpen} à la colonne ${col}`);
                         }
                     } else if (!tag.endsWith('/>')) {
                         // Balise ouvrante
@@ -214,14 +215,14 @@ class Database {
                 }
                 
                 if (stack.length > 0) {
-                    console.log(`\n⚠️ Balises non fermées : ${stack.join(', ')}`);
+                    logger.log(`\n⚠️ Balises non fermées : ${stack.join(', ')}`);
                 }
             } else {
-                console.log(`   ${lineNum}: ${line}`);
+                logger.log(`   ${lineNum}: ${line}`);
             }
         }
         
-        console.log('\n=== Fin de l\'analyse détaillée ===\n');
+        logger.log('\n=== Fin de l\'analyse détaillée ===\n');
     }
 
     // Méthode pour charger les critères depuis le XML
@@ -357,6 +358,7 @@ class Database {
     }
 
     // Calculer le taux de conformité d'une page
+    // Dans database.js
     async calculatePageRate(pageId) {
         return new Promise((resolve, reject) => {
             this.db.all(
@@ -369,30 +371,50 @@ class Database {
                     }
     
                     try {
-                        const allCriteria = await this.loadCriteria(path.join(__dirname, '..', 'criteres_rgaa.xml'));
-                        
-                        // Calculer le nombre total de critères
-                        let totalCriteres = 0;
+                        // Obtenir le nombre total de critères du RGAA
+                        const allCriteria = await this.loadCriteria();
+                        let totalCriteria = 0;
                         allCriteria.forEach(section => {
                             section.sousSections.forEach(sousSection => {
-                                totalCriteres += sousSection.criteres.length;
+                                totalCriteria += sousSection.criteres.length;
                             });
                         });
-                        
+    
+                        // Si aucun critère testé, retourner 0
+                        if (!results || results.length === 0) {
+                            resolve(0);
+                            return;
+                        }
+    
+                        // Nombre de critères NA
                         const naCount = results.filter(r => r.status === 'NA').length;
-                        const validResults = results.filter(r => r.status === 'C').length;
                         
-                        const applicableCriteria = totalCriteres - naCount;
-                        const rate = Math.round((100 / applicableCriteria) * validResults);
-                        
-                        console.log('--- Calcul du taux pour la page ---');
-                        console.log('Page ID:', pageId);
-                        console.log('Nombre total de critères:', totalCriteres);
-                        console.log('Nombre de NA:', naCount);
-                        console.log('Critères applicables:', applicableCriteria);
-                        console.log('Nombre de conformes:', validResults);
-                        console.log('Taux calculé:', rate);
-                        console.log('--------------------------------');
+                        // Nombre de critères conformes (C)
+                        const conformCount = results.filter(r => r.status === 'C').length;
+    
+                        // Nombre de critères applicables (total - NA)
+                        const applicableCriteria = totalCriteria - naCount;
+    
+                        // Si aucun critère applicable, retourner 0
+                        if (applicableCriteria === 0) {
+                            resolve(0);
+                            return;
+                        }
+    
+                        // Calcul du taux : (conformes / total des critères hors NA) * 100
+                        const rate = Math.round((conformCount / applicableCriteria) * 100);
+    
+                        // Log pour debug plus détaillé
+                        logger.log('--- Calcul détaillé du taux pour la page ---');
+                        logger.log('Page ID:', pageId);
+                        logger.log('Total critères RGAA:', totalCriteria);
+                        logger.log('Critères testés:', results.length);
+                        logger.log('Nombre de NA:', naCount);
+                        logger.log('Critères applicables (total - NA):', applicableCriteria);
+                        logger.log('Nombre de conformes:', conformCount);
+                        logger.log('Formule: (' + conformCount + ' / ' + applicableCriteria + ') * 100');
+                        logger.log('Taux calculé:', rate);
+                        logger.log('--------------------------------');
     
                         resolve(rate);
                     } catch (error) {
@@ -402,10 +424,6 @@ class Database {
             );
         });
     }
-
-    // Calculer le taux global
-    // Modification de la méthode calculateGlobalRate dans database.js
-    
     
     async calculateAverageRate() {
         return new Promise((resolve, reject) => {
@@ -414,29 +432,22 @@ class Database {
                     reject(err);
                     return;
                 }
-
+    
                 try {
                     if (!pages || pages.length === 0) {
-                        resolve(0); // Retourne 0 s'il n'y a pas de pages
+                        resolve(0);
                         return;
                     }
-
+    
                     const rates = await Promise.all(pages.map(page => this.calculatePageRate(page.id)));
                     const validRates = rates.filter(rate => !isNaN(rate)); // Filtre les valeurs NaN
                     
                     if (validRates.length === 0) {
-                        resolve(0); // Retourne 0 si aucun taux valide
+                        resolve(0);
                         return;
                     }
-
+    
                     const average = Math.round(validRates.reduce((a, b) => a + b, 0) / validRates.length);
-                    
-                    console.log('--- Calcul du taux moyen ---');
-                    console.log('Nombre de pages:', pages.length);
-                    console.log('Taux par page:', rates);
-                    console.log('Taux moyen calculé:', average);
-                    console.log('--------------------------------');
-                    
                     resolve(average);
                 } catch (error) {
                     reject(error);
@@ -444,87 +455,59 @@ class Database {
             });
         });
     }
-
+    
     async calculateGlobalRate() {
-        return new Promise((resolve, reject) => {
-            Promise.all([
-                this.loadCriteria(path.join(__dirname, '..', 'criteres_rgaa.xml')),
-                new Promise((resolve, reject) => {
-                    this.db.all('SELECT id FROM pages', (err, pages) => {
-                        if (err) reject(err);
-                        resolve(pages);
-                    });
-                })
-            ]).then(async ([allCriteria, pages]) => {
-                try {
-                    if (!pages || pages.length === 0) {
-                        resolve(0);
-                        return;
-                    }
+        try {
+            const pages = await new Promise((resolve, reject) => {
+                this.db.all('SELECT id FROM pages', (err, pages) => {
+                    if (err) reject(err);
+                    resolve(pages || []);
+                });
+            });
     
-                    // Récupérer tous les critères dans un tableau plat
-                    let flatCriteria = [];
-                    allCriteria.forEach(section => {
-                        section.sousSections.forEach(sousSection => {
-                            flatCriteria = flatCriteria.concat(sousSection.criteres);
-                        });
-                    });
+            if (pages.length === 0) {
+                return 0;
+            }
     
-                    const globalStatuses = await Promise.all(
-                        flatCriteria.map(async (criterion) => {
-                            const results = await new Promise((resolve, reject) => {
-                                this.db.all(
-                                    `SELECT status FROM audit_results 
-                                    WHERE criterion_id = ?`,
-                                    [criterion.id],
-                                    (err, results) => {
-                                        if (err) reject(err);
-                                        resolve(results);
-                                    }
-                                );
-                            });
+            const results = await new Promise((resolve, reject) => {
+                this.db.all(`
+                    SELECT criterion_id, 
+                           GROUP_CONCAT(status) as statuses
+                    FROM audit_results
+                    GROUP BY criterion_id
+                `, [], (err, rows) => {
+                    if (err) reject(err);
+                    resolve(rows || []);
+                });
+            });
     
-                            if (results.length === pages.length && 
-                                results.every(r => r.status === 'NA')) {
-                                return 'NA';
-                            }
-                            
-                            if (results.length === pages.length && 
-                                results.every(r => r.status === 'C')) {
-                                return 'C';
-                            }
+            const totalCriteria = results.length;
+            const naCount = results.filter(row => 
+                row.statuses.split(',').every(status => status === 'NA')
+            ).length;
     
-                            return 'NC';
-                        })
-                    );
+            const conformCount = results.filter(row => 
+                row.statuses.split(',').every(status => status === 'C')
+            ).length;
     
-                    const naCount = globalStatuses.filter(status => status === 'NA').length;
-                    const conformCount = globalStatuses.filter(status => status === 'C').length;
+            const applicableCriteria = totalCriteria - naCount;
     
-                    const applicableCriteria = flatCriteria.length - naCount;
-                    
-                    if (applicableCriteria === 0) {
-                        resolve(0);
-                        return;
-                    }
+            if (applicableCriteria === 0) {
+                return 0;
+            }
     
-                    const rate = Math.round((100 / applicableCriteria) * conformCount);
-                    
-                    console.log('--- Calcul du taux global ---');
-                    console.log('Nombre total de critères:', flatCriteria.length);
-                    console.log('Nombre de NA global:', naCount);
-                    console.log('Critères applicables:', applicableCriteria);
-                    console.log('Nombre de conformes global:', conformCount);
-                    console.log('Taux global calculé:', rate);
-                    console.log('--------------------------------');
-    
-                    resolve(rate);
-                } catch (error) {
-                    reject(error);
-                }
-            }).catch(reject);
-        });
+            return Math.round((conformCount / applicableCriteria) * 100);
+        } catch (error) {
+            console.error('Erreur lors du calcul du taux global:', error);
+            throw error;
+        }
     }
+
+    // Calculer le taux global
+    // Modification de la méthode calculateGlobalRate dans database.js
+    
+    
+
 
     // calculer le nombre de critères
     async getTotalCriteria() {
@@ -554,7 +537,7 @@ class Database {
             const uploadPath = path.join(__dirname, '..', 'public', 'uploads', this.projectId);
             try {
                 await fsPromises.rm(uploadPath, { recursive: true, force: true });
-                console.log(`Dossier d'uploads supprimé: ${uploadPath}`);
+                logger.log(`Dossier d'uploads supprimé: ${uploadPath}`);
             } catch (error) {
                 console.warn(`Erreur lors de la suppression du dossier d'uploads: ${error.message}`);
             }
