@@ -1059,7 +1059,7 @@ app.get('/api/suggestions/:criterionId', async (req, res) => {
 });
 
 // Route pour créer un nouveau projet
-app.post('/audit/new', async (req, res) => {
+/*app.post('/audit/new', async (req, res) => {
     try {
         console.log("Données reçues:", req.body);
         
@@ -1128,6 +1128,7 @@ app.post('/audit/new', async (req, res) => {
             });
         }
     });
+*/
 // Route pour créer une nouvelle page
 app.post('/project/:id/page/new', async (req, res) => {
   try {
