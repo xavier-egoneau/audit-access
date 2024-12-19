@@ -156,12 +156,24 @@ class FormHandler {
     getFormData() {
         if (this.form.id === 'newProjectForm') {
             const formData = new FormData(this.form);
-            const customData = JSON.parse(this.form.getAttribute('data-custom') || '{}');
+            const pageNames = formData.getAll('page_names[]');
+            const pageUrls = formData.getAll('page_urls[]');
+            
+            // Créer le tableau des screens en combinant les noms et URLs
+            const screens = pageNames.map((name, index) => ({
+                name: name.trim(),
+                url: pageUrls[index] ? pageUrls[index].trim() : ''
+            }));
+    
             const data = {
-                ...Object.fromEntries(formData.entries()),
-                ...customData
+                name: formData.get('name'),
+                url: formData.get('url'),
+                referential: formData.get('referential'),
+                screens: screens
             };
-            return JSON.stringify(data); // Convertir en JSON pour l'envoi
+    
+            console.log('Données formatées:', data); // Pour debug
+            return JSON.stringify(data);
         }
         return new FormData(this.form);
     }
@@ -304,126 +316,136 @@ class FormHandler {
         try {
             this.startLoading();
             
-            // Récupérer les données du formulaire
-            const formData = new FormData(this.form);
-            const ncId = formData.get('ncId');
-            const isEditMode = ncId && ncId.trim() !== '';
-            const isNewProject = this.form.id === 'newProjectForm';
-    
-            // Construire l'URL appropriée
-            let url;
-            if (isNewProject) {
-                url = '/audit/new';
-            } else if (isEditMode) {
-                url = `/audit/${currentProjectId}/nc/${ncId}/edit`;
-            } else {
-                url = `/audit/${currentProjectId}/nc`;
-            }
-    
-            console.log(`Mode ${isNewProject ? 'création projet' : (isEditMode ? 'édition NC' : 'création NC')}, URL:`, url);
-    
-            // Configurer les options de la requête
-            let fetchOptions = {
-                method: this.method
-            };
-    
-            if (isNewProject) {
-                // Pour un nouveau projet, envoyer les données en JSON
-                const customData = JSON.parse(this.form.getAttribute('data-custom') || '{}');
-                const data = {
-                    ...Object.fromEntries(formData.entries()),
-                    ...customData
-                };
+            // Pour les nouveaux projets et l'édition de projet
+            if (this.form.id === 'newProjectForm' || this.form.id === 'editProjectForm') {
+                const formData = new FormData(this.form);
+                const pageNames = formData.getAll('page_names[]');
+                const pageUrls = formData.getAll('page_urls[]');
                 
-                fetchOptions.headers = {
-                    'Content-Type': 'application/json'
+                const screens = pageNames.map((name, index) => ({
+                    name: name.trim(),
+                    url: pageUrls[index] ? pageUrls[index].trim() : ''
+                })).filter(screen => screen.name);
+    
+                const data = {
+                    name: formData.get('name'),
+                    url: formData.get('url'),
+                    referential: formData.get('referential'),
+                    referentialVersion: formData.get('referentialVersion'),
+                    screens: screens
                 };
-                fetchOptions.body = JSON.stringify(data);
-            } else {
-                // Pour les NC, utiliser FormData tel quel
-                fetchOptions.body = formData;
-            }
     
-            const response = await fetch(url, fetchOptions);
+                console.log('Données à envoyer:', data);
     
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP: ${response.status}`);
-            }
+                const response = await fetch(this.form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
     
-            const result = await response.json();
-            
-            if (!result.success) {
-                throw new Error(result.message || 'Erreur lors de l\'opération');
-            }
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
     
-            // Gérer la réponse selon le type d'opération
-            if (isNewProject && result.projectId) {
-                window.location.href = `/audit/${result.projectId}`;
-                return;
-            }
-    
-            if (isEditMode && result.ncId) {
-                // Mise à jour de la carte NC existante
-                const card = document.querySelector(`#nc-${result.ncId}`);
-                if (card) {
-                    // Mettre à jour l'impact
-                    const impactElement = card.querySelector('h5.card-title + p');
-                    if (impactElement) {
-                        impactElement.textContent = formData.get('impact') || '';
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.projectId) {
+                        window.location.href = `/audit/${result.projectId}`;
+                        return;
+                    } else {
+                        // Pour l'édition, recharger la page courante
+                        window.location.reload();
+                        return;
                     }
+                } else {
+                    throw new Error(result.message || 'Une erreur est survenue');
+                }
+            }
+            // Pour les autres types de formulaires (comme les NC)
+            else {
+                const fetchOptions = {
+                    method: this.method
+                };
     
-                    // Mettre à jour la description
-                    const descriptionElement = card.querySelector('h5.card-text + p');
-                    if (descriptionElement) {
-                        descriptionElement.textContent = formData.get('description') || '';
-                    }
+                if (this.method === 'POST' || this.method === 'PUT') {
+                    fetchOptions.body = new FormData(this.form);
+                }
     
-                    // Mettre à jour la solution
-                    const solutionElement = card.querySelector('h5.card-title:last-of-type + p');
-                    if (solutionElement) {
-                        solutionElement.textContent = formData.get('solution') || '';
-                    }
+                const response = await fetch(this.form.action, fetchOptions);
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
     
-                    // Mettre à jour l'image si une nouvelle a été uploadée
-                    if (result.screenshot_path) {
-                        const imgElement = card.querySelector('img.card-img-top');
-                        if (imgElement) {
-                            imgElement.src = result.screenshot_path;
-                        } else {
-                            // Si pas d'image existante, en ajouter une nouvelle
-                            card.insertAdjacentHTML('afterbegin', 
-                                `<img src="${result.screenshot_path}" class="card-img-top" alt="Capture d'écran de la non-conformité">`
-                            );
+                const result = await response.json();
+    
+                if (result.success) {
+                    if (result.ncId) {
+                        // Mise à jour de la carte NC existante
+                        const card = document.querySelector(`#nc-${result.ncId}`);
+                        if (card) {
+                            // Mettre à jour l'impact
+                            const impactElement = card.querySelector('h5.card-title + p');
+                            if (impactElement) {
+                                impactElement.textContent = fetchOptions.body.get('impact') || '';
+                            }
+    
+                            // Mettre à jour la description
+                            const descriptionElement = card.querySelector('h5.card-text + p');
+                            if (descriptionElement) {
+                                descriptionElement.textContent = fetchOptions.body.get('description') || '';
+                            }
+    
+                            // Mettre à jour la solution
+                            const solutionElement = card.querySelector('h5.card-title:last-of-type + p');
+                            if (solutionElement) {
+                                solutionElement.textContent = fetchOptions.body.get('solution') || '';
+                            }
+    
+                            // Mettre à jour l'image si une nouvelle a été uploadée
+                            if (result.screenshot_path) {
+                                const imgElement = card.querySelector('img.card-img-top');
+                                if (imgElement) {
+                                    imgElement.src = result.screenshot_path;
+                                } else {
+                                    // Si pas d'image existante, en ajouter une nouvelle
+                                    card.insertAdjacentHTML('afterbegin', 
+                                        `<img src="${result.screenshot_path}" class="card-img-top" alt="Capture d'écran de la non-conformité">`
+                                    );
+                                }
+                            }
+    
+                            // Animation de mise à jour
+                            card.style.transition = 'background-color 0.3s ease';
+                            card.style.backgroundColor = '#e8f5e9';
+                            setTimeout(() => {
+                                card.style.backgroundColor = '';
+                            }, 500);
+                        }
+    
+                        // Fermeture de la modal
+                        const modalElement = this.form.closest('.modal');
+                        if (modalElement) {
+                            const modal = bootstrap.Modal.getInstance(modalElement);
+                            if (modal) {
+                                modal.hide();
+                            }
+                        }
+    
+                        // Réinitialiser le formulaire
+                        this.form.reset();
+                        if (this.filePreviewContainer) {
+                            this.filePreviewContainer.innerHTML = '';
                         }
                     }
-    
-                    // Animation de mise à jour
-                    card.style.transition = 'background-color 0.3s ease';
-                    card.style.backgroundColor = '#e8f5e9';
-                    setTimeout(() => {
-                        card.style.backgroundColor = '';
-                    }, 500);
                 }
     
-                // Fermeture de la modal
-                const modalElement = this.form.closest('.modal');
-                if (modalElement) {
-                    const modal = bootstrap.Modal.getInstance(modalElement);
-                    if (modal) {
-                        modal.hide();
-                    }
-                }
-    
-                // Réinitialiser le formulaire
-                this.form.reset();
-                if (this.filePreviewContainer) {
-                    this.filePreviewContainer.innerHTML = '';
-                }
-            } else {
-                // Création d'une nouvelle NC ou autre cas
                 await this.handleSuccess(result);
             }
-    
         } catch (error) {
             console.error('Erreur:', error);
             this.showError(error.message);
@@ -446,199 +468,83 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Fichier: projectHandler.js
-// Fichier entier pour éviter toute confusion
-
 class ProjectHandler {
     constructor() {
-        this.screens = new Set();
-        this.initialized = false;
+        console.log('ProjectHandler initialized');
+        this.pages = new Map();
+        this.pageCounter = 0;
         this.initializeEventListeners();
     }
 
     initializeEventListeners() {
         document.addEventListener('DOMContentLoaded', () => {
-            if (this.initialized) return;
-            this.initialized = true;
+            ['newProject', 'editProject'].forEach(modalId => {
+                const addPageBtn = document.getElementById(`${modalId}`).querySelector('#addNewPageRow');
+                if (addPageBtn) {
+                    addPageBtn.addEventListener('click', () => this.addNewPageRow(modalId));
+                }
 
-            // Gestion du formulaire d'édition
-            this.editForm = document.getElementById('editProjectForm');
-            if (this.editForm) {
-                // Supprimer tout gestionnaire d'événements existant
-                const newForm = this.editForm.cloneNode(true);
-                this.editForm.parentNode.replaceChild(newForm, this.editForm);
-                this.editForm = newForm;
-                
-                this.editForm.addEventListener('submit', (e) => this.handleEditSubmit(e));
-                this.loadExistingScreens();
-
-                // Gestion de l'ajout d'écrans
-                this.setupScreenAddition();
-            }
+                const pagesList = document.getElementById(`${modalId}`).querySelector('#pagesList');
+                if (pagesList && pagesList.children.length === 0 && modalId === 'newProject') {
+                    this.addNewPageRow(modalId);
+                }
+            });
         });
     }
 
-    setupScreenAddition() {
-        const addScreenBtn = this.editForm.querySelector('#addScreen');
-        const screenInput = this.editForm.querySelector('#screenInput');
+    addNewPageRow(modalId) {
+        const modal = document.getElementById(modalId);
+        const pagesList = modal.querySelector('#pagesList');
+        const rowId = ++this.pageCounter;
 
-        if (addScreenBtn && screenInput) {
-            // Gestionnaire pour le bouton d'ajout
-            addScreenBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.addScreen(screenInput);
-            });
+        const row = document.createElement('div');
+        row.className = 'row mb-2 align-items-center';
+        row.dataset.rowId = rowId;
+        row.innerHTML = `
+            <div class="col-5">
+                <input type="text" 
+                       class="form-control page-name" 
+                       name="page_names[]"
+                       placeholder="Nom de la page"
+                       required>
+            </div>
+            <div class="col-6">
+                <input type="url" 
+                       class="form-control page-url" 
+                       name="page_urls[]"
+                       placeholder="URL de la page">
+            </div>
+            <div class="col-1">
+                <button type="button" 
+                        class="btn btn-outline-danger delete-page"
+                        ${pagesList.children.length === 0 ? 'disabled' : ''}>
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
 
-            // Gestionnaire pour la touche Enter
-            screenInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    this.addScreen(screenInput);
-                }
-            });
-        }
-    }
+        // Gestionnaire de suppression de ligne
+        const deleteBtn = row.querySelector('.delete-page');
+        deleteBtn.addEventListener('click', () => {
+            row.remove();
+            const remainingRows = pagesList.querySelectorAll('.row');
+            if (remainingRows.length === 1) {
+                remainingRows[0].querySelector('.delete-page').disabled = true;
+            }
+        });
 
-    addScreen(input) {
-        const screenName = input.value.trim();
-        if (screenName && !this.screens.has(screenName)) {
-            this.screens.add(screenName);
-            
-            const screensList = this.editForm.querySelector('#screensList');
-            const badge = document.createElement('div');
-            badge.className = 'badge bg-primary me-2 mb-2';
-            badge.innerHTML = `
-                ${screenName}
-                <button type="button" class="btn-close btn-close-white ms-2" aria-label="Supprimer"></button>
-            `;
-            
-            badge.querySelector('.btn-close').addEventListener('click', () => 
-                this.removeScreen(badge, screenName)
-            );
-            
-            screensList.appendChild(badge);
-            input.value = '';
-
-            console.log('Écran ajouté:', screenName);
-            console.log('Liste actuelle des écrans:', Array.from(this.screens));
-        }
-    }
-
-    removeScreen(badge, screenName) {
-        if (confirm('Êtes-vous sûr de vouloir supprimer cet écran ? Toutes les non-conformités associées seront également supprimées.')) {
-            this.screens.delete(screenName);
-            badge.remove();
-            console.log('Écran supprimé:', screenName);
-            console.log('Liste actuelle des écrans:', Array.from(this.screens));
-        }
-    }
-
-    loadExistingScreens() {
-        if (!this.editForm) return;
-
-        const screensList = this.editForm.querySelector('#screensList');
-        if (screensList) {
-            // Vider d'abord this.screens
-            this.screens.clear();
-            
-            screensList.querySelectorAll('.badge').forEach(badge => {
-                const screenName = badge.textContent.trim().replace(/×$/, '').trim();
-                if (screenName) {
-                    this.screens.add(screenName);
-                    
-                    let closeBtn = badge.querySelector('.btn-close');
-                    if (!closeBtn) {
-                        closeBtn = document.createElement('button');
-                        closeBtn.className = 'btn-close btn-close-white ms-2';
-                        closeBtn.setAttribute('type', 'button');
-                        closeBtn.setAttribute('aria-label', 'Supprimer');
-                        badge.appendChild(closeBtn);
-                    }
-
-                    closeBtn.addEventListener('click', () => this.removeScreen(badge, screenName));
-                }
-            });
-
-            console.log('Écrans chargés:', Array.from(this.screens));
-        }
-    }
-
-    async handleEditSubmit(e) {
-        e.preventDefault();
-        console.log('Soumission du formulaire');
+        pagesList.appendChild(row);
         
-        const submitBtn = this.editForm.querySelector('button[type="submit"]');
-        const spinner = submitBtn.querySelector('.spinner-border');
-
-        try {
-            submitBtn.disabled = true;
-            spinner?.classList.remove('d-none');
-
-            // Récupération et validation des données
-            const formData = {
-                name: this.editForm.querySelector('#editProjectName').value.trim(),
-                url: this.editForm.querySelector('#editProjectUrl').value.trim(),
-                referential: this.editForm.querySelector('#editReferential').value,
-                referentialVersion: this.editForm.querySelector('#editReferentialVersion').value,
-                screens: Array.from(this.screens)
-            };
-
-            console.log('Données à envoyer:', formData);
-
-            // Validation côté client
-            if (!formData.name) {
-                throw new Error('Le nom du projet est requis');
-            }
-
-            // Envoi de la requête avec fetch
-            const response = await fetch(this.editForm.action, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
+        const allRows = pagesList.querySelectorAll('.row');
+        if (allRows.length > 1) {
+            allRows.forEach(r => {
+                const delBtn = r.querySelector('.delete-page');
+                if (delBtn) delBtn.disabled = false;
             });
-
-            console.log('Statut de la réponse:', response.status);
-            const data = await response.json();
-            console.log('Réponse du serveur:', data);
-
-            if (!data.success) {
-                throw new Error(data.message || 'Erreur lors de la mise à jour');
-            }
-
-            if (data.success) {
-                // Récupérer le paramètre pageId de l'URL actuelle
-                const urlParams = new URLSearchParams(window.location.search);
-                const pageId = urlParams.get('pageId');
-                
-                // Recharger la page en préservant le paramètre pageId
-                if (pageId) {
-                    window.location.href = `${window.location.pathname}?pageId=${pageId}`;
-                } else {
-                    window.location.reload();
-                }
-            }
-
-        } catch (error) {
-            console.error('Erreur lors de la soumission:', error);
-            
-            // Affichage de l'erreur
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3';
-            alertDiv.style.zIndex = '9999';
-            alertDiv.textContent = error.message;
-            document.body.appendChild(alertDiv);
-            setTimeout(() => alertDiv.remove(), 5000);
-        } finally {
-            submitBtn.disabled = false;
-            spinner?.classList.add('d-none');
         }
     }
 }
 
-// Initialisation
 new ProjectHandler();
 class LearningUI {
     constructor() {

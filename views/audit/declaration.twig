@@ -1,0 +1,102 @@
+{# views/restitution.twig #}
+{% extends "layout.twig" %}
+
+{% block title %}Rapport d'audit - {{ currentProject.name }}{% endblock %}
+
+{% block content %}
+<main class="container mt-4">
+    {# En-tête du rapport #}
+
+
+          <h1>Exemple de déclaration d’accessibilité</h1>
+          
+          <p><span class="aModifier">[Nom de l’entité]</span> s’engage à rendre ses sites internet, intranet, extranet et ses progiciels accessibles (et ses applications mobiles et mobilier urbain numérique) conformément à l’article 47 de la loi n°2005-102 du 11 février 2005.</p>
+<p>À cette fin, <span class="aModifier">[Nom de l’entité]</span> met en œuvre la stratégie et les actions suivantes&nbsp;:</p>
+<ul>
+<li>Schéma pluriannuel de mise en accessibilité 2022-2024 <span class="aModifier">{{ url }}</span>&nbsp;;</li>
+<li>Actions réalisées en 2020-2021 <span class="aModifier">{{ url }}</span>&nbsp;;</li>
+<li>Plan d’actions 2022-2024 <span class="aModifier">{{ url }}</span>.</li>
+</ul>
+<p>Cette déclaration d’accessibilité s’applique à <span class="aModifier">[www.nomdusite.gouv.fr]</span>.</p>
+<h2 id="etat-de-conformite">État de conformité</h2>
+<p><span class="aModifier">{{ url }}</span> est <strong class="aModifier">non/partiellement/totalement</strong> conforme avec le référentiel général d’amélioration de l’accessibilité (RGAA), version 4 en raison des non-conformités et des dérogations énumérées ci-dessous.</p>
+<h3 id="resultats-des-tests">Résultats des tests</h3>
+<p>L’audit de conformité réalisé par <span class="aModifier">[nom de l’entité qui a réalisé l’audit]</span> révèle que&nbsp;:</p>
+<ul>
+<li><span class="aModifier">[nn]</span>% des critères du RGAA version 4 sont respectés&nbsp;;</li>
+<li>(Facultatif) Le taux moyen de conformité du site s’élève à <span class="aModifier">[nn]</span>%&nbsp;;</li>
+<li>(Facultatif) Accès à la grille d’audit RGAA <span class="aModifier">{{ url }}</span> pour télécharger la grille d’audit.</li>
+</ul>
+<h2 id="contenus-non-accessibles">Contenus non accessibles</h2>
+<h3 id="non-conformites">Non-conformités</h3>
+<p>Exemples&nbsp;:</p>
+<ul>
+<li>La vidéo de présentation de la demande d’aide n’a pas de transcription. Pour toute question sur cette démarche, vous pouvez contacter le NN NN NN NN NN. La version 2020 respectera les critères du RGAA sur les alternatives texte pour les documents multimédias.</li>
+<li>Le bouton d’envoi du formulaire de déclaration contient un intitulé « Retour » au lieu de « Envoi ». Cette erreur sera corrigée avant le 31 mars 2020</li>
+<li>La connexion au compte personnel contient une vérification que vous n’êtes pas un robot avec un captcha visuel. Il est possible d’effectuer sa démarche par téléphone ou au guichet pour les personnes empêchées d’accéder à leur compte...</li>
+</ul>
+<h3 id="derogations-pour-charge-disproportionnee">Dérogations pour charge disproportionnée</h3>
+<p>Exemple&nbsp;:
+Les archives des comptes rendus des séances du conseil municipal jusqu’en 2010 sont au format PDF image. Il est cependant possible d’en demander un exemplaire texte par courriel</p>
+<h3 id="contenus-non-soumis-a-lobligation-daccessibilite">Contenus non soumis à l’obligation d’accessibilité</h3>
+<p>Exemples&nbsp;:</p>
+<ul>
+<li>Cartes de l’Institut géographique national associées à l’annuaire</li>
+<li>Reproduction du manuscrit du Moyen-Âge...</li>
+</ul>
+<h2 id="etablissement-de-cette-declaration-daccessibilite">Établissement de cette déclaration d’accessibilité</h2>
+<p>Cette déclaration a été établie le <span class="aModifier">{{ date }}</span>.
+Elle a été mise à jour le <span class="aModifier">{{ date }}</span>.</p>
+<h3 id="technologies-utilisees-pour-la-realisation-du-site">Technologies utilisées pour la réalisation du site</h3>
+<ul>
+<li>HTML5</li>
+<li>CSS</li>
+<li>...</li>
+</ul>
+<h3 id="environnement-de-test">Environnement de test</h3>
+<p>Les vérifications de restitution de contenus ont été réalisées sur la base de la combinaison fournie par la base de référence du RGAA, avec les versions suivantes&nbsp;:</p>
+<ul>
+<li>Firefox et NVDA</li>
+<li>Safari et VoiceOver</li>
+<li>...</li>
+</ul>
+<h3 id="outils-pour-evaluer-laccessibilite">Outils pour évaluer l’accessibilité</h3>
+<ul>
+<li>color contrast analyzer</li>
+<li>inspecteur de code</li>
+<li>...</li>
+</ul>
+<h3 id="pages-du-site-ayant-fait-lobjet-de-la-verification-de-conformite">Pages du site ayant fait l’objet de la vérification de conformité</h3>
+<ul>
+<li>page d’accueil <span class="aModifier">{{ url }}</span></li>
+<li>page contact <span class="aModifier">{{ url }}</span></li>
+<li>page mentions légales <span class="aModifier">{{ url }}</span></li>
+<li>page accessibilité <span class="aModifier">{{ url }}</span></li>
+<li>page plan du site <span class="aModifier">{{ url }}</span></li>
+<li>page d’aide <span class="aModifier">{{ url }}</span></li>
+<li>...</li>
+</ul>
+<h2 id="retour-dinformation-et-contact">Retour d’information et contact</h2>
+<p>Si vous n’arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter le responsable de <span class="aModifier">[nom du site]</span> pour être orienté vers une alternative accessible ou obtenir le contenu sous une autre forme.</p>
+<ul>
+<li>Envoyer un message <span class="aModifier">[url du formulaire en ligne]</span>&nbsp;;</li>
+<li>Contacter <span class="aModifier">[Nom de l’entité responsable du service en ligne et coordonnées]</span>.</li>
+</ul>
+<h2 id="voies-de-recours">Voies de recours</h2>
+<p>Si vous constatez un défaut d’accessibilité vous empêchant d’accéder à un contenu ou une fonctionnalité du site, que vous nous le signalez et que vous ne parvenez pas à obtenir une réponse de notre part, vous êtes en droit de faire parvenir vos doléances ou une demande de saisine au Défenseur des droits.</p>
+<p>Plusieurs moyens sont à votre disposition&nbsp;:</p>
+<ul>
+<li>Écrire un message au Défenseur des droits</li>
+<li>Contacter le délégué du Défenseur des droits dans votre région</li>
+<li>Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre)
+Défenseur des droits
+Libre réponse 71120
+75342 Paris CEDEX 07</li>
+</ul>
+
+          
+
+
+
+</main>
+{% endblock %}

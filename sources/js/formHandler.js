@@ -156,12 +156,24 @@ class FormHandler {
     getFormData() {
         if (this.form.id === 'newProjectForm') {
             const formData = new FormData(this.form);
-            const customData = JSON.parse(this.form.getAttribute('data-custom') || '{}');
+            const pageNames = formData.getAll('page_names[]');
+            const pageUrls = formData.getAll('page_urls[]');
+            
+            // Créer le tableau des screens en combinant les noms et URLs
+            const screens = pageNames.map((name, index) => ({
+                name: name.trim(),
+                url: pageUrls[index] ? pageUrls[index].trim() : ''
+            }));
+    
             const data = {
-                ...Object.fromEntries(formData.entries()),
-                ...customData
+                name: formData.get('name'),
+                url: formData.get('url'),
+                referential: formData.get('referential'),
+                screens: screens
             };
-            return JSON.stringify(data); // Convertir en JSON pour l'envoi
+    
+            console.log('Données formatées:', data); // Pour debug
+            return JSON.stringify(data);
         }
         return new FormData(this.form);
     }
@@ -304,126 +316,136 @@ class FormHandler {
         try {
             this.startLoading();
             
-            // Récupérer les données du formulaire
-            const formData = new FormData(this.form);
-            const ncId = formData.get('ncId');
-            const isEditMode = ncId && ncId.trim() !== '';
-            const isNewProject = this.form.id === 'newProjectForm';
-    
-            // Construire l'URL appropriée
-            let url;
-            if (isNewProject) {
-                url = '/audit/new';
-            } else if (isEditMode) {
-                url = `/audit/${currentProjectId}/nc/${ncId}/edit`;
-            } else {
-                url = `/audit/${currentProjectId}/nc`;
-            }
-    
-            console.log(`Mode ${isNewProject ? 'création projet' : (isEditMode ? 'édition NC' : 'création NC')}, URL:`, url);
-    
-            // Configurer les options de la requête
-            let fetchOptions = {
-                method: this.method
-            };
-    
-            if (isNewProject) {
-                // Pour un nouveau projet, envoyer les données en JSON
-                const customData = JSON.parse(this.form.getAttribute('data-custom') || '{}');
-                const data = {
-                    ...Object.fromEntries(formData.entries()),
-                    ...customData
-                };
+            // Pour les nouveaux projets et l'édition de projet
+            if (this.form.id === 'newProjectForm' || this.form.id === 'editProjectForm') {
+                const formData = new FormData(this.form);
+                const pageNames = formData.getAll('page_names[]');
+                const pageUrls = formData.getAll('page_urls[]');
                 
-                fetchOptions.headers = {
-                    'Content-Type': 'application/json'
+                const screens = pageNames.map((name, index) => ({
+                    name: name.trim(),
+                    url: pageUrls[index] ? pageUrls[index].trim() : ''
+                })).filter(screen => screen.name);
+    
+                const data = {
+                    name: formData.get('name'),
+                    url: formData.get('url'),
+                    referential: formData.get('referential'),
+                    referentialVersion: formData.get('referentialVersion'),
+                    screens: screens
                 };
-                fetchOptions.body = JSON.stringify(data);
-            } else {
-                // Pour les NC, utiliser FormData tel quel
-                fetchOptions.body = formData;
-            }
     
-            const response = await fetch(url, fetchOptions);
+                console.log('Données à envoyer:', data);
     
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP: ${response.status}`);
-            }
+                const response = await fetch(this.form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
     
-            const result = await response.json();
-            
-            if (!result.success) {
-                throw new Error(result.message || 'Erreur lors de l\'opération');
-            }
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
     
-            // Gérer la réponse selon le type d'opération
-            if (isNewProject && result.projectId) {
-                window.location.href = `/audit/${result.projectId}`;
-                return;
-            }
-    
-            if (isEditMode && result.ncId) {
-                // Mise à jour de la carte NC existante
-                const card = document.querySelector(`#nc-${result.ncId}`);
-                if (card) {
-                    // Mettre à jour l'impact
-                    const impactElement = card.querySelector('h5.card-title + p');
-                    if (impactElement) {
-                        impactElement.textContent = formData.get('impact') || '';
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.projectId) {
+                        window.location.href = `/audit/${result.projectId}`;
+                        return;
+                    } else {
+                        // Pour l'édition, recharger la page courante
+                        window.location.reload();
+                        return;
                     }
+                } else {
+                    throw new Error(result.message || 'Une erreur est survenue');
+                }
+            }
+            // Pour les autres types de formulaires (comme les NC)
+            else {
+                const fetchOptions = {
+                    method: this.method
+                };
     
-                    // Mettre à jour la description
-                    const descriptionElement = card.querySelector('h5.card-text + p');
-                    if (descriptionElement) {
-                        descriptionElement.textContent = formData.get('description') || '';
-                    }
+                if (this.method === 'POST' || this.method === 'PUT') {
+                    fetchOptions.body = new FormData(this.form);
+                }
     
-                    // Mettre à jour la solution
-                    const solutionElement = card.querySelector('h5.card-title:last-of-type + p');
-                    if (solutionElement) {
-                        solutionElement.textContent = formData.get('solution') || '';
-                    }
+                const response = await fetch(this.form.action, fetchOptions);
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
     
-                    // Mettre à jour l'image si une nouvelle a été uploadée
-                    if (result.screenshot_path) {
-                        const imgElement = card.querySelector('img.card-img-top');
-                        if (imgElement) {
-                            imgElement.src = result.screenshot_path;
-                        } else {
-                            // Si pas d'image existante, en ajouter une nouvelle
-                            card.insertAdjacentHTML('afterbegin', 
-                                `<img src="${result.screenshot_path}" class="card-img-top" alt="Capture d'écran de la non-conformité">`
-                            );
+                const result = await response.json();
+    
+                if (result.success) {
+                    if (result.ncId) {
+                        // Mise à jour de la carte NC existante
+                        const card = document.querySelector(`#nc-${result.ncId}`);
+                        if (card) {
+                            // Mettre à jour l'impact
+                            const impactElement = card.querySelector('h5.card-title + p');
+                            if (impactElement) {
+                                impactElement.textContent = fetchOptions.body.get('impact') || '';
+                            }
+    
+                            // Mettre à jour la description
+                            const descriptionElement = card.querySelector('h5.card-text + p');
+                            if (descriptionElement) {
+                                descriptionElement.textContent = fetchOptions.body.get('description') || '';
+                            }
+    
+                            // Mettre à jour la solution
+                            const solutionElement = card.querySelector('h5.card-title:last-of-type + p');
+                            if (solutionElement) {
+                                solutionElement.textContent = fetchOptions.body.get('solution') || '';
+                            }
+    
+                            // Mettre à jour l'image si une nouvelle a été uploadée
+                            if (result.screenshot_path) {
+                                const imgElement = card.querySelector('img.card-img-top');
+                                if (imgElement) {
+                                    imgElement.src = result.screenshot_path;
+                                } else {
+                                    // Si pas d'image existante, en ajouter une nouvelle
+                                    card.insertAdjacentHTML('afterbegin', 
+                                        `<img src="${result.screenshot_path}" class="card-img-top" alt="Capture d'écran de la non-conformité">`
+                                    );
+                                }
+                            }
+    
+                            // Animation de mise à jour
+                            card.style.transition = 'background-color 0.3s ease';
+                            card.style.backgroundColor = '#e8f5e9';
+                            setTimeout(() => {
+                                card.style.backgroundColor = '';
+                            }, 500);
+                        }
+    
+                        // Fermeture de la modal
+                        const modalElement = this.form.closest('.modal');
+                        if (modalElement) {
+                            const modal = bootstrap.Modal.getInstance(modalElement);
+                            if (modal) {
+                                modal.hide();
+                            }
+                        }
+    
+                        // Réinitialiser le formulaire
+                        this.form.reset();
+                        if (this.filePreviewContainer) {
+                            this.filePreviewContainer.innerHTML = '';
                         }
                     }
-    
-                    // Animation de mise à jour
-                    card.style.transition = 'background-color 0.3s ease';
-                    card.style.backgroundColor = '#e8f5e9';
-                    setTimeout(() => {
-                        card.style.backgroundColor = '';
-                    }, 500);
                 }
     
-                // Fermeture de la modal
-                const modalElement = this.form.closest('.modal');
-                if (modalElement) {
-                    const modal = bootstrap.Modal.getInstance(modalElement);
-                    if (modal) {
-                        modal.hide();
-                    }
-                }
-    
-                // Réinitialiser le formulaire
-                this.form.reset();
-                if (this.filePreviewContainer) {
-                    this.filePreviewContainer.innerHTML = '';
-                }
-            } else {
-                // Création d'une nouvelle NC ou autre cas
                 await this.handleSuccess(result);
             }
-    
         } catch (error) {
             console.error('Erreur:', error);
             this.showError(error.message);

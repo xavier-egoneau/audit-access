@@ -705,12 +705,19 @@ app.post('/audit/new', async (req, res) => {
         // Création des pages
         if (projectData.screens.length > 0) {
             await Promise.all(projectData.screens.map(screen => {
+                // Vérifier si screen est un objet ou une simple chaîne
+                const screenName = typeof screen === 'object' ? screen.name : screen;
+                const screenUrl = typeof screen === 'object' ? screen.url || '' : '';
+                
                 return new Promise((resolve, reject) => {
                     db.db.run(
-                        'INSERT INTO pages (name, created_at) VALUES (?, datetime("now"))',
-                        [screen],
+                        'INSERT INTO pages (name, url, created_at) VALUES (?, ?, datetime("now"))',
+                        [screenName, screenUrl],
                         (err) => {
-                            if (err) reject(err);
+                            if (err) {
+                                console.error('Erreur lors de l\'insertion de la page:', err);
+                                reject(err);
+                            }
                             resolve();
                         }
                     );

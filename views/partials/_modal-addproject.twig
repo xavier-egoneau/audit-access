@@ -28,13 +28,20 @@
                                 <option value="RAAM">RAAM</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="screens" class="form-label">Pages du projet</label>
-                            <div class="input-group mb-2">
-                                <input type="text" class="form-control" id="screenInput" placeholder="Nom de la page">
-                                <button class="btn btn-outline-secondary" type="button" id="addScreen">Ajouter</button>
+                       Copy<div class="mb-3">
+                            <label class="form-label">Pages du projet</label>
+                            <div id="pagesContainer">
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <button type="button" class="btn btn-outline-primary w-100" id="addNewPageRow">
+                                            <i class="fas fa-plus"></i> Ajouter une page
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="pagesList">
+                                    <!-- Les lignes de pages seront ajoutées ici dynamiquement -->
+                                </div>
                             </div>
-                            <div id="screensList" class="mt-2"></div>
                         </div>
                     </div>
                     <div class="modal-footer">
