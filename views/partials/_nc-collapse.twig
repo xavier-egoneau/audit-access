@@ -4,7 +4,7 @@
                              class="accordion-collapse collapse" 
                              aria-labelledby="heading-{{ criterion.id|replace({'.': '-'}) }}" 
                              data-bs-parent="#accordion-{{ criterion.id|replace({'.': '-'}) }}">
-                            <div class="accordion-body">
+                            <div class="accordion-body nc-list">
                                 <div class="container2">
                                     <div class="row">
                                         <div id="wrapper-{{ criterion.id|replace({'.': '-'}) }}" class="wrapper_ncs row" data-criterion-id="{{ criterion.id }}">
@@ -23,7 +23,7 @@
                                             </div>
                                             {% endif %}
                                         </div>
-                                        <div class="col-12 mt-4 mb-4">
+                                        <div class="nc-actions">
                                             <button class="btn btn-primary add-nc" 
                                                     data-criterion="{{ criterion.id }}"
                                                     data-bs-toggle="modal" 

@@ -433,45 +433,52 @@ class Database {
     
     async calculateGlobalRate() {
         try {
-            const pages = await new Promise((resolve, reject) => {
-                this.db.all('SELECT id FROM pages', (err, pages) => {
-                    if (err) reject(err);
-                    resolve(pages || []);
+            // 1. Obtenir le nombre total de critères RGAA
+            const allCriteria = await this.loadCriteria();
+            let totalCriteria = 0;
+            allCriteria.forEach(section => {
+                section.sousSections.forEach(sousSection => {
+                    totalCriteria += sousSection.criteres.length;
                 });
             });
     
-            if (pages.length === 0) {
-                return 0;
-            }
-    
+            // 2. Récupérer tous les résultats d'audit
             const results = await new Promise((resolve, reject) => {
                 this.db.all(`
-                    SELECT criterion_id, 
-                           GROUP_CONCAT(status) as statuses
+                    SELECT criterion_id, status 
                     FROM audit_results
-                    GROUP BY criterion_id
                 `, [], (err, rows) => {
                     if (err) reject(err);
                     resolve(rows || []);
                 });
             });
     
-            const totalCriteria = results.length;
-            const naCount = results.filter(row => 
-                row.statuses.split(',').every(status => status === 'NA')
-            ).length;
+            // 3. Compter les critères conformes et NA
+            const naCount = results.filter(row => row.status === 'NA').length;
+            const conformCount = results.filter(row => row.status === 'C').length;
     
-            const conformCount = results.filter(row => 
-                row.statuses.split(',').every(status => status === 'C')
-            ).length;
-    
+            // 4. Calculer le nombre de critères applicables (total - NA)
             const applicableCriteria = totalCriteria - naCount;
     
             if (applicableCriteria === 0) {
                 return 0;
             }
     
-            return Math.round((conformCount / applicableCriteria) * 100);
+            // 5. Calculer le taux selon la formule :
+            // (100 / (total critères - NA)) * nombre de critères conformes
+            const rate = Math.round((100 / applicableCriteria) * conformCount);
+    
+            // Log pour debug
+            logger.log('=== Calcul du taux global ===');
+            logger.log('Total critères:', totalCriteria);
+            logger.log('Critères NA:', naCount);
+            logger.log('Critères applicables:', applicableCriteria);
+            logger.log('Critères conformes:', conformCount);
+            logger.log('Formule:', `(100 / ${applicableCriteria}) * ${conformCount}`);
+            logger.log('Taux calculé:', rate);
+            logger.log('===========================');
+    
+            return rate;
         } catch (error) {
             console.error('Erreur lors du calcul du taux global:', error);
             throw error;

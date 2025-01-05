@@ -242,15 +242,16 @@ class LearningUI {
 
     async useSuggestion(suggestion) {
         // Convertir l'ID du critère en un sélecteur CSS valide
-        // Remplacer tous les points par des tirets
-        const formId = `ncForm-${this.currentCriterionId.replace(/\./g, '-')}`;
-        const form = document.querySelector(`#${formId}`);
+        // L'ID de la modal est maintenant "nc-modal-" au lieu de "addnc-"
+        const modalId = `nc-modal-${this.currentCriterionId.replace(/\./g, '-')}`;
+        const form = document.querySelector(`#${modalId} form`);
         
         if (!form) {
-            console.warn(`Formulaire #${formId} non trouvé`);
+            console.warn(`Formulaire dans la modal #${modalId} non trouvé`);
             return;
         }
     
+        // Remplir le formulaire avec les suggestions
         form.querySelector('[name="impact"]').value = suggestion.impact;
         form.querySelector('[name="description"]').value = suggestion.description;
         form.querySelector('[name="solution"]').value = suggestion.solution;
@@ -258,15 +259,13 @@ class LearningUI {
         // Fermer la modale des suggestions
         const learningModal = document.getElementById('learningModal');
         const modalInstance = bootstrap.Modal.getInstance(learningModal);
-        modalInstance.hide();
+        modalInstance?.hide();
         learningModal.setAttribute('inert', '');
         
-        // Ouvrir la modale d'ajout de NC
-        const ncModalId = `addnc-${this.currentCriterionId.replace(/\./g, '-')}`;
-        const ncModalElement = document.getElementById(ncModalId);
-        
+        // Ouvrir la modale de NC
+        const ncModalElement = document.getElementById(modalId);
         if (!ncModalElement) {
-            console.warn(`Modal #${ncModalId} non trouvée`);
+            console.warn(`Modal #${modalId} non trouvée`);
             return;
         }
         
@@ -274,6 +273,7 @@ class LearningUI {
         const ncModal = new bootstrap.Modal(ncModalElement);
         ncModal.show();
     
+        // Gérer la fermeture de la modal
         ncModalElement.addEventListener('hidden.bs.modal', () => {
             ncModalElement.setAttribute('inert', '');
         }, { once: true });

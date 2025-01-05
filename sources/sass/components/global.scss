@@ -30,19 +30,26 @@ html,body{
   
   .card-body {
       padding: 1.25rem;
+      
   }
 }
 
 .wrapper_ncs {
   .card {
       background: white;
-      margin-bottom: 1rem;
+
       
       .card-title {
-          font-size: 1.8rem;
           margin-bottom: 0.5rem;
-          color: #666;
-          font-weight: bold;
+      }
+      .card-body {
+        .badge{
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          font-size: 11px;
+          font-weight: 400;
+        }
       }
   }
 }
@@ -188,22 +195,43 @@ h1{
       font-size: 1.8rem;
       border-bottom: 1px solid #000;
     }
-    &-text{
-      font-size: 1.8rem;
+    &-title{
+      font-size: 1.6rem;
+      text-align: left;
     }
     p{
       font-size: 1.5rem;
+      text-align: left;
     }
   }
+  
 } 
+.accordion-body.nc-list{
+  .row{position: relative;}
+  .nc-actions{
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: auto;
+  }
+}
 
 .modal-body{
   h6{
-    font-size: 2rem;
+    font-size: 1.3rem;
     font-weight: 600;
   }
   li{
     font-size: 2rem;
     padding-bottom: 24px;
   }
+}
+.section,.sous-section{
+  tr,td{
+    background-color: #eee;
+  }
+  tr:hover{
+    background-color: #eee;
+  }
+  
 }

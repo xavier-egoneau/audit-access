@@ -14,7 +14,7 @@
     {% for section in criteria %}
 
 
-            <tr >
+            <tr class="section">
                 <td>{{ section.id}}</td>
                 <td></td>
                 <td> {{ section.titre }}</td>
@@ -24,7 +24,7 @@
             {% for sousSection in section.sousSections %}
 
 
-                    <tr >
+                    <tr class="sous-section">
                         <td>{{ sousSection.id }}</td>
                         <td></td>
                         <td > {{ sousSection.titre }}</td>
@@ -33,7 +33,7 @@
                     </tr>
                     
                             {% for criterion in sousSection.criteres %}
-                                <tr class="statut statut-{{ criterion.status }}">
+                                <tr class="critere statut statut-{{ criterion.status }}">
                                     <td>{{ criterion.id }}</td>
                                     <td>{{ criterion.niveauWCAG }}</td>
                                     <td>{{ criterion.titre }}</td>

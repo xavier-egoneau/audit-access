@@ -1,5 +1,5 @@
 {# _nc-template.twig #}
-<div class="card mb-3" id="nc-{{ nc.id }}">
+<div class="card" id="nc-{{ nc.id }}">
     
     {% if nc.screenshot_path %}
         <img src="{{ nc.screenshot_path }}" class="card-img-top" alt="Capture d'écran de la non-conformité">
@@ -11,27 +11,30 @@
         </div>
         <h5 class="card-title">Impact</h5>
         <p>{{ nc.impact }}</p>
-        <h5 class="card-text">Description</h5>
+        <h5 class="card-text card-title">Description</h5>
         <p>{{ nc.description }}</p>
         <h5 class="card-title">Solution proposée</h5>
         <p>{{ nc.solution }}</p>
-        <!-- data-debug="id:{{ nc.id|default('undefined') }},ncId:{{ nc.ncId|default('undefined') }}" -->
-        <div class="d-flex justify-content-end">
-            <button type="button" 
-                class="card-link btn btn-outline-primary me-2 btn-modifier" 
-                data-nc-id="{{ nc.id }}"
-                data-criterion-id="{{ nc.criterion_id }}"
-                data-bs-toggle="modal" 
-                data-bs-target="#nc-modal-{{ nc.criterion_id|replace({'.': '-'}) }}"
-                title="Modifier cette non-conformité">
-                Modifier
-            </button>
-            <button type="button" 
-                    class="card-link btn btn-outline-danger delete-nc" 
-                    data-nc-id="{{ nc.id|default(nc.nonConformities[0].id) }}"
-                    title="Supprimer cette non-conformité">
-                Supprimer
-            </button>
-        </div>
+        
     </div>
+    <div class="card-footer">
+            <!-- data-debug="id:{{ nc.id|default('undefined') }},ncId:{{ nc.ncId|default('undefined') }}" -->
+            <div class="d-flex justify-content-center">
+                <button type="button" 
+                    class="card-link btn btn-outline-primary me-2 btn-modifier" 
+                    data-nc-id="{{ nc.id }}"
+                    data-criterion-id="{{ nc.criterion_id }}"
+                    data-bs-toggle="modal" 
+                    data-bs-target="#nc-modal-{{ nc.criterion_id|replace({'.': '-'}) }}"
+                    title="Modifier cette non-conformité">
+                    Modifier
+                </button>
+                <button type="button" 
+                        class="card-link btn btn-outline-danger delete-nc" 
+                        data-nc-id="{{ nc.id|default(nc.nonConformities[0].id) }}"
+                        title="Supprimer cette non-conformité">
+                    Supprimer
+                </button>
+            </div>
+        </div>
 </div>
