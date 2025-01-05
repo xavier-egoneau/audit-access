@@ -16,10 +16,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="ncForm-{{ criterion.id|replace({'.': '-'}) }}" 
-                class="senddata nc-form" 
-                method="POST" 
-                enctype="multipart/form-data"
-                data-modal="nc-modal-{{ criterion.id|replace({'.': '-'}) }}">
+    class="senddata nc-form" 
+    method="POST" 
+    action="/audit/{{ currentProjectId }}/nc"
+    enctype="multipart/form-data"
+    data-modal="nc-modal-{{ criterion.id|replace({'.': '-'}) }}">
                 
                 {# Vérifier que ces champs sont bien présents #}
                 <input type="hidden" name="ncId" value="">

@@ -9,24 +9,56 @@ class ProjectHandler {
     initializeEventListeners() {
         document.addEventListener('DOMContentLoaded', () => {
             ['newProject', 'editProject'].forEach(modalId => {
-                const addPageBtn = document.getElementById(`${modalId}`).querySelector('#addNewPageRow');
+                // Vérifier d'abord si la modale existe
+                const modal = document.getElementById(modalId);
+                if (!modal) {
+                    return; // Passer à l'itération suivante si la modale n'existe pas
+                }
+
+                // Bouton d'ajout de page
+                const addPageBtn = modal.querySelector('#addNewPageRow');
                 if (addPageBtn) {
                     addPageBtn.addEventListener('click', () => this.addNewPageRow(modalId));
                 }
 
-                const pagesList = document.getElementById(`${modalId}`).querySelector('#pagesList');
-                if (pagesList && pagesList.children.length === 0 && modalId === 'newProject') {
-                    this.addNewPageRow(modalId);
+                // Gestion des boutons de suppression existants
+                const pagesList = modal.querySelector('#pagesList');
+                if (pagesList) {
+                    if (pagesList.children.length === 0 && modalId === 'newProject') {
+                        this.addNewPageRow(modalId);
+                    }
+
+                    // Ajouter les gestionnaires pour les boutons de suppression existants
+                    pagesList.querySelectorAll('.delete-page').forEach(button => {
+                        this.setupDeletePageButton(button, pagesList);
+                    });
                 }
             });
         });
     }
-
+    
+    setupDeletePageButton(button, pagesList) {
+        button.addEventListener('click', () => {
+            const row = button.closest('.row');
+            if (row) {
+                row.remove();
+                // Mettre à jour l'état des boutons
+                const remainingRows = pagesList.querySelectorAll('.row');
+                remainingRows.forEach(r => {
+                    const delBtn = r.querySelector('.delete-page');
+                    if (delBtn) {
+                        delBtn.disabled = remainingRows.length <= 1;
+                    }
+                });
+            }
+        });
+    }
+    
     addNewPageRow(modalId) {
         const modal = document.getElementById(modalId);
         const pagesList = modal.querySelector('#pagesList');
         const rowId = ++this.pageCounter;
-
+    
         const row = document.createElement('div');
         row.className = 'row mb-2 align-items-center';
         row.dataset.rowId = rowId;
@@ -52,22 +84,17 @@ class ProjectHandler {
                 </button>
             </div>
         `;
-
-        // Gestionnaire de suppression de ligne
-        const deleteBtn = row.querySelector('.delete-page');
-        deleteBtn.addEventListener('click', () => {
-            row.remove();
-            const remainingRows = pagesList.querySelectorAll('.row');
-            if (remainingRows.length === 1) {
-                remainingRows[0].querySelector('.delete-page').disabled = true;
-            }
-        });
-
+    
         pagesList.appendChild(row);
-        
-        const allRows = pagesList.querySelectorAll('.row');
-        if (allRows.length > 1) {
-            allRows.forEach(r => {
+            
+        // Ajouter le gestionnaire d'événements au nouveau bouton de suppression
+        const deleteBtn = row.querySelector('.delete-page');
+        this.setupDeletePageButton(deleteBtn, pagesList);
+    
+        // Mettre à jour l'état de tous les boutons de suppression
+        const remainingRows = pagesList.querySelectorAll('.row');
+        if (remainingRows.length > 1) {
+            remainingRows.forEach(r => {
                 const delBtn = r.querySelector('.delete-page');
                 if (delBtn) delBtn.disabled = false;
             });

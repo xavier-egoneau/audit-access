@@ -110,13 +110,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         
             const modalId = `nc-modal-${criterionId.replace(/\./g, '-')}`;
-            console.log("Recherche modal avec ID:", modalId);
-            
             const modal = document.getElementById(modalId);
             if (!modal) {
-                console.error('Modal non trouvée. Modales disponibles:', 
-                    Array.from(document.querySelectorAll('.modal')).map(m => m.id)
-                );
+                console.error('Modal non trouvée');
                 return;
             }
         
@@ -125,86 +121,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Formulaire non trouvé dans la modal');
                 return;
             }
-            // Vérifions que tous les champs nécessaires existent
-            const fields = {
-                ncId: form.querySelector('[name="ncId"]'),
-                criterionId: form.querySelector('[name="criterionId"]')
-            };
-            // Log de debug pour voir quels champs sont trouvés
-            console.log("Champs trouvés dans le formulaire:", {
-                ncId: !!fields.ncId,
-                criterionId: !!fields.criterionId
-            });
-
-            // Vérification avant assignation
-            if (!fields.ncId || !fields.criterionId) {
-                console.error('Champs manquants dans le formulaire');
-                return;
+        
+            // IMPORTANT: modifier l'action du formulaire pour l'édition
+            const originalAction = form.getAttribute('action');
+            form.setAttribute('action', `/audit/${currentProjectId}/nc/${ncId}/edit`);
+            
+            // Mettre à jour les champs cachés
+            form.querySelector('[name="ncId"]').value = ncId;
+            form.querySelector('[name="criterionId"]').value = criterionId;
+        
+            // Remplir les champs du formulaire
+            form.querySelector('[name="impact"]').value = card.querySelector('h5.card-title + p').textContent.trim();
+            form.querySelector('[name="description"]').value = card.querySelector('h5.card-text + p').textContent.trim();
+            form.querySelector('[name="solution"]').value = card.querySelector('h5.card-title:last-of-type + p').textContent.trim();
+        
+            // Afficher l'image existante si présente
+            const existingImg = card.querySelector('.card-img-top');
+            if (existingImg) {
+                const currentScreenshot = form.querySelector('#current-screenshot');
+                currentScreenshot.innerHTML = `
+                    <img src="${existingImg.src}" class="img-fluid mb-2" alt="Capture d'écran actuelle">
+                    <small class="text-muted d-block">Capture d'écran actuelle</small>
+                `;
             }
-            fields.ncId.value = ncId;
-            fields.criterionId.value = criterionId;
-
-            // Configuration de la modal pour l'édition
+        
+            // Configurer le formulaire pour le mode édition
             modal.querySelectorAll('.mode-create').forEach(el => el.style.display = 'none');
             modal.querySelectorAll('.mode-edit').forEach(el => el.style.display = 'inline');
             modal.querySelectorAll('.create-mode-field').forEach(el => el.style.display = 'none');
-    
-            // Récupérer toutes les données de la carte
-            const ncData = {
-                impact: card.querySelector('h5.card-title + p')?.textContent?.trim(),
-                description: card.querySelector('h5.card-text + p')?.textContent?.trim(),
-                solution: card.querySelector('h5.card-title:last-of-type + p')?.textContent?.trim(),
-                screenshot: card.querySelector('img.card-img-top')?.src
-            };
-            console.log("Données de la NC à éditer:", ncData);
-    
-            try {
-                // Remplir les champs cachés
-                const ncIdInput = form.querySelector('[name="ncId"]');
-                const criterionIdInput = form.querySelector('[name="criterionId"]');
-                const impactInput = form.querySelector('[name="impact"]');
-                const descriptionInput = form.querySelector('[name="description"]');
-                const solutionInput = form.querySelector('[name="solution"]');
-    
-                console.log("Champs trouvés:", {
-                    ncId: !!ncIdInput,
-                    criterionId: !!criterionIdInput,
-                    impact: !!impactInput,
-                    description: !!descriptionInput,
-                    solution: !!solutionInput
-                });
-    
-                if (ncIdInput) ncIdInput.value = ncId;
-                if (criterionIdInput) criterionIdInput.value = button.dataset.criterionId;
-                if (impactInput) impactInput.value = ncData.impact || '';
-                if (descriptionInput) descriptionInput.value = ncData.description || '';
-                if (solutionInput) solutionInput.value = ncData.solution || '';
-    
-                // Gérer la capture d'écran
-                const currentScreenshot = form.querySelector('#current-screenshot');
-                if (currentScreenshot && ncData.screenshot) {
-                    currentScreenshot.innerHTML = `
-                        <img src="${ncData.screenshot}" class="img-fluid mb-2" alt="Capture d'écran actuelle">
-                        <small class="text-muted d-block">Capture d'écran actuelle</small>
-                    `;
-                }
-    
-                // Afficher la modal
-                const modalInstance = new bootstrap.Modal(modal);
-                modalInstance.show();
-                modal.addEventListener('hidden.bs.modal', () => {
-                    document.body.classList.remove('modal-open');
-                    document.body.style.paddingRight = '';
-                    document.body.style.overflow = '';
-                    const backdrop = document.querySelector('.modal-backdrop');
-                    if (backdrop) {
-                        backdrop.remove();
-                    }
-                }, { once: true }); // L'option once:true fait que l'événement se supprime automatiquement après utilisation
-    
-            } catch (error) {
-                console.error("Erreur lors du remplissage du formulaire:", error);
-            }
+        
+            // Gestionnaire pour restaurer l'action originale à la fermeture
+            modal.addEventListener('hidden.bs.modal', () => {
+                form.setAttribute('action', originalAction);
+                form.reset();
+                modal.querySelectorAll('.mode-create').forEach(el => el.style.display = 'inline');
+                modal.querySelectorAll('.mode-edit').forEach(el => el.style.display = 'none');
+                modal.querySelectorAll('.create-mode-field').forEach(el => el.style.display = 'block');
+            }, { once: true });
+        
+            // Afficher la modal
+            const modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
         }
     });
 
@@ -424,8 +381,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Dans audit.js, ajouter dans le DOMContentLoaded
-    /*const deleteProjectBtn = document.getElementById('deleteProjectBtn');
+    const deleteProjectBtn = document.getElementById('deleteProjectBtn');
     if (deleteProjectBtn) {
         deleteProjectBtn.addEventListener('click', async function() {
             if (!confirm('Êtes-vous sûr de vouloir supprimer ce projet ? Cette action est irréversible.')) {
@@ -441,50 +397,110 @@ document.addEventListener('DOMContentLoaded', function() {
                     method: 'DELETE'
                 });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
 
                 if (data.success) {
-                    // Rediriger vers la page d'accueil
                     window.location.href = '/';
                 } else {
-                    throw new Error(data.message);
+                    throw new Error(data.message || 'Une erreur est survenue lors de la suppression');
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('Erreur lors de la suppression du projet');
+                alert('Erreur lors de la suppression du projet: ' + error.message);
             } finally {
                 this.disabled = false;
                 spinner.classList.add('d-none');
             }
         });
     }
-*/
 
 
     // Dans audit.js, ajouter ceci
 // Dans audit.js, cherchez la partie qui ressemble à ceci :
 
 // Dans audit.js, modifiez la partie qui gère l'ouverture du collapse :
-document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(button => {
-    const targetId = button.getAttribute('data-bs-target');
-    const target = document.querySelector(targetId);
-    if (!target) return;
+    document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(button => {
+        const targetId = button.getAttribute('data-bs-target');
+        const target = document.querySelector(targetId);
+        if (!target) return;
 
-    target.addEventListener('show.bs.collapse', async function() {
-        // Récupérer l'ID du critère et le formater correctement
-        const criterionId = button.getAttribute('data-bs-target')
-                              .replace('#collapse-', '')  
-                              .replace('-', '.'); // Changement ici : on remplace le tiret par un point
-        const pageId = document.getElementById('screenSelector')?.value;
-        console.log('Chargement des NC pour', criterionId);
-        
-        const wrapper = document.querySelector(`#wrapper-${criterionId.replace('.', '-')}`);
-        if (!wrapper) {
-            console.error('Wrapper non trouvé pour le critère', criterionId);
-            return;
-        }
+        target.addEventListener('show.bs.collapse', async function() {
+            // Récupérer l'ID du critère et le formater correctement
+            const criterionId = button.getAttribute('data-bs-target')
+                                .replace('#collapse-', '')  
+                                .replace('-', '.'); // Changement ici : on remplace le tiret par un point
+            const pageId = document.getElementById('screenSelector')?.value;
+            console.log('Chargement des NC pour', criterionId);
+            
+            const wrapper = document.querySelector(`#wrapper-${criterionId.replace('.', '-')}`);
+            if (!wrapper) {
+                console.error('Wrapper non trouvé pour le critère', criterionId);
+                return;
+            }
 
-        if (pageId) {
+            if (pageId) {
+                const loadingSpinner = document.createElement('div');
+                loadingSpinner.className = 'text-center my-4';
+                loadingSpinner.innerHTML = `
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                `;
+                wrapper.innerHTML = '';
+                wrapper.appendChild(loadingSpinner);
+
+                try {
+                    const url = `/audit/${currentProjectId}/criterion/${criterionId}/allnc?pageId=${pageId}`;
+                    console.log('URL appelée:', url);
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    console.log('Données reçues:', data);
+
+                    wrapper.innerHTML = '';
+                    
+                    if (!data.ncs || data.ncs.length === 0) {
+                        wrapper.innerHTML = `
+                            <div class="alert alert-info">
+                                Aucune non-conformité trouvée pour ce critère sur cette page
+                            </div>
+                        `;
+                    } else {
+                        for (const nc of data.ncs) {
+                            const templateResponse = await fetch(`/nc-template?data=${encodeURIComponent(JSON.stringify(nc))}`);
+                            const html = await templateResponse.text();
+                            wrapper.insertAdjacentHTML('beforeend', html);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    wrapper.innerHTML = `
+                        <div class="alert alert-danger">
+                            Une erreur est survenue lors du chargement des non-conformités: ${error.message}
+                        </div>
+                    `;
+                }
+            }
+        });
+    });
+
+   // Dans audit.js, ajoutez cette fonction :
+
+    // Gestionnaire pour "Voir tous les écrans"
+    // Dans audit.js, gardez uniquement cette partie pour la gestion du bouton "Voir tous les écrans"
+    document.querySelectorAll('.seeall').forEach(button => {
+        button.addEventListener('click', async function() {
+            const criterionId = this.closest('.collapse_container')
+                                .id.replace('accordion-detail-', '')
+                                .replace('-', '.');
+            const wrapper = document.querySelector(`#wrapper-${criterionId.replace('.', '-')}`);
+            const currentPageId = document.getElementById('screenSelector')?.value;
+            
+            if (!wrapper) return;
+
             const loadingSpinner = document.createElement('div');
             loadingSpinner.className = 'text-center my-4';
             loadingSpinner.innerHTML = `
@@ -492,31 +508,72 @@ document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(button => {
                     <span class="visually-hidden">Chargement...</span>
                 </div>
             `;
-            wrapper.innerHTML = '';
-            wrapper.appendChild(loadingSpinner);
 
             try {
-                const url = `/audit/${currentProjectId}/criterion/${criterionId}/allnc?pageId=${pageId}`;
-                console.log('URL appelée:', url);
-                const response = await fetch(url);
-                const data = await response.json();
-                console.log('Données reçues:', data);
-
                 wrapper.innerHTML = '';
-                
-                if (!data.ncs || data.ncs.length === 0) {
-                    wrapper.innerHTML = `
-                        <div class="alert alert-info">
-                            Aucune non-conformité trouvée pour ce critère sur cette page
-                        </div>
-                    `;
-                } else {
-                    for (const nc of data.ncs) {
-                        const templateResponse = await fetch(`/nc-template?data=${encodeURIComponent(JSON.stringify(nc))}`);
-                        const html = await templateResponse.text();
-                        wrapper.insertAdjacentHTML('beforeend', html);
+                wrapper.appendChild(loadingSpinner);
+
+                // Si on montre déjà toutes les pages, revenir à la page courante
+                if (this.dataset.showingAll === 'true') {
+                    const response = await fetch(`/audit/${currentProjectId}/criterion/${criterionId}/allnc?pageId=${currentPageId}`);
+                    const data = await response.json();
+
+                    wrapper.innerHTML = '';
+                    
+                    if (!data.ncs || data.ncs.length === 0) {
+                        wrapper.innerHTML = `
+                            <div class="alert alert-info">
+                                Aucune non-conformité trouvée pour ce critère sur cette page
+                            </div>
+                        `;
+                    } else {
+                        for (const nc of data.ncs) {
+                            const templateResponse = await fetch(`/nc-template?data=${encodeURIComponent(JSON.stringify(nc))}`);
+                            const html = await templateResponse.text();
+                            wrapper.insertAdjacentHTML('beforeend', html);
+                        }
                     }
+
+                    this.textContent = 'Voir tous les écrans';
+                    this.classList.remove('btn-primary');
+                    this.classList.add('btn-secondary');
+                    this.dataset.showingAll = 'false';
+                } 
+                // Sinon, montrer toutes les pages
+                else {
+                    const response = await fetch(`/audit/${currentProjectId}/criterion/${criterionId}/allnc`);
+                    const data = await response.json();
+
+                    wrapper.innerHTML = '';
+                    
+                    if (!data.ncs || data.ncs.length === 0) {
+                        wrapper.innerHTML = `
+                            <div class="alert alert-info">
+                                Aucune non-conformité trouvée pour ce critère
+                            </div>
+                        `;
+                    } else {
+                        for (const nc of data.ncs) {
+                            const templateResponse = await fetch(`/nc-template?data=${encodeURIComponent(JSON.stringify(nc))}`);
+                            const html = await templateResponse.text();
+                            wrapper.insertAdjacentHTML('beforeend', html);
+                        }
+                    }
+
+                    this.textContent = 'Revenir à l\'écran courant';
+                    this.classList.remove('btn-secondary');
+                    this.classList.add('btn-primary');
+                    this.dataset.showingAll = 'true';
                 }
+
+                // Réinitialiser les handlers de suppression
+                wrapper.querySelectorAll('.delete-nc').forEach(deleteBtn => {
+                    if (!deleteBtn.dataset.handlerAttached) {
+                        const formHandler = new FormHandler(document.querySelector('form.nc-form'));
+                        formHandler.setupDeleteHandler(deleteBtn);
+                    }
+                });
+
             } catch (error) {
                 console.error('Erreur:', error);
                 wrapper.innerHTML = `
@@ -525,107 +582,8 @@ document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(button => {
                     </div>
                 `;
             }
-        }
+        });
     });
-});
-
-   // Dans audit.js, ajoutez cette fonction :
-
-    // Gestionnaire pour "Voir tous les écrans"
-    // Dans audit.js, gardez uniquement cette partie pour la gestion du bouton "Voir tous les écrans"
-document.querySelectorAll('.seeall').forEach(button => {
-    button.addEventListener('click', async function() {
-        const criterionId = this.closest('.collapse_container')
-                              .id.replace('accordion-detail-', '')
-                              .replace('-', '.');
-        const wrapper = document.querySelector(`#wrapper-${criterionId.replace('.', '-')}`);
-        const currentPageId = document.getElementById('screenSelector')?.value;
-        
-        if (!wrapper) return;
-
-        const loadingSpinner = document.createElement('div');
-        loadingSpinner.className = 'text-center my-4';
-        loadingSpinner.innerHTML = `
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Chargement...</span>
-            </div>
-        `;
-
-        try {
-            wrapper.innerHTML = '';
-            wrapper.appendChild(loadingSpinner);
-
-            // Si on montre déjà toutes les pages, revenir à la page courante
-            if (this.dataset.showingAll === 'true') {
-                const response = await fetch(`/audit/${currentProjectId}/criterion/${criterionId}/allnc?pageId=${currentPageId}`);
-                const data = await response.json();
-
-                wrapper.innerHTML = '';
-                
-                if (!data.ncs || data.ncs.length === 0) {
-                    wrapper.innerHTML = `
-                        <div class="alert alert-info">
-                            Aucune non-conformité trouvée pour ce critère sur cette page
-                        </div>
-                    `;
-                } else {
-                    for (const nc of data.ncs) {
-                        const templateResponse = await fetch(`/nc-template?data=${encodeURIComponent(JSON.stringify(nc))}`);
-                        const html = await templateResponse.text();
-                        wrapper.insertAdjacentHTML('beforeend', html);
-                    }
-                }
-
-                this.textContent = 'Voir tous les écrans';
-                this.classList.remove('btn-primary');
-                this.classList.add('btn-secondary');
-                this.dataset.showingAll = 'false';
-            } 
-            // Sinon, montrer toutes les pages
-            else {
-                const response = await fetch(`/audit/${currentProjectId}/criterion/${criterionId}/allnc`);
-                const data = await response.json();
-
-                wrapper.innerHTML = '';
-                
-                if (!data.ncs || data.ncs.length === 0) {
-                    wrapper.innerHTML = `
-                        <div class="alert alert-info">
-                            Aucune non-conformité trouvée pour ce critère
-                        </div>
-                    `;
-                } else {
-                    for (const nc of data.ncs) {
-                        const templateResponse = await fetch(`/nc-template?data=${encodeURIComponent(JSON.stringify(nc))}`);
-                        const html = await templateResponse.text();
-                        wrapper.insertAdjacentHTML('beforeend', html);
-                    }
-                }
-
-                this.textContent = 'Revenir à l\'écran courant';
-                this.classList.remove('btn-secondary');
-                this.classList.add('btn-primary');
-                this.dataset.showingAll = 'true';
-            }
-
-            // Réinitialiser les handlers de suppression
-            wrapper.querySelectorAll('.delete-nc').forEach(deleteBtn => {
-                if (!deleteBtn.dataset.handlerAttached) {
-                    const formHandler = new FormHandler(document.querySelector('form.nc-form'));
-                    formHandler.setupDeleteHandler(deleteBtn);
-                }
-            });
-
-        } catch (error) {
-            console.error('Erreur:', error);
-            wrapper.innerHTML = `
-                <div class="alert alert-danger">
-                    Une erreur est survenue lors du chargement des non-conformités: ${error.message}
-                </div>
-            `;
-        }
-    });
-});
     
     // Ajouter un listener sur le changement de page
     document.getElementById('screenSelector')?.addEventListener('change', function() {

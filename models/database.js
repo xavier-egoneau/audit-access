@@ -49,11 +49,11 @@ class Database {
                         name TEXT NOT NULL,
                         url TEXT,
                         referential TEXT NOT NULL,
-                        referential_version TEXT, -- Modification ici : utiliser -- pour les commentaires SQL
+                        referential_version TEXT,
                         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                     )
                 `);
-
+    
                 // Table des pages auditées
                 this.db.run(`
                     CREATE TABLE IF NOT EXISTS pages (
@@ -63,7 +63,7 @@ class Database {
                         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                     )
                 `);
-
+    
                 // Table des résultats de l'audit
                 this.db.run(`
                     CREATE TABLE IF NOT EXISTS audit_results (
@@ -75,7 +75,7 @@ class Database {
                         UNIQUE(page_id, criterion_id)
                     )
                 `);
-
+    
                 // Table des non-conformités
                 this.db.run(`
                     CREATE TABLE IF NOT EXISTS non_conformities (
@@ -85,41 +85,16 @@ class Database {
                         description TEXT,
                         screenshot_path TEXT,
                         solution TEXT,
-                        page_ids TEXT, /* Stockage JSON des IDs des pages concernées */
+                        page_ids TEXT,
                         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
                     )
                 `, err => {
-                    if (err) reject(err);
-                    
-                    // Mettre à jour la table si elle existe déjà pour ajouter la colonne page_ids
-                    this.db.run(`
-                        PRAGMA table_info(non_conformities)
-                    `, (err, rows) => {
-                        if (err) reject(err);
-                        
-                        // Vérifier si la colonne page_ids existe
-                        this.db.get(`
-                            SELECT COUNT(*) as count 
-                            FROM pragma_table_info('non_conformities') 
-                            WHERE name = 'page_ids'
-                        `, (err, row) => {
-                            if (err) reject(err);
-                            
-                            if (row.count === 0) {
-                                // Ajouter la colonne page_ids si elle n'existe pas
-                                this.db.run(`
-                                    ALTER TABLE non_conformities 
-                                    ADD COLUMN page_ids TEXT
-                                `, err => {
-                                    if (err) reject(err);
-                                    resolve();
-                                });
-                            } else {
-                                resolve();
-                            }
-                        });
-                    });
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    resolve();
                 });
             });
         });
@@ -541,31 +516,29 @@ class Database {
             } catch (error) {
                 console.warn(`Erreur lors de la suppression du dossier d'uploads: ${error.message}`);
             }
-
-            // 2. Sauvegarder le chemin de la base de données
-            const dbPath = path.join(__dirname, '..', 'database', `${this.projectId}.sqlite`);
-
-            // 3. Fermer proprement la base de données
+    
+            // 2. Fermer proprement la base de données
             await new Promise((resolve, reject) => {
                 this.db.serialize(() => {
                     this.db.run('PRAGMA optimize');
                     this.db.run('VACUUM');
                     this.db.close((err) => {
                         if (err) reject(err);
-                        resolve();
+                        else resolve();
                     });
                 });
             });
-
-            // 4. Créer un fichier temporaire
-            const tempPath = dbPath + '.temp';
+    
+            // 3. Supprimer le fichier de la base de données
+            const dbPath = path.join(__dirname, '..', 'database', `${this.projectId}.sqlite`);
             try {
-                await fsPromises.rename(dbPath, tempPath);
-                await fsPromises.unlink(tempPath);
-            } catch (error) {
                 await fsPromises.unlink(dbPath);
+                logger.log(`Base de données supprimée: ${dbPath}`);
+            } catch (error) {
+                console.error(`Erreur lors de la suppression du fichier de base de données: ${error.message}`);
+                throw error;
             }
-
+    
             return true;
         } catch (error) {
             console.error('Erreur lors de la suppression du projet:', error);

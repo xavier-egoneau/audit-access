@@ -560,93 +560,93 @@ app.get('/audit/:projectId/criterion/:criterionId/allnc', async (req, res) => {
 app.post('/audit/:projectId/nc/:ncId/edit', upload.single('screenshot'), async (req, res) => {
     const { projectId, ncId } = req.params;
     const { impact, description, solution } = req.body;
+    console.log("Edition NC - ID:", ncId);
 
     try {
         const db = new Database(projectId);
         
-        // Construire l'objet de mise à jour
-        const updateData = {
-            impact,
-            description,
-            solution
-        };
+        // Commencer une transaction
+        await db.db.run('BEGIN TRANSACTION');
 
-        // Si une nouvelle image est fournie
+        // 1. Récupérer la NC existante
+        const existingNC = await new Promise((resolve, reject) => {
+            db.db.get('SELECT * FROM non_conformities WHERE id = ?', [ncId], (err, row) => {
+                if (err) reject(err);
+                if (!row) reject(new Error('NC non trouvée'));
+                resolve(row);
+            });
+        });
+
+        // 2. Gérer l'image
+        let screenshotPath = existingNC.screenshot_path;
         if (req.file) {
-            updateData.screenshot_path = `/uploads/${projectId}/${req.file.filename}`;
-
-            // Optionnel : Supprimer l'ancienne image
-            try {
-                const oldNC = await new Promise((resolve, reject) => {
-                    db.db.get('SELECT screenshot_path FROM non_conformities WHERE id = ?', [ncId], (err, row) => {
-                        if (err) reject(err);
-                        resolve(row);
-                    });
-                });
-
-                if (oldNC && oldNC.screenshot_path) {
-                    const oldImagePath = path.join(__dirname, 'public', oldNC.screenshot_path);
-                    await fs.unlink(oldImagePath).catch(err => console.warn('Erreur lors de la suppression de l\'ancienne image:', err));
+            screenshotPath = `/uploads/${projectId}/${req.file.filename}`;
+            // Supprimer l'ancienne image si elle existe
+            if (existingNC.screenshot_path) {
+                const oldImagePath = path.join(__dirname, 'public', existingNC.screenshot_path);
+                try {
+                    await fs.unlink(oldImagePath);
+                } catch (err) {
+                    console.warn('Erreur lors de la suppression de l\'ancienne image:', err);
                 }
-            } catch (error) {
-                console.warn('Erreur lors de la récupération/suppression de l\'ancienne image:', error);
             }
         }
 
-        // Mise à jour de la NC
+        // 3. Mettre à jour la NC
         await new Promise((resolve, reject) => {
-            const fields = Object.keys(updateData);
-            const values = Object.values(updateData);
-            const setClause = fields.map(field => `${field} = ?`).join(', ');
-            
-            db.db.run(
-                `UPDATE non_conformities 
-                 SET ${setClause}
-                 WHERE id = ?`,
-                [...values, ncId],
-                function(err) {
-                    if (err) reject(err);
-                    resolve();
-                }
-            );
+            db.db.run(`
+                UPDATE non_conformities 
+                SET impact = ?, 
+                    description = ?, 
+                    solution = ?, 
+                    screenshot_path = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            `, [impact, description, solution, screenshotPath, ncId], function(err) {
+                if (err) reject(err);
+                if (this.changes === 0) reject(new Error('Aucune mise à jour effectuée'));
+                resolve();
+            });
         });
 
-        // Récupérer la NC mise à jour
+        // 4. Récupérer la NC mise à jour avec les infos des pages
         const updatedNC = await new Promise((resolve, reject) => {
-            db.db.get(
-                `SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
-                 FROM non_conformities nc
-                 LEFT JOIN pages p ON EXISTS (
-                     SELECT 1 
-                     FROM json_each(nc.page_ids) 
-                     WHERE value = CAST(p.id AS TEXT)
-                 )
-                 WHERE nc.id = ?
-                 GROUP BY nc.id`,
-                [ncId],
-                (err, row) => {
-                    if (err) reject(err);
-                    resolve(row);
-                }
-            );
+            db.db.get(`
+                SELECT nc.*, GROUP_CONCAT(p.name) as page_names 
+                FROM non_conformities nc 
+                LEFT JOIN pages p ON EXISTS (
+                    SELECT 1 FROM json_each(nc.page_ids) 
+                    WHERE value = CAST(p.id AS TEXT)
+                )
+                WHERE nc.id = ?
+                GROUP BY nc.id
+            `, [ncId], (err, row) => {
+                if (err) reject(err);
+                resolve(row);
+            });
         });
 
+        await db.db.run('COMMIT');
         db.close();
 
-        // Format de réponse adapté pour l'édition
-        res.json({ 
+        // 5. Renvoyer les données mises à jour
+        res.json({
             success: true,
             ncId: Number(ncId),
-            impact: updateData.impact,
-            description: updateData.description,
-            solution: updateData.solution,
-            screenshot_path: updateData.screenshot_path || updatedNC.screenshot_path,
+            impact,
+            description,
+            solution,
+            screenshot_path: screenshotPath,
             pages: updatedNC.page_names ? updatedNC.page_names.split(',') : [],
             allPages: false
         });
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour de la NC:', error);
+        if (db) {
+            await db.db.run('ROLLBACK');
+            db.close();
+        }
         res.status(500).json({ 
             success: false, 
             error: error.message || 'Erreur lors de la mise à jour de la non-conformité'
@@ -1119,8 +1119,7 @@ app.post('/project/:id/page/new', async (req, res) => {
 // Modification partielle - Route d'édition
 
 app.post('/audit/:projectId/edit', async (req, res) => {
-    logger.log('Headers reçus:', req.headers);
-    logger.log('Body brut:', req.body);
+    logger.log('Données reçues dans edit:', req.body);
     
     try {
         const projectId = req.params.projectId;
@@ -1128,8 +1127,9 @@ app.post('/audit/:projectId/edit', async (req, res) => {
         // Validation des données reçues
         const { name, url, referential, referentialVersion, screens } = req.body;
         
+        logger.log('Screens à traiter:', screens);
+        
         if (!name || name.trim() === '') {
-            logger.log('Nom manquant dans:', req.body);
             return res.status(400).json({
                 success: false,
                 message: 'Le nom du projet est requis'
@@ -1154,35 +1154,32 @@ app.post('/audit/:projectId/edit', async (req, res) => {
                     referentialVersion || '4.1',
                     projectId
                 ];
-
-                logger.log('Exécution de la requête:', query, params);
                 
                 db.db.run(query, params, function(err) {
-                    if (err) {
-                        console.error('Erreur SQL:', err);
-                        reject(err);
-                        return;
-                    }
-                    logger.log('Projet mis à jour, changes:', this.changes);
+                    if (err) reject(err);
                     resolve();
                 });
             });
 
-            // Gestion des pages
-            if (Array.isArray(screens)) {
-                // Récupérer d'abord les pages existantes
-                const existingPages = await new Promise((resolve, reject) => {
-                    db.db.all('SELECT id, name FROM pages', [], (err, rows) => {
-                        if (err) reject(err);
-                        resolve(rows || []);
-                    });
+            // Récupérer les pages existantes
+            const existingPages = await new Promise((resolve, reject) => {
+                db.db.all('SELECT id, name, url FROM pages', [], (err, rows) => {
+                    if (err) reject(err);
+                    resolve(rows || []);
                 });
-            
+            });
+
+            logger.log('Pages existantes:', existingPages);
+
+            // Ne supprimer des pages que si nous avons reçu de nouvelles pages
+            if (screens && screens.length > 0) {
                 const existingNames = existingPages.map(p => p.name);
-                const newScreens = screens.filter(name => !existingNames.includes(name));
-                const removedPages = existingPages.filter(p => !screens.includes(p.name));
-            
-                // Supprimer uniquement les pages qui ne sont plus présentes
+                const newNames = screens.map(s => s.name).filter(name => name && name.trim() !== '');
+                const removedPages = existingPages.filter(p => !newNames.includes(p.name));
+
+                logger.log('Pages à supprimer:', removedPages);
+
+                // Supprimer les pages qui ne sont plus dans la liste
                 for (const page of removedPages) {
                     await new Promise((resolve, reject) => {
                         db.db.run('DELETE FROM pages WHERE id = ?', [page.id], (err) => {
@@ -1191,19 +1188,41 @@ app.post('/audit/:projectId/edit', async (req, res) => {
                         });
                     });
                 }
-            
-                // Ajouter uniquement les nouvelles pages
-                for (const screenName of newScreens) {
-                    await new Promise((resolve, reject) => {
-                        db.db.run(
-                            'INSERT INTO pages (name, created_at) VALUES (?, datetime("now"))',
-                            [screenName],
-                            (err) => {
-                                if (err) reject(err);
-                                resolve();
-                            }
-                        );
-                    });
+
+                // Ajouter ou mettre à jour les pages
+                for (const screen of screens) {
+                    const name = screen.name?.trim();
+                    const url = screen.url?.trim() || '';
+
+                    if (name) {
+                        const existingPage = existingPages.find(p => p.name === name);
+                        
+                        if (!existingPage) {
+                            logger.log('Ajout nouvelle page:', { name, url });
+                            await new Promise((resolve, reject) => {
+                                db.db.run(
+                                    'INSERT INTO pages (name, url, created_at) VALUES (?, ?, datetime("now"))',
+                                    [name, url],
+                                    (err) => {
+                                        if (err) reject(err);
+                                        resolve();
+                                    }
+                                );
+                            });
+                        } else {
+                            logger.log('Mise à jour page existante:', { name, url });
+                            await new Promise((resolve, reject) => {
+                                db.db.run(
+                                    'UPDATE pages SET name = ?, url = ? WHERE id = ?',
+                                    [name, url, existingPage.id],
+                                    (err) => {
+                                        if (err) reject(err);
+                                        resolve();
+                                    }
+                                );
+                            });
+                        }
+                    }
                 }
             }
 
