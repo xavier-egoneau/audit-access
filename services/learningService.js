@@ -26,42 +26,36 @@ class LearningService {
 
     // Méthode principale pour apprendre d'une nouvelle NC
     async learnFromNC(nonConformity) {
-        logger.log("Learning Service - Nouvelle NC reçue:", nonConformity);
-        
+        logger.log("NC reçue:", nonConformity); // Debug
+    
         const { criterionId, impact, description, solution, projectId } = nonConformity;
     
         try {
             await this.db.beginTransaction();
-            logger.log("Learning Service - Transaction démarrée");
     
+            // On vérifie que description existe et n'est pas vide
             if (!description) {
-                logger.warn("Learning Service - Description manquante dans la NC");
+                console.warn("Description manquante dans la NC");
                 throw new Error("Description obligatoire");
             }
     
             const patterns = this.extractPatterns(description);
-            logger.log("Learning Service - Patterns extraits:", patterns);
-            
             await this.updatePattern(criterionId, patterns);
-            logger.log("Learning Service - Patterns mis à jour");
     
+            // 2. Créer ou mettre à jour la suggestion
             const suggestionId = await this.createOrUpdateSuggestion(criterionId, {
                 impact,
                 description,
                 solution
             });
-            logger.log("Learning Service - Suggestion créée/mise à jour, ID:", suggestionId);
     
+            // 3. Mettre à jour les métriques
             await this.updateMetrics(criterionId);
-            logger.log("Learning Service - Métriques mises à jour");
     
             await this.db.commit();
-            logger.log("Learning Service - Transaction terminée avec succès");
-    
             return suggestionId;
     
         } catch (error) {
-            logger.error("Learning Service - Erreur:", error);
             await this.db.rollback();
             throw error;
         }
