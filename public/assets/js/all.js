@@ -230,9 +230,47 @@ class FormHandler {
             if (response.ncId) {
                 const isEditing = this.form.action.includes('/edit');
                 const criterionId = this.form.querySelector('[name="criterionId"]').value;
+                const pageIdInput = this.form.querySelector('[name="pageId"]');
+                const allPagesCheckbox = this.form.querySelector('[name="allPages"]');
                 const wrapperId = `wrapper-${criterionId.replace(/\./g, '-')}`;
                 const wrapper = document.querySelector(`#${wrapperId}`);
-                
+    
+                // Mettre le critère en NC
+                try {
+                    const statusResponse = await fetch(`/audit/${currentProjectId}/criterion/${criterionId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            status: 'NC',
+                            pageId: pageIdInput?.value || undefined,
+                            allPages: allPagesCheckbox?.checked || !pageIdInput?.value
+                        })
+                    });
+    
+                    const statusResult = await statusResponse.json();
+                    if (statusResult.success && statusResult.rates) {
+                        if (statusResult.rates.currentRate !== undefined) {
+                            document.getElementById('taux_conform_pa').textContent = `${statusResult.rates.currentRate}%`;
+                        }
+                        if (statusResult.rates.averageRate !== undefined) {
+                            document.getElementById('taux_moyen').textContent = `${statusResult.rates.averageRate}%`;
+                        }
+                        if (statusResult.rates.globalRate !== undefined) {
+                            document.getElementById('taux_conform').textContent = `${statusResult.rates.globalRate}%`;
+                        }
+                    }
+    
+                    // Mettre à jour le select du critère
+                    const criterionSelect = document.querySelector(`select[data-criterion="${criterionId}"]`);
+                    if (criterionSelect) {
+                        criterionSelect.value = 'NC';
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la mise à jour du statut:', error);
+                }
+    
                 if (wrapper) {
                     if (isEditing) {
                         // Mode édition - Mettre à jour la carte existante
@@ -264,13 +302,13 @@ class FormHandler {
                             pages: response.pages || [],
                             allPages: response.allPages || false
                         };
-    
+        
                         // Supprimer le message "Aucune NC" s'il existe
                         const emptyMessage = wrapper.querySelector('.alert-info');
                         if (emptyMessage && emptyMessage.textContent.includes('Aucune non-conformité')) {
                             emptyMessage.remove();
                         }
-    
+        
                         // Récupérer et insérer le template
                         const templateResponse = await fetch(`/nc-template?data=${encodeURIComponent(JSON.stringify(templateData))}`);
                         const html = await templateResponse.text();
@@ -291,7 +329,7 @@ class FormHandler {
                     this.filePreviewContainer = null;
                 }
             }
-        } 
+        }  
         // Si c'est un formulaire d'édition de projet
         else if (this.form.id === 'editProjectForm') {
             // Fermer la modale
