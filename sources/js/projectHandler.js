@@ -14,20 +14,36 @@ class ProjectHandler {
                 if (!modal) {
                     return; // Passer à l'itération suivante si la modale n'existe pas
                 }
-
+    
+                // Validation du formulaire
+                const form = modal.querySelector('form');
+                if (form && form.id === 'newProjectForm') {
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const nameInput = form.querySelector('[name="name"]');
+                        if (!nameInput.value.trim()) {
+                            alert('Le nom du projet est requis');
+                            nameInput.focus();
+                            return;
+                        }
+                        // Continue avec le submit si la validation passe
+                        form.submit();
+                    });
+                }
+    
                 // Bouton d'ajout de page
                 const addPageBtn = modal.querySelector('#addNewPageRow');
                 if (addPageBtn) {
                     addPageBtn.addEventListener('click', () => this.addNewPageRow(modalId));
                 }
-
+    
                 // Gestion des boutons de suppression existants
                 const pagesList = modal.querySelector('#pagesList');
                 if (pagesList) {
                     if (pagesList.children.length === 0 && modalId === 'newProject') {
                         this.addNewPageRow(modalId);
                     }
-
+    
                     // Ajouter les gestionnaires pour les boutons de suppression existants
                     pagesList.querySelectorAll('.delete-page').forEach(button => {
                         this.setupDeletePageButton(button, pagesList);

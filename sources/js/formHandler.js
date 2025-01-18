@@ -156,24 +156,30 @@ class FormHandler {
     getFormData() {
         if (this.form.id === 'newProjectForm') {
             const formData = new FormData(this.form);
-            const pageNames = formData.getAll('page_names[]');
-            const pageUrls = formData.getAll('page_urls[]');
+            
+            // Validation du nom du projet
+            const name = formData.get('name');
+            if (!name || name.trim() === '') {
+                throw new Error('Le nom du projet est requis');
+            }
+    
+            const pageNames = document.querySelectorAll('.page-name');
+            const pageUrls = document.querySelectorAll('.page-url');
             
             // Créer le tableau des screens en combinant les noms et URLs
-            const screens = pageNames.map((name, index) => ({
-                name: name.trim(),
-                url: pageUrls[index] ? pageUrls[index].trim() : ''
-            }));
+            const screens = Array.from(pageNames).map((nameInput, index) => ({
+                name: nameInput.value.trim(),
+                url: pageUrls[index] ? pageUrls[index].value.trim() : ''
+            })).filter(screen => screen.name !== ''); // Filtrer les pages sans nom
     
             const data = {
-                name: formData.get('name'),
-                url: formData.get('url'),
+                name: name.trim(),
+                url: formData.get('url') || '',
                 referential: formData.get('referential'),
                 screens: screens
             };
-    
-            console.log('Données formatées:', data); // Pour debug
-            return JSON.stringify(data);
+            
+            return data;
         }
         return new FormData(this.form);
     }
@@ -286,6 +292,16 @@ class FormHandler {
                 }
             }
         } 
+        // Si c'est un formulaire d'édition de projet
+        else if (this.form.id === 'editProjectForm') {
+            // Fermer la modale
+            const modal = bootstrap.Modal.getInstance(document.getElementById('editProject'));
+            if (modal) {
+                modal.hide();
+            }
+            // Recharger la page pour voir les changements
+            window.location.reload();
+        }
         // Si c'est un formulaire de projet (nouveau ou édition)
         else if (response.projectId) {
             window.location.href = `/audit/${response.projectId}`;
@@ -310,20 +326,16 @@ class FormHandler {
         try {
             this.startLoading();
             
-            const isEditing = this.form.action.includes('/edit');
-            console.log('Mode édition:', isEditing);
-            
-            const response = await fetch(this.form.action, {
-                method: this.method,
-                body: new FormData(this.form)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            let response;
+            if (this.form.id === 'editProjectForm') {
+                response = await this.handleEditProjectSubmit();
+            } else if (this.form.id === 'newProjectForm') {
+                response = await this.handleNewProjectSubmit();
+            } else {
+                response = await this.handleDefaultSubmit();
             }
 
-            const result = await response.json();
-            await this.handleSuccess(result);
+            await this.handleSuccess(response);
 
         } catch (error) {
             console.error('Erreur:', error);
@@ -331,6 +343,81 @@ class FormHandler {
         } finally {
             this.stopLoading();
         }
+    }
+
+    async handleEditProjectSubmit() {
+        const formData = new FormData(this.form);
+        
+        const data = {
+            name: formData.get('name'),
+            url: formData.get('url'),
+            referential: formData.get('referential'),
+            referentialVersion: formData.get('referentialVersion'),
+            screens: []
+        };
+
+        // Récupérer toutes les pages
+        const pageNames = formData.getAll('page_names[]');
+        const pageUrls = formData.getAll('page_urls[]');
+        
+        // Combiner les noms et URLs des pages
+        data.screens = pageNames.map((name, index) => ({
+            name: name.trim(),
+            url: pageUrls[index] || ''
+        })).filter(screen => screen.name !== '');
+
+        const response = await fetch(this.form.action, {
+            method: this.method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    }
+
+    async handleNewProjectSubmit() {
+        const formData = new FormData(this.form);
+        
+        const data = {
+            name: formData.get('name'),
+            url: formData.get('url'),
+            referential: formData.get('referential'),
+            page_names: formData.getAll('page_names[]'),
+            page_urls: formData.getAll('page_urls[]')
+        };
+
+        const response = await fetch(this.form.action, {
+            method: this.method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    }
+
+    async handleDefaultSubmit() {
+        const response = await fetch(this.form.action, {
+            method: this.method,
+            body: new FormData(this.form)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
     }
     
     

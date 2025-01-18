@@ -656,6 +656,7 @@ app.post('/audit/:projectId/nc/:ncId/edit', upload.single('screenshot'), async (
 
 // Dans app.js, modifiez la route POST /audit/new :
 app.post('/audit/new', async (req, res) => {
+    let db = null;  // Déclaration de db en dehors du try pour pouvoir le fermer dans finally
     try {
         logger.log("Données reçues:", req.body);
         
@@ -664,20 +665,26 @@ app.post('/audit/new', async (req, res) => {
             name: req.body.name ? req.body.name.trim() : '',
             url: req.body.url || '',
             referential: req.body.referential,
-            screens: Array.isArray(req.body.screens) ? req.body.screens : []
+            screens: []
         };
 
         if (!projectData.name) {
             throw new Error('Le nom du projet est requis');
         }
 
-        const validReferentials = ['RGAA', 'WCAG', 'RAAM'];
-        if (!validReferentials.includes(projectData.referential)) {
-            throw new Error('Référentiel invalide');
-        }
+        // Construction du tableau des screens
+        const pageNames = Array.isArray(req.body.page_names) ? req.body.page_names : [];
+        const pageUrls = Array.isArray(req.body.page_urls) ? req.body.page_urls : [];
+
+        projectData.screens = pageNames.map((name, index) => ({
+            name: name.trim(),
+            url: pageUrls[index] || ''
+        })).filter(screen => screen.name !== '');
+
+        logger.log("Pages à créer:", projectData.screens);
 
         const projectId = uuidv4();
-        const db = new Database(projectId);
+        db = new Database(projectId);  // Création de l'instance de la base de données
 
         // Création du projet
         await new Promise((resolve, reject) => {
@@ -704,28 +711,31 @@ app.post('/audit/new', async (req, res) => {
 
         // Création des pages
         if (projectData.screens.length > 0) {
-            await Promise.all(projectData.screens.map(screen => {
-                // Vérifier si screen est un objet ou une simple chaîne
-                const screenName = typeof screen === 'object' ? screen.name : screen;
-                const screenUrl = typeof screen === 'object' ? screen.url || '' : '';
-                
-                return new Promise((resolve, reject) => {
-                    db.db.run(
-                        'INSERT INTO pages (name, url, created_at) VALUES (?, ?, datetime("now"))',
-                        [screenName, screenUrl],
-                        (err) => {
-                            if (err) {
-                                console.error('Erreur lors de l\'insertion de la page:', err);
-                                reject(err);
+            logger.log("Début de la création des pages...");
+            for (const screen of projectData.screens) {
+                try {
+                    await new Promise((resolve, reject) => {
+                        logger.log("Tentative d'insertion de la page:", screen);
+                        db.db.run(
+                            'INSERT INTO pages (name, url, created_at) VALUES (?, ?, datetime("now"))',
+                            [screen.name, screen.url],
+                            (err) => {
+                                if (err) {
+                                    logger.error('Erreur lors de l\'insertion de la page:', err);
+                                    reject(err);
+                                }
+                                logger.log("Page insérée avec succès:", screen);
+                                resolve();
                             }
-                            resolve();
-                        }
-                    );
-                });
-            }));
+                        );
+                    });
+                } catch (error) {
+                    logger.error("Erreur lors de l'insertion d'une page:", error);
+                    throw error;
+                }
+            }
         }
 
-        db.close();
         res.json({ 
             success: true, 
             projectId
@@ -737,6 +747,10 @@ app.post('/audit/new', async (req, res) => {
             success: false, 
             message: error.message || 'Erreur lors de la création du projet'
         });
+    } finally {
+        if (db) {
+            db.close();  // Fermeture de la connexion à la base de données
+        }
     }
 });
 
@@ -992,6 +1006,20 @@ app.post('/audit/:projectId/nc', upload.single('screenshot'), async (req, res) =
             });
             db.close();
             throw error;
+        }
+
+        try {
+            await learningService.learnFromNC({
+                criterionId,
+                impact,
+                description,
+                solution,
+                projectId
+            });
+            logger.log("Apprentissage effectué avec succès");
+        } catch (learningError) {
+            logger.error("Erreur lors de l'apprentissage:", learningError);
+            // Ne pas bloquer la création de la NC si l'apprentissage échoue
         }
 
     } catch (error) {
