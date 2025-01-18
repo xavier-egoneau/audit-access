@@ -1,1 +1,1 @@
-supprimer le projet
+- verif criteres_raam.xml and criteres_wcag.xml
