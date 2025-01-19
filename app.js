@@ -388,7 +388,7 @@ app.get('/audit/:projectId/restitution', async (req, res) => {
 
         // Récupérer les pages avec leurs taux
         const pages = await new Promise((resolve, reject) => {
-            db.db.all('SELECT * FROM pages', [], async (err, pages) => {
+            db.db.all('SELECT * FROM pages ORDER BY id', [], async (err, pages) => {
                 if (err) reject(err);
                 
                 // Calculer le taux pour chaque page
@@ -400,6 +400,93 @@ app.get('/audit/:projectId/restitution', async (req, res) => {
                 resolve(pagesWithRates);
             });
         });
+
+        // Pour chaque page, récupérer les non-conformités complètes
+        for (const page of pages) {
+            // D'abord récupérer tous les critères non conformes
+            const nonConformCriteria = await new Promise((resolve, reject) => {
+                const query = `
+                    SELECT DISTINCT ar.criterion_id 
+                    FROM audit_results ar
+                    WHERE ar.page_id = ? AND ar.status = 'NC'
+                    ORDER BY ar.criterion_id
+                `;
+                
+                db.db.all(query, [page.id], (err, rows) => {
+                    if (err) {
+                        logger.error('Erreur SQL:', err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows || []);
+                });
+            });
+
+            // Ensuite récupérer les NC documentées
+            const documentedNCs = await new Promise((resolve, reject) => {
+                const query = `
+                    SELECT nc.* 
+                    FROM non_conformities nc 
+                    WHERE json_extract(nc.page_ids, '$') LIKE '%' || ? || '%'
+                    ORDER BY nc.criterion_id
+                `;
+                
+                db.db.all(query, [page.id], (err, ncs) => {
+                    if (err) {
+                        logger.error('Erreur SQL:', err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(ncs || []);
+                });
+            });
+
+            // Initialiser un tableau pour toutes les NC
+            let allNCs = [];
+
+            // D'abord ajouter toutes les NC documentées
+            const groupedDocumentedNCs = {};
+            documentedNCs.forEach(nc => {
+                if (!groupedDocumentedNCs[nc.criterion_id]) {
+                    groupedDocumentedNCs[nc.criterion_id] = [];
+                }
+                groupedDocumentedNCs[nc.criterion_id].push(nc);
+            });
+
+            // Ensuite ajouter les NC non documentées
+            nonConformCriteria.forEach(criterion => {
+                if (groupedDocumentedNCs[criterion.criterion_id]) {
+                    // Si on a des NC documentées pour ce critère, les ajouter
+                    allNCs = [...allNCs, ...groupedDocumentedNCs[criterion.criterion_id]];
+                } else {
+                    // Sinon ajouter une NC non documentée
+                    allNCs.push({
+                        criterion_id: criterion.criterion_id,
+                        impact: "Non documenté",
+                        description: "Non-conformité non documentée",
+                        solution: "Aucune solution proposée",
+                        isUndocumented: true
+                    });
+                }
+            });
+
+            // Trier les NC par criterion_id
+            allNCs.sort((a, b) => {
+                // Convertir les IDs en nombres pour le tri
+                const aId = a.criterion_id.split('.').map(Number);
+                const bId = b.criterion_id.split('.').map(Number);
+                
+                // Comparer chaque partie de l'ID
+                for (let i = 0; i < Math.max(aId.length, bId.length); i++) {
+                    if (aId[i] !== bId[i]) {
+                        return aId[i] - bId[i];
+                    }
+                }
+                return 0;
+            });
+
+            page.nonConformities = allNCs;
+        }
 
         // Identifier les Quick Wins
         const quickwins = await new Promise((resolve, reject) => {
@@ -486,28 +573,10 @@ app.get('/audit/:projectId/restitution', async (req, res) => {
             });
         });
 
-        // Récupérer toutes les NC pour chaque page
-        for (const page of pages) {
-            page.nonConformities = await new Promise((resolve, reject) => {
-                db.db.all(`
-                    SELECT * FROM non_conformities 
-                    WHERE json_extract(page_ids, '$') LIKE '%' || ? || '%'
-                    ORDER BY criterion_id
-                `, [page.id], (err, ncs) => {
-                    if (err) reject(err);
-                    resolve(ncs);
-                });
-            });
-        }
-
         const globalRate = await db.calculateGlobalRate();
 
         db.close();
 
-        // Après la récupération des autres données, ajoutez :
-    
-
-        // Modifiez le res.render pour inclure statusStats
         res.render('audit/restitution', {
             currentProject: projectInfo,
             pages: pages,

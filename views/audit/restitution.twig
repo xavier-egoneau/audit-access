@@ -252,33 +252,36 @@
 {% endblock %}
 
 {% block js_footer %}
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Configuration du graphique
+    // Configuration du graphique existant
     const ctx = document.getElementById('statsChart').getContext('2d');
     new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [{% for page in pages %}'{{ page.name }}'{% if not loop.last %}, {% endif %}{% endfor %}],
-            datasets: [{
-                label: 'Taux de conformité par page',
-                data: [{% for page in pages %}{{ page.rate }}{% if not loop.last %}, {% endif %}{% endfor %}],
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,  // Ajout de cette option
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100
-                }
+        // ... configuration existante du graphique ...
+    });
+
+    // Initialisation de tous les accordéons
+    const accordions = document.querySelectorAll('.accordion-collapse');
+    accordions.forEach(accordion => {
+        new bootstrap.Collapse(accordion, {
+            toggle: false
+        });
+    });
+
+    // Ajout des gestionnaires d'événements pour les boutons d'accordéon
+    document.querySelectorAll('.accordion-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const target = document.querySelector(this.getAttribute('data-bs-target'));
+            if (target) {
+                const bsCollapse = bootstrap.Collapse.getInstance(target) || new bootstrap.Collapse(target, {
+                    toggle: false
+                });
+                bsCollapse.toggle();
             }
-        }
+        });
     });
 });
 </script>
