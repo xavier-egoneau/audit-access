@@ -6,26 +6,31 @@
 {% block content %}
 <main class="container mt-4">
     {# En-tête du rapport #}
-    <div class="header-section mb-5">
-        <h1>Rapport d'audit d'accessibilité</h1>
-        <div class="project-info">
-            <h2>{{ currentProject.name }}</h2>
-            {% if currentProject.url %}
-                <p>URL : <a href="{{ currentProject.url }}" target="_blank">{{ currentProject.url }}</a></p>
-            {% endif %}
-            <p>Date de l'audit : {{ "now"|date("d/m/Y") }}</p>
-        </div>
+<div class="header-section mb-5">
+    <h1>Rapport d'audit d'accessibilité</h1>
+    <div class="project-info">
+        <h2>{{ currentProject.name }}</h2>
+        {% if currentProject.url %}
+            <p>URL : <a href="{{ currentProject.url }}" target="_blank">{{ currentProject.url }}</a></p>
+        {% endif %}
+        <p>Date de l'audit : {{ "now"|date("d/m/Y") }}</p>
     </div>
+</div>
 
-    {% if hasNonTestedCriteria %}
-    <div class="alert alert-warning alert-dismissible fade show mt-4" role="alert">
+{# Alerte pour les critères non testés #}
+{% if hasNonTestedCriteria %}
+    <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
         <div class="d-flex align-items-center">
             <i class="fas fa-exclamation-triangle me-2"></i>
-            <strong>Attention !</strong> Certains critères n'ont pas encore été testés. Le rapport d'audit n'est pas complet.
+            <strong>Attention !</strong> 
+            <span class="ms-2">
+                Ce rapport est incomplet. Certains critères n'ont pas encore été testés. 
+                Veuillez compléter l'audit avant de générer le rapport final.
+            </span>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
     </div>
-    {% endif %}
+{% endif %}
 
     {# Section Statistiques avec graphique #}
     <div class="stats-section mb-5">

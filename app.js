@@ -369,22 +369,45 @@ app.get('/audit/:projectId/restitution', async (req, res) => {
         });
 
         // Vérifier les critères non testés
-        const statusStats = await new Promise((resolve, reject) => {
-            db.db.all(`
-                SELECT 
-                    status,
-                    COUNT(*) as count,
-                    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM audit_results), 1) as percentage
-                FROM audit_results 
-                GROUP BY status
-            `, [], (err, rows) => {
-                if (err) reject(err);
-                resolve(rows || []);
-            });
-        });
+        // Vérifier les critères non testés
+const statusStats = await new Promise((resolve, reject) => {
+    db.db.all(`
+        WITH AllCriteria AS (
+            -- Obtenir tous les critères possibles pour toutes les pages
+            SELECT p.id as page_id, c.criterion_id
+            FROM pages p
+            CROSS JOIN (
+                SELECT DISTINCT criterion_id 
+                FROM audit_results
+                UNION
+                SELECT '1.1.1' /* Critère de départ pour être sûr d'avoir au moins une ligne */
+            ) c
+        ),
+        Results AS (
+            -- Joindre avec les résultats existants
+            SELECT 
+                ac.criterion_id,
+                COALESCE(ar.status, 'NT') as status
+            FROM AllCriteria ac
+            LEFT JOIN audit_results ar ON ar.page_id = ac.page_id 
+                AND ar.criterion_id = ac.criterion_id
+        )
+        SELECT 
+            status,
+            COUNT(*) as count,
+            ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM Results), 1) as percentage
+        FROM Results
+        GROUP BY status
+    `, [], (err, rows) => {
+        if (err) reject(err);
+        resolve(rows || []);
+    });
+});
 
-        // Vérifier s'il y a des critères NT
-        const hasNonTestedCriteria = statusStats.some(stat => stat.status === 'NT');
+// Vérifier s'il y a des critères NT
+const hasNonTestedCriteria = statusStats.some(stat => stat.status === 'NT');
+logger.log('Status stats:', statusStats);
+logger.log('Has NT criteria:', hasNonTestedCriteria);
 
         // Récupérer les pages avec leurs taux
         const pages = await new Promise((resolve, reject) => {
