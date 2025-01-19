@@ -10,10 +10,11 @@ const { v4: uuidv4 } = require('uuid');
 const cookieParser = require('cookie-parser');
 const fs = require('fs/promises');
 const logger = require('./utils/logger');
-
 // IA
 const LearningService = require('./services/learningService');
 const learningService = new LearningService();
+// check auto
+const AutomatedCheck = require('./services/automatedCheck');
 
 // Configuration
 dotenv.config();
@@ -51,6 +52,125 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
+
+// Modification de la route dans app.js
+app.post('/api/autocheck/:projectId/:pageId', async (req, res) => {
+    let db = null;
+    try {
+        const { projectId, pageId } = req.params;
+        db = new Database(projectId);
+        
+        // Configuration de SQLite pour mieux gérer la concurrence
+        await new Promise((resolve, reject) => {
+            db.db.configure('busyTimeout', 15000); // Attendre jusqu'à 15 secondes
+            db.db.run('PRAGMA journal_mode = WAL;', (err) => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+
+        // Récupérer l'URL de la page
+        const page = await new Promise((resolve, reject) => {
+            db.db.get('SELECT url FROM pages WHERE id = ?', [pageId], (err, row) => {
+                if (err) reject(err);
+                resolve(row);
+            });
+        });
+
+        if (!page?.url) {
+            if (db) db.close();
+            return res.status(400).json({
+                success: false,
+                message: 'URL de la page non définie'
+            });
+        }
+
+        const checker = new AutomatedCheck();
+        await checker.initialize();
+        const results = await checker.checkUrl(page.url);
+        await checker.close();
+
+        // Utiliser une transaction pour les mises à jour
+        await new Promise((resolve, reject) => {
+            db.db.run('BEGIN TRANSACTION', (err) => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+
+        try {
+            // Mettre à jour les résultats dans la base de données
+            await Promise.all(Object.entries(results).map(([criterionId, result]) => {
+                return new Promise((resolve, reject) => {
+                    db.db.run(
+                        'INSERT OR REPLACE INTO audit_results (page_id, criterion_id, status) VALUES (?, ?, ?)',
+                        [pageId, criterionId, result.status],
+                        (err) => {
+                            if (err) reject(err);
+                            resolve();
+                        }
+                    );
+                });
+            }));
+
+            // Calculer les nouveaux taux
+            const currentRate = await db.calculatePageRate(pageId);
+            const averageRate = await db.calculateAverageRate();
+            const globalRate = await db.calculateGlobalRate();
+
+            // Commit de la transaction
+            await new Promise((resolve, reject) => {
+                db.db.run('COMMIT', (err) => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+
+            // Fermer proprement la base de données
+            db.close();
+            db = null;
+
+            res.json({ 
+                success: true, 
+                results,
+                rates: {
+                    currentRate,
+                    averageRate,
+                    globalRate
+                }
+            });
+
+        } catch (error) {
+            // Rollback en cas d'erreur
+            if (db) {
+                await new Promise(resolve => {
+                    db.db.run('ROLLBACK', () => resolve());
+                });
+            }
+            throw error;
+        }
+
+    } catch (error) {
+        console.error('Erreur lors de la vérification automatique:', error);
+        // S'assurer de fermer la base de données en cas d'erreur
+        if (db) {
+            try {
+                await new Promise(resolve => {
+                    db.db.run('ROLLBACK', () => {
+                        db.close();
+                        resolve();
+                    });
+                });
+            } catch (closeError) {
+                console.error('Erreur lors de la fermeture de la base:', closeError);
+            }
+        }
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
 
 // Route pour afficher le formulaire de création de projet
 app.get('/project/new', (req, res) => {

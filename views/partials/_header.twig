@@ -18,6 +18,13 @@
                 {% endif %}
             </select>
         </div>
+        <div class="col-auto">
+            {% if currentPage and currentPage.url %}
+                <button id="autoCheckButton" class="btn btn-primary" data-page-id="{{ currentPage.id }}">
+                    <i class="fas fa-robot"></i> Vérification automatique
+                </button>
+            {% endif %}
+        </div>
 
         {# Statistiques #}
         <div class="col-auto">
