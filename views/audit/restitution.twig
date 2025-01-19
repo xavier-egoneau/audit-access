@@ -31,16 +31,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
     </div>
 {% endif %}
-
     {# Section Statistiques avec graphique #}
-    <div class="stats-section mb-5">
+    <div class="row stats-section mb-5">
         <h2>Statistiques globales</h2>
-        <div class="row">
-            <div class="col-md-6">
-                {# Ajout du canvas pour Chart.js #}
+        <div class="col-md-6" style="min-height: 400px;">
+            <div class="chart-container" style="position: relative; height: 100%; width: 100%;">
                 <canvas id="statsChart"></canvas>
             </div>
-            <div class="col-md-6">
+        </div>
+        <div class="col-md-6">
                 <div class="stats-cards">
                     <div class="card mb-3">
                         <div class="card-body">
@@ -78,9 +77,9 @@
                     </div>
 
                 </div>
-            </div>
         </div>
     </div>
+
 
     {# Section Quick Wins #}
     <div class="quickwins-section mb-5">
@@ -261,33 +260,76 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+console.log('Initialisation du graphique...');
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Configuration du graphique existant
-    const ctx = document.getElementById('statsChart').getContext('2d');
+    console.log('DOM chargé');
+    const ctx = document.getElementById('statsChart');
+    
+    if (!ctx) {
+        console.error('Canvas non trouvé');
+        return;
+    }
+
+    const statusStats = {{ statusStats|json_encode|raw }};
+    console.log('Données des stats:', statusStats);
+
+    const chartData = {
+        labels: statusStats.map(stat => stat.status),
+        datasets: [{
+            label: 'Nombre de critères',
+            data: statusStats.map(stat => stat.count),
+            backgroundColor: statusStats.map(stat => {
+                switch(stat.status) {
+                    case 'C': return 'rgba(40, 167, 69, 0.5)';
+                    case 'NC': return 'rgba(220, 53, 69, 0.5)';
+                    case 'NT': return 'rgba(255, 193, 7, 0.5)';
+                    default: return 'rgba(108, 117, 125, 0.5)';
+                }
+            }),
+            borderColor: statusStats.map(stat => {
+                switch(stat.status) {
+                    case 'C': return 'rgba(40, 167, 69, 1)';
+                    case 'NC': return 'rgba(220, 53, 69, 1)';
+                    case 'NT': return 'rgba(255, 193, 7, 1)';
+                    default: return 'rgba(108, 117, 125, 1)';
+                }
+            }),
+            borderWidth: 1
+        }]
+    };
+
+    console.log('Configuration du graphique:', chartData);
+
     new Chart(ctx, {
-        // ... configuration existante du graphique ...
-    });
-
-    // Initialisation de tous les accordéons
-    const accordions = document.querySelectorAll('.accordion-collapse');
-    accordions.forEach(accordion => {
-        new bootstrap.Collapse(accordion, {
-            toggle: false
-        });
-    });
-
-    // Ajout des gestionnaires d'événements pour les boutons d'accordéon
-    document.querySelectorAll('.accordion-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const target = document.querySelector(this.getAttribute('data-bs-target'));
-            if (target) {
-                const bsCollapse = bootstrap.Collapse.getInstance(target) || new bootstrap.Collapse(target, {
-                    toggle: false
-                });
-                bsCollapse.toggle();
+        type: 'bar',
+        data: chartData,
+        options: {
+            animation: false, // Désactive les animations pour le débogage
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Répartition des critères par statut'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Nombre de critères'
+                    }
+                }
             }
-        });
+        }
     });
+    
+    console.log('Graphique initialisé');
 });
 </script>
 {% endblock %}
