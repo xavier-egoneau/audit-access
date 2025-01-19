@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<CRITERES version="1.0.0">
+<CRITERES version="2.1.0">
     <Critere id="1.1">
         <Titre>Chaque image porteuse d'information a-t-elle une alternative textuelle ?</Titre>
         <NiveauWCAG>A</NiveauWCAG>
