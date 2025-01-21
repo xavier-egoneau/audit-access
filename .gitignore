@@ -6,7 +6,7 @@ backups/
 *.sqlite
 # Maven
 target/
-
+sources/criteres/
 # File Vault (VLT) / Sync
 .vlt
 .vlt-sync*

@@ -179,5 +179,832 @@
                 <Notes></Notes>
             </Critere>
         </sousSection>
+        <sousSection id="1.4">
+            <titre>Distinguable</titre>
+            
+            <Critere id="1.4.1">
+                <titre>Utilisation de la couleur</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>La couleur n'est pas utilisée comme la seule façon de véhiculer de l'information, d'indiquer une action, de solliciter une réponse ou de distinguer un élément visuel.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes>Ce critère de succès traite spécifiquement de la perception des couleurs. Les autres formes de perception sont traitées à la règle 1.3 comme l'accès à la couleur par programme informatique et les autres formes de codage de la présentation visuelle.</Notes>
+            </Critere>
+
+            <Critere id="1.4.2">
+                <titre>Contrôle du son</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Si du son sur une page Web est audible automatiquement pendant plus de 3 secondes, un mécanisme est disponible pour le mettre en pause, l'arrêter ou pour en contrôler le volume de façon indépendante du niveau de volume du système général.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes>Puisque tout contenu ne satisfaisant pas à ce critère de succès peut interférer avec la capacité de l'utilisateur à exploiter la page entière, tout le contenu présent dans la page Web (qu'il soit utilisé pour satisfaire à d'autres critères de succès ou non) doit satisfaire à ce critère de succès.</Notes>
+            </Critere>
+
+            <Critere id="1.4.3">
+                <titre>Contraste (minimum)</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>La présentation visuelle du texte et du texte sous forme d'image a un rapport de contraste d'au moins 4,5:1, sauf dans les cas suivants:<![CDATA[<br>]]>
+- Texte agrandi : le texte agrandi et le texte agrandi sous forme d'image ont un rapport de contraste d'au moins 3:1<![CDATA[<br>]]>
+- Texte décoratif : aucune exigence de contraste pour le texte ou le texte sous forme d'image qui fait partie d'un composant d'interface utilisateur inactif, qui est purement décoratif, qui est invisible pour tous ou qui est une partie d'une image contenant un autre contenu significatif<![CDATA[<br>]]>
+- Logotypes : aucune exigence de contraste pour le texte faisant partie d'un logo ou d'un nom de marque</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="1.4.4">
+                <titre>Redimensionnement du texte</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>À l'exception des sous-titres et du texte sous forme d'image, le texte peut être redimensionné jusqu'à 200 pour cent sans l'aide d'une technologie d'assistance et sans perte de contenu ou de fonctionnalité.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="1.4.5">
+                <titre>Texte sous forme d'image</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Si les technologies utilisées peuvent réaliser la présentation visuelle, du texte est utilisé pour véhiculer l'information plutôt que du texte sous forme d'image sauf dans les cas suivants:<![CDATA[<br>]]>
+- Personnalisable : le texte sous forme d'image peut être personnalisé visuellement selon les exigences de l'utilisateur<![CDATA[<br>]]>
+- Essentielle : une présentation spécifique du texte est essentielle à l'information véhiculée</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes>Les logotypes sont considérés comme essentiels (le texte qui fait partie d'un logo ou d'un nom de marque).</Notes>
+            </Critere>
+            <Critere id="1.4.6">
+                <titre>Contraste (amélioré)</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>La présentation visuelle du texte et du texte sous forme d'image a un rapport de contraste d'au moins 7:1, sauf dans les cas suivants:<![CDATA[<br>]]>
+            - Texte agrandi : le texte agrandi et le texte agrandi sous forme d'image ont un rapport de contraste d'au moins 4,5:1<![CDATA[<br>]]>
+            - Texte décoratif : aucune exigence de contraste pour le texte ou le texte sous forme d'image qui fait partie d'un composant d'interface utilisateur inactif, qui est purement décoratif, qui est invisible pour tous ou qui est une partie d'une image contenant un autre contenu significatif<![CDATA[<br>]]>
+            - Logotypes : aucune exigence de contraste pour le texte faisant partie d'un logo ou d'un nom de marque</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="1.4.7">
+                <titre>Arrière-plan sonore faible ou absent</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Pour tout contenu seulement audio pré-enregistré qui contient principalement une expression orale au premier plan, qui n'est pas un CAPTCHA sonore ou un logo sonore et qui n'est pas une vocalisation ayant pour but principal d'être une expression musicale comme une chanson ou un rap, au moins une des conditions suivantes est vraie:<![CDATA[<br>]]>
+            - Pas d'arrière-plan : l'audio ne contient pas de sons d'arrière-plan<![CDATA[<br>]]>
+            - Désactivation : les sons d'arrière-plan peuvent être désactivés<![CDATA[<br>]]>
+            - 20 dB : les sons d'arrière-plan sont au moins 20 décibels plus faibles que l'expression orale au premier plan, à l'exception d'effets sonores occasionnels durant quelques secondes</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes>D'après la définition des décibels, le son d'arrière-plan répondant à cette exigence est approximativement quatre fois plus faible que l'expression orale au premier plan.</Notes>
+            </Critere>
+
+            <Critere id="1.4.8">
+                <titre>Présentation visuelle</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Pour la présentation visuelle des blocs de texte, un mécanisme est disponible pour réaliser ce qui suit:<![CDATA[<br>]]>
+            1. Les couleurs de l'avant-plan et de l'arrière-plan peuvent être sélectionnées par l'utilisateur<![CDATA[<br>]]>
+            2. La largeur n'excède pas 80 caractères ou glyphes (40 en caractères chinois, japonais ou coréen)<![CDATA[<br>]]>
+            3. Le texte n'est pas justifié (aligné simultanément à droite et à gauche)<![CDATA[<br>]]>
+            4. L'espacement entre les lignes (interligne) est d'au moins 1,5 dans les paragraphes et l'espacement entre les paragraphes est supérieur d'au moins 1,5 fois à l'interligne<![CDATA[<br>]]>
+            5. Le texte peut être redimensionné jusqu'à 200 pour cent sans devoir faire défiler horizontalement pour lire une ligne de texte dans une fenêtre plein écran</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="1.4.9">
+                <titre>Texte sous forme d'image (sans exception)</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Le texte sous forme d'image est utilisé uniquement pour de la décoration pure ou lorsqu'une présentation spécifique du texte est essentielle à l'information véhiculée.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes>Les logotypes sont considérés comme essentiels.</Notes>
+            </Critere>
+
+            <Critere id="1.4.10">
+                <titre>Redimensionnement</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Le contenu peut être présenté sans perte d'information ou de fonctionnalité, et sans avoir besoin de faire défiler dans les deux sens pour:<![CDATA[<br>]]>
+            - Un contenu avec défilement vertical à une largeur équivalente à 320 pixels CSS<![CDATA[<br>]]>
+            - Un contenu avec défilement horizontal à une hauteur équivalente à 256 pixels CSS<![CDATA[<br>]]>
+            Sauf pour les parties du contenu qui nécessitent une mise en page en deux dimensions pour leur utilisation ou pour en comprendre le sens.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="1.4.11">
+                <titre>Contraste des éléments non textuels</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>La présentation visuelle des éléments suivants a un rapport de contraste d'au moins 3:1 par rapport aux couleurs adjacentes:<![CDATA[<br>]]>
+            - Composants d'interface utilisateur : les informations visuelles nécessaires pour identifier les composants d'interface utilisateur et leurs états, sauf pour les composants d'interface utilisateur inactifs ou lorsque l'apparence du composant est déterminée par l'agent utilisateur et non modifiée par l'auteur<![CDATA[<br>]]>
+            - Objets graphiques : les parties des graphiques nécessaires pour comprendre le contenu, sauf quand une présentation particulière des graphiques est essentielle à l'information véhiculée</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="1.4.12">
+                <titre>Espacement du texte</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Dans le contenu implémenté en utilisant un langage de balisage qui prend en charge les propriétés de style de texte suivantes, il n'y a pas de perte de contenu ou de fonctionnalité lorsque l'on définit ce qui suit sans changer d'autres propriétés de style:<![CDATA[<br>]]>
+            - Interligne d'au moins 1,5 fois la taille de la police<![CDATA[<br>]]>
+                - Espacement après les paragraphes d'au moins 2 fois la taille de la police<![CDATA[<br>]]>
+                - Espacement des lettres d'au moins 0,12 fois la taille de la police<![CDATA[<br>]]>
+                - Espacement des mots d'au moins 0,16 fois la taille de la police</Etape>
+                    </Methodologie>
+                    <CasParticuliers></CasParticuliers>
+                    <Notes>Les polices qui ont des espaces extrêmement petits entre les caractères, comme certaines polices cursives, sont exemptées de l'exigence d'espacement des caractères dans la mesure où l'espacement des caractères réduit est essentiel à leur conception.</Notes>
+                </Critere>
+
+                <Critere id="1.4.13">
+                    <titre>Contenu au survol ou au focus</titre>
+                    <NiveauWCAG>AA</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Lorsque la réception puis le retrait du pointeur ou du focus du clavier déclenche l'affichage puis le masquage de contenu supplémentaire, les conditions suivantes sont vraies:<![CDATA[<br>]]>
+                - Persistent : un mécanisme est disponible pour faire persister le contenu supplémentaire jusqu'à ce que l'utilisateur le masque ou invalide son déclenchement<![CDATA[<br>]]>
+                - Survol possible : si le pointeur peut déclencher le contenu supplémentaire, alors le pointeur peut être déplacé sur le contenu supplémentaire sans que celui-ci disparaisse<![CDATA[<br>]]>
+                - Visible jusqu'à la fin : le contenu supplémentaire reste visible jusqu'à ce que le déclencheur de survol ou de focus soit supprimé, qu'un mécanisme de masquage soit activé par l'utilisateur ou que l'information ne soit plus valide</Etape>
+                    </Methodologie>
+                    <CasParticuliers></CasParticuliers>
+                    <Notes></Notes>
+                </Critere>
+        </sousSection>
     </section>
+    <section id="2">
+        <Titre>Utilisable - Les composants de l'interface utilisateur et de navigation doivent être utilisables.</Titre>
+        
+        <sousSection id="2.1">
+            <titre>Accessibilité au clavier</titre>
+            
+            <Critere id="2.1.1">
+                <titre>Clavier</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Toutes les fonctionnalités du contenu sont utilisables à l'aide d'une interface clavier sans exiger un rythme de frappe propre à l'utilisateur, sauf lorsque la fonction sous-jacente nécessite une saisie qui dépend du tracé du mouvement effectué par l'utilisateur et pas seulement des points de départ et d'arrivée de ce tracé.</Etape>
+                </Methodologie>
+                <Notes>Cette exception ne concerne que la fonction sous-jacente et non la technique de saisie. Par exemple, lorsqu'on utilise l'écriture manuscrite pour saisir du texte, la technique de saisie (l'écriture manuscrite) nécessite une saisie qui dépend d'un tracé, mais la fonction sous-jacente (la saisie de texte) ne le requiert pas.<![CDATA[<br>]]>Cela n'interdit pas et ne devrait pas décourager l'utilisation de la souris ou de toute autre méthode de saisie en plus de l'utilisation du clavier.</Notes>
+                <CasParticuliers></CasParticuliers>
+            </Critere>
+
+            <Critere id="2.1.2">
+                <titre>Pas de piège au clavier</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Si le focus du clavier peut être positionné sur un élément de la page à l'aide d'une interface clavier, réciproquement, il peut être déplacé hors de ce même composant simplement à l'aide d'une interface clavier et, si ce déplacement exige plus que l'utilisation d'une simple touche flèche ou tabulation ou toute autre méthode standard de sortie, l'utilisateur est informé de la méthode permettant de déplacer le focus hors de ce composant.</Etape>
+                </Methodologie>
+                <Notes>Puisque tout contenu ne satisfaisant pas à ce critère de succès peut interférer avec la capacité de l'utilisateur à exploiter la page entière, tout le contenu présent dans la page Web (qu'il soit utilisé pour satisfaire à d'autres critères de succès ou non) doit satisfaire à ce critère de succès.</Notes>
+                <CasParticuliers></CasParticuliers>
+            </Critere>
+
+            <Critere id="2.1.3">
+                <titre>Clavier (pas d'exception)</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Toutes les fonctionnalités du contenu sont utilisables à l'aide d'une interface clavier sans exiger un rythme de frappe propre à l'utilisateur.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+            <Critere id="2.1.4">
+                    <titre>Raccourcis clavier utilisant des caractères</titre>
+                    <NiveauWCAG>A</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Si un raccourci clavier est implémenté dans du contenu en utilisant uniquement des caractères de type lettres (y compris les majuscules et les minuscules), des signes de ponctuation, des chiffres ou des symboles, alors au moins l'une des conditions suivantes est vraie:<![CDATA[<br>]]>
+    - Désactivation : un mécanisme est disponible pour désactiver le raccourci<![CDATA[<br>]]>
+    - Réassignation : un mécanisme est disponible pour réassigner le raccourci afin d'inclure une ou plusieurs touches non imprimables du clavier (par exemple, Ctrl, Alt)<![CDATA[<br>]]>
+    - Actif uniquement au focus : le raccourci clavier pour un composant d'interface utilisateur n'est actif que lorsque ce composant a le focus.</Etape>
+                    </Methodologie>
+                    <CasParticuliers></CasParticuliers>
+                    <Notes></Notes>
+                </Critere>
+            </sousSection>
+
+            <sousSection id="2.2">
+                <titre>Délai suffisant</titre>
+                
+                <Critere id="2.2.1">
+                    <titre>Réglage du délai</titre>
+                    <NiveauWCAG>A</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Pour chaque limite de temps fixée par le contenu, au moins l'un des points suivants est vrai:<![CDATA[<br>]]>
+    - Suppression : l'utilisateur a la possibilité de supprimer la limite de temps avant de la rencontrer<![CDATA[<br>]]>
+    - Ajustement : l'utilisateur a la possibilité d'ajuster la limite de temps avant de la rencontrer dans un intervalle d'au moins dix fois la durée paramétrée par défaut<![CDATA[<br>]]>
+    - Extension : l'utilisateur est averti avant que la limite de temps n'expire et il lui est accordé au moins 20 secondes pour étendre cette limite par une action simple (par exemple, « appuyer sur la barre d'espace ») et l'utilisateur a la possibilité d'étendre la limite de temps au moins dix fois<![CDATA[<br>]]>
+    - L'exception du temps réel : la limite de temps est une partie constitutive d'un événement en temps réel (par exemple, une enchère) et aucune alternative n'est possible<![CDATA[<br>]]>
+    - L'exception de la limite essentielle : la limite de temps est essentielle et l'étendre invaliderait alors l'activité<![CDATA[<br>]]>
+    - L'exception des 20 heures : la limite de temps est supérieure à 20 heures.</Etape>
+                    </Methodologie>
+                    <Notes>Ce critère de succès permet de s'assurer que les utilisateurs peuvent compléter leurs tâches sans changement inattendu de contenu ou de contexte résultant de la limite de temps. Il devrait être considéré conjointement avec le critère de succès 3.2.1, qui pose des limites aux changements de contenu ou de contexte résultant d'une action de l'utilisateur.</Notes>
+                    <CasParticuliers></CasParticuliers>
+                </Critere>
+
+                <Critere id="2.2.2">
+                    <titre>Mettre en pause, arrêter, masquer</titre>
+                    <NiveauWCAG>A</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Pour toute information en mouvement, clignotante, défilante ou mise à jour automatiquement, tous les points suivants sont vrais:<![CDATA[<br>]]>
+    - Déplacement, clignotement, défilement : pour toute information en mouvement, clignotante ou défilante qui (1) démarre automatiquement, (2) dure plus de cinq secondes et (3) est présentée conjointement avec un autre contenu, il y a un mécanisme à la disposition de l'utilisateur pour la mettre en pause, l'arrêter ou la masquer, à moins que le mouvement, le clignotement ou le défilement s'avère un élément essentiel au bon déroulement de l'activité<![CDATA[<br>]]>
+    - Mise à jour automatique : pour toute information mise à jour automatiquement qui (1) démarre automatiquement (2) et est présentée conjointement avec un autre contenu, il y a un mécanisme à la disposition de l'utilisateur pour la mettre en pause, l'arrêter ou pour en contrôler la fréquence des mises à jour à moins que la mise à jour automatique s'avère essentielle au bon déroulement de l'activité.</Etape>
+                    </Methodologie>
+                    <Notes>Pour les exigences relatives au contenu scintillant ou flashant, se référer à la règle 2.3.<![CDATA[<br>]]>
+    Puisque tout contenu ne satisfaisant pas à ce critère de succès peut interférer avec la capacité de l'utilisateur à exploiter la page entière, tout le contenu présent dans la page Web (qu'il soit utilisé pour satisfaire à d'autres critères de succès ou non) doit satisfaire à ce critère de succès.<![CDATA[<br>]]>
+    Il n'est pas exigé que le contenu mis à jour périodiquement par logiciel ou diffusé en flux à l'agent utilisateur conserve ou présente l'information générée ou reçue entre la mise en pause et la reprise de la présentation, puisque cela peut ne pas être techniquement possible et s'avérer trompeur dans beaucoup de situations.<![CDATA[<br>]]>
+    Une animation survenant dans une phase de pré-chargement ou dans une situation similaire peut être considérée comme essentielle si aucune interaction n'est permise à tous les utilisateurs durant cette phase et si l'absence d'indication de progression est susceptible de perturber les utilisateurs ou de leur faire croire que le contenu est figé ou défectueux.</Notes>
+                    <CasParticuliers></CasParticuliers>
+                </Critere>
+                <Critere id="2.2.3">
+                    <titre>Pas de délai d'exécution</titre>
+                    <NiveauWCAG>AAA</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Le temps n'est pas un facteur essentiel dans le déroulement de l'événement ou de l'activité, à l'exception des médias synchronisés non interactifs et des événements en temps réel.</Etape>
+                    </Methodologie>
+                    <CasParticuliers></CasParticuliers>
+                    <Notes></Notes>
+                </Critere>
+
+                <Critere id="2.2.4">
+                    <titre>Interruptions</titre>
+                    <NiveauWCAG>AAA</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Les interruptions peuvent être reportées ou supprimées par l'utilisateur, à l'exception des interruptions impliquant une urgence.</Etape>
+                    </Methodologie>
+                    <CasParticuliers></CasParticuliers>
+                    <Notes></Notes>
+                </Critere>
+
+                <Critere id="2.2.5">
+                    <titre>Nouvelle authentification</titre>
+                    <NiveauWCAG>AAA</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Quand une session authentifiée expire, l'utilisateur peut poursuivre son activité sans perte de données après une nouvelle authentification.</Etape>
+                    </Methodologie>
+                    <CasParticuliers></CasParticuliers>
+                    <Notes></Notes>
+                </Critere>
+
+                <Critere id="2.2.6">
+                    <titre>Délais d'expiration</titre>
+                    <NiveauWCAG>AAA</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Les utilisateurs sont avertis de la durée de leur inactivité qui pourrait entraîner une perte de données, à moins que les données ne soient conservées pendant plus de 20 heures lorsque l'utilisateur n'effectue aucune action.</Etape>
+                    </Methodologie>
+                    <Notes>Les réglementations relatives à la protection de la vie privée peuvent exiger le consentement explicite de l'utilisateur avant qu'il ait été authentifié et avant que ses données soient conservées. Dans la plupart des juridictions, pays ou régions, le consentement explicite d'une personne mineure ne peut pas être sollicité. Lorsque la conservation des données est envisagée comme une méthode pour satisfaire à ce critère de succès, il est conseillé de consulter des professionnels de la protection de la vie privée et un conseiller juridique.</Notes>
+                    <CasParticuliers></CasParticuliers>
+                </Critere>
+            </sousSection>
+
+            <sousSection id="2.3">
+                <titre>Crises et réactions physiques</titre>
+
+                <Critere id="2.3.1">
+                    <titre>Pas plus de trois flashs ou sous le seuil critique</titre>
+                    <NiveauWCAG>A</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Une page Web doit être exempte de tout élément qui flashe plus de trois fois dans n'importe quel intervalle d'une seconde ou ce flash doit se situer sous le seuil de flash générique et le seuil de flash rouge.</Etape>
+                    </Methodologie>
+                    <Notes>Puisque tout contenu ne satisfaisant pas à ce critère de succès peut interférer avec la capacité de l'utilisateur à exploiter la page entière, tout le contenu présent dans la page Web (qu'il soit utilisé pour satisfaire à d'autres critères de succès ou non) doit satisfaire à ce critère de succès. Voir l'exigence de conformité 5: Non-interférence.</Notes>
+                    <CasParticuliers></CasParticuliers>
+                </Critere>
+                <Critere id="2.3.2">
+                    <titre>Trois flashs</titre>
+                    <NiveauWCAG>AAA</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Une page Web doit être exempte de tout élément qui flashe plus de trois fois dans n'importe quel intervalle d'une seconde.</Etape>
+                    </Methodologie>
+                    <CasParticuliers></CasParticuliers>
+                    <Notes></Notes>
+                </Critere>
+
+                <Critere id="2.3.3">
+                    <titre>Animation résultant d'interactions</titre>
+                    <NiveauWCAG>AAA</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>L'animation basée sur le mouvement, déclenchée par une interaction, peut être désactivée sauf si l'animation est essentielle à la fonctionnalité ou à l'information transmise.</Etape>
+                    </Methodologie>
+                    <Notes></Notes>
+                    <CasParticuliers></CasParticuliers>
+                </Critere>
+            </sousSection>
+
+            <sousSection id="2.4">
+                <titre>Navigable</titre>
+
+                <Critere id="2.4.1">
+                    <titre>Contourner des blocs</titre>
+                    <NiveauWCAG>A</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Un mécanisme permet de contourner les blocs de contenu qui sont répétés sur plusieurs pages Web.</Etape>
+                    </Methodologie>
+                    <CasParticuliers></CasParticuliers>
+                    <Notes></Notes>
+                </Critere>
+
+                <Critere id="2.4.2">
+                    <titre>Titre de page</titre>
+                    <NiveauWCAG>A</NiveauWCAG>
+                    <Methodologie>
+                        <Etape>Les pages Web présentent un titre qui décrit leur sujet ou leur but.</Etape>
+                    </Methodologie>
+                    <CasParticuliers></CasParticuliers>
+                    <Notes></Notes>
+                </Critere>
+
+                    <Critere id="2.4.3">
+                        <titre>Parcours du focus</titre>
+                        <NiveauWCAG>A</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>Si une page Web peut être parcourue de façon séquentielle et que les séquences de navigation affectent la signification ou l'action, les éléments reçoivent le focus dans un ordre qui préserve la signification et l'opérabilité.</Etape>
+                        </Methodologie>
+                        <CasParticuliers></CasParticuliers>
+                        <Notes></Notes>
+                    </Critere>
+
+                    <Critere id="2.4.4">
+                        <titre>Fonction du lien (selon le contexte)</titre>
+                        <NiveauWCAG>A</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>La fonction de chaque lien est déterminée par le texte du lien seul ou par le texte du lien associé à un contexte du lien déterminé par un programme informatique, sauf si la fonction du lien est ambiguë pour tout utilisateur.</Etape>
+                        </Methodologie>
+                        <CasParticuliers></CasParticuliers>
+                        <Notes></Notes>
+                    </Critere>
+                    <Critere id="2.4.5">
+                        <titre>Accès multiples</titre>
+                        <NiveauWCAG>AA</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>Une page Web peut être située par plus d'un moyen dans un ensemble de pages Web sauf si cette page est le résultat ou une étape d'un processus.</Etape>
+                        </Methodologie>
+                        <CasParticuliers></CasParticuliers>
+                        <Notes></Notes>
+                    </Critere>
+
+                    <Critere id="2.4.6">
+                        <titre>En-têtes et étiquettes</titre>
+                        <NiveauWCAG>AA</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>Les en-têtes et les étiquettes décrivent le sujet ou le but.</Etape>
+                        </Methodologie>
+                        <CasParticuliers></CasParticuliers>
+                        <Notes></Notes>
+                    </Critere>
+
+                    <Critere id="2.4.7">
+                        <titre>Visibilité du focus</titre>
+                        <NiveauWCAG>AA</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>Toute interface utilisable au clavier comporte un mode de fonctionnement où le focus est visible.</Etape>
+                        </Methodologie>
+                        <CasParticuliers></CasParticuliers>
+                        <Notes></Notes>
+                    </Critere>
+
+                    <Critere id="2.4.8">
+                        <titre>Localisation</titre>
+                        <NiveauWCAG>AAA</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>L'utilisateur dispose d'informations pour se situer dans un ensemble de pages Web.</Etape>
+                        </Methodologie>
+                        <CasParticuliers></CasParticuliers>
+                        <Notes></Notes>
+                    </Critere>
+
+                    <Critere id="2.4.9">
+                        <titre>Fonction du lien (lien uniquement)</titre>
+                        <NiveauWCAG>AAA</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>Un mécanisme permet de déterminer la fonction de chaque lien par le texte du lien uniquement, sauf si la fonction du lien est ambiguë pour tout utilisateur.</Etape>
+                        </Methodologie>
+                        <CasParticuliers></CasParticuliers>
+                        <Notes></Notes>
+                    </Critere>
+
+                    <Critere id="2.4.10">
+                        <titre>En-têtes de section</titre>
+                        <NiveauWCAG>AAA</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>Les en-têtes de section sont utilisés pour organiser le contenu.</Etape>
+                        </Methodologie>
+                        <Notes>« En-tête » est utilisé dans le sens général et comprend les titres et autres moyens de structurer les différents types de contenus.<![CDATA[<br>]]>Ce critère de succès concerne les contenus de sections et non les composants d'interface utilisateur. Les composants d'interface utilisateur sont traités par le critère de succès 4.1.2.</Notes>
+                        <CasParticuliers></CasParticuliers>
+                    </Critere>
+                    <Critere id="2.4.11">
+                        <titre>Focus non masqué (minimum)</titre>
+                        <NiveauWCAG>AA</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>Lorsqu'un composant d'interface utilisateur reçoit le focus du clavier, ce composant n'est pas entièrement masqué par du contenu créé par l'auteur.</Etape>
+                        </Methodologie>
+                        <Notes>Lorsqu'un contenu d'une interface configurable peut être repositionné par l'utilisateur, alors seules les positions initiales du contenu déplaçable sont prises en compte pour les tests et la conformité à ce critère de succès.<![CDATA[<br>]]>Il arrive que du contenu ouvert par l'utilisateur masque le composant qui reçoit le focus. Si l'utilisateur peut révéler le composant ayant le focus sans déplacer le focus du clavier, alors le composant ayant le focus n'est pas considéré comme masqué par du contenu créé par l'auteur.</Notes>
+                        <CasParticuliers></CasParticuliers>
+                    </Critere>
+
+                    <Critere id="2.4.12">
+                        <titre>Focus non masqué (amélioré)</titre>
+                        <NiveauWCAG>AAA</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>Lorsqu'un composant d'interface utilisateur reçoit le focus du clavier, aucune partie de ce composant n'est masquée par du contenu créé par l'auteur.</Etape>
+                        </Methodologie>
+                        <CasParticuliers></CasParticuliers>
+                        <Notes></Notes>
+                    </Critere>
+
+                    <Critere id="2.4.13">
+                        <titre>Apparence du focus</titre>
+                        <NiveauWCAG>AAA</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>Lorsque le focus est visible, une partie de l'indicateur de focus satisfait à toutes les exigences suivantes:<![CDATA[<br>]]>
+        - elle est au moins aussi grande que la surface d'un périmètre de 2 pixels CSS d'épaisseur du composant ou du sous-composant à l'état non focalisé, et<![CDATA[<br>]]>
+        - le rapport de contraste est d'au moins 3:1 entre l'état focalisé et non focalisé de chacun des pixels.</Etape>
+                        </Methodologie>
+                        <Notes>Ce qui est perçu comme le composant ou sous-composant d'interface utilisateur (pour déterminer le contour ou la taille) dépend de sa présentation visuelle. La présentation visuelle inclut le contenu visible du composant, la bordure et l'arrière-plan spécifique au composant. Elle n'inclut pas les effets d'ombre et de brillance à l'extérieur du contenu, de l'arrière-plan ou de la bordure du composant.<![CDATA[<br>]]>Des exemples de sous-composants qui peuvent recevoir le focus sont les éléments de menu dans un menu déroulant ouvert, ou les cellules focalisables dans une grille.<![CDATA[<br>]]>Les calculs de contraste peuvent être basés sur les couleurs définies au niveau de la technologie (comme HTML, CSS et SVG). Les pixels modifiés par les améliorations de résolution de l'agent utilisateur et l'anti-crénelage peuvent être ignorés.</Notes>
+                        <CasParticuliers></CasParticuliers>
+                    </Critere>
+                </sousSection>
+
+                <sousSection id="2.5">
+                    <titre>Modalités d'entrée</titre>
+
+                    <Critere id="2.5.1">
+                        <titre>Gestes pour le contrôle du pointeur</titre>
+                        <NiveauWCAG>A</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>Toutes les fonctionnalités qui utilisent des gestes multipoints ou basés sur un tracé peuvent être utilisées avec un pointage à contact unique sans geste basé sur un tracé, à moins qu'un geste multipoint ou basé sur un tracé ne soit essentiel.</Etape>
+                        </Methodologie>
+                        <Notes>Cette exigence s'applique aux contenus Web qui interprètent les actions du pointeur (elle ne s'applique pas aux actions nécessaires à l'utilisation d'un agent utilisateur ou d'une technologie d'assistance).</Notes>
+                        <CasParticuliers></CasParticuliers>
+                    </Critere>
+
+                    <Critere id="2.5.2">
+                        <titre>Annulation de l'action du pointeur</titre>
+                        <NiveauWCAG>A</NiveauWCAG>
+                        <Methodologie>
+                            <Etape>Pour une fonctionnalité qui peut être activée avec un dispositif de pointage à contact unique, au moins une des conditions suivantes est vraie:<![CDATA[<br>]]>
+        - Aucun événement descendant : l'événement descendant (down-event) du pointeur n'est pas utilisé pour exécuter une partie ou la totalité de la fonction<![CDATA[<br>]]>
+        - Abandon ou annulation : l'achèvement de la fonction se fait sur l'événement ascendant (up-event), et un mécanisme est disponible pour interrompre la fonction avant l'achèvement ou pour annuler la fonction après l'achèvement<![CDATA[<br>]]>
+        - Inversion sur l'événement ascendant : l'événement ascendant inverse tout résultat de l'événement descendant précédent<![CDATA[<br>]]>
+        - Essentiel : l'achèvement de la fonction lors de l'événement descendant est essentiel</Etape>
+                        </Methodologie>
+                        <Notes>Les fonctions qui émulent l'appui d'une touche du clavier ou du pavé numérique sont considérées comme essentielles.<![CDATA[<br>]]>Cette exigence s'applique aux contenus Web qui interprètent les actions du pointeur (elle ne s'applique pas aux actions nécessaires à l'utilisation d'un agent utilisateur ou d'une technologie d'assistance).</Notes>
+                        <CasParticuliers></CasParticuliers>
+                    </Critere>
+            <Critere id="2.5.3">
+                <titre>Étiquette dans le nom</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Pour les composants d'interface utilisateur dont les étiquettes contiennent du texte ou du texte sous forme d'image, le nom contient le texte qui est présenté visuellement.</Etape>
+                </Methodologie>
+                <Notes>Une bonne pratique consiste à placer le texte de l'étiquette au début du nom.</Notes>
+                <CasParticuliers></CasParticuliers>
+            </Critere>
+
+            <Critere id="2.5.4">
+                <titre>Activation par le mouvement</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Les fonctionnalités qui peuvent être activées par un mouvement de l'appareil ou un mouvement de l'utilisateur peuvent également être activées par des composants d'interface utilisateur et la réponse au mouvement peut être désactivée pour éviter une activation accidentelle, sauf dans les cas suivants:<![CDATA[<br>]]>
+- Interface compatible : le mouvement est utilisé pour activer la fonctionnalité par l'intermédiaire d'une interface compatible avec l'accessibilité<![CDATA[<br>]]>
+- Essentiel : le mouvement est essentiel à la fonction et le désactiver invaliderait l'activité.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="2.5.5">
+                <titre>Taille de la cible (amélioré)</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>La taille de la cible pour les entrées de pointeur est d'au moins 44 par 44 pixels CSS, sauf quand:<![CDATA[<br>]]>
+- Équivalence : la cible est disponible depuis un lien ou un contrôle équivalent sur la même page qui mesure au moins 44 par 44 pixels CSS<![CDATA[<br>]]>
+- En ligne : la cible se trouve dans une phrase ou un bloc de texte<![CDATA[<br>]]>
+- Contrôle par l'agent utilisateur : la taille de la cible est déterminée par l'agent utilisateur et n'est pas modifiée par l'auteur<![CDATA[<br>]]>
+- Essentiel : une présentation spécifique de la cible est essentielle à l'information transmise.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="2.5.6">
+                <titre>Modalités d'entrées concurrentes</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Le contenu Web ne restreint pas l'utilisation des modalités d'entrée disponibles sur une plateforme, sauf si la restriction est essentielle, nécessaire pour garantir la sécurité du contenu ou nécessaire pour respecter les paramètres de l'utilisateur.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="2.5.7">
+                <titre>Mouvements de glissement</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Toutes les fonctionnalités qui utilisent un mouvement de glissement peuvent être réalisées par un pointage à contact unique sans glissement, sauf si le glissement est essentiel ou que la fonctionnalité est déterminée par l'agent utilisateur et non modifiée par l'auteur.</Etape>
+                </Methodologie>
+                <Notes>Cette exigence s'applique aux contenus Web qui interprètent les actions du pointeur (c'est-à-dire qu'elle ne s'applique pas aux actions nécessaires pour faire fonctionner l'agent utilisateur ou la technologie d'assistance).</Notes>
+                <CasParticuliers></CasParticuliers>
+            </Critere>
+
+            <Critere id="2.5.8">
+                <titre>Taille de la cible (minimum)</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>La taille de la cible pour les entrées de pointeur est d'au moins 24 par 24 pixels CSS, sauf dans les cas suivants:<![CDATA[<br>]]>
+- Espacement : les cibles de taille réduite (de moins de 24 par 24 pixels CSS) sont positionnées de telle sorte que si un cercle de 24 pixels CSS de diamètre est centré sur la boîte de délimitation de chacune d'elles, les cercles ne croisent pas d'autre cible ni le cercle d'une autre cible de taille réduite<![CDATA[<br>]]>
+- Équivalence : la fonction peut être réalisée grâce à un élément de contrôle différent sur la même page, et qui satisfait à ce critère<![CDATA[<br>]]>
+- En ligne : la cible se trouve dans une phrase, ou bien sa taille est limitée par la hauteur de ligne du texte non ciblé<![CDATA[<br>]]>
+- Contrôle par l'agent utilisateur : la taille de la cible est déterminée par l'agent utilisateur et n'est pas modifiée par l'auteur<![CDATA[<br>]]>
+- Essentiel : une présentation spécifique de la cible est essentielle ou est légalement requise pour transmettre l'information.</Etape>
+                </Methodologie>
+                <Notes>Pour ce critère de succès, les cibles qui permettent de sélectionner des valeurs en fonction de leur position dans la cible sont considérées comme une seule cible. Cela inclut par exemple les curseurs (slider), les sélecteurs de couleurs affichant un dégradé de couleurs, ou les zones éditables où l'on positionne le curseur.<![CDATA[<br>]]>Pour les cibles en ligne, la hauteur de ligne doit être interprétée comme étant perpendiculaire au flux de texte. Par exemple, dans une langue affichée verticalement, la hauteur de ligne serait horizontale.</Notes>
+                <CasParticuliers></CasParticuliers>
+            </Critere>
+        </sousSection>
+    </section>
+    <section id="3">
+        <Titre>Compréhensible - Les informations et l'utilisation de l'interface utilisateur doivent être compréhensibles.</Titre>
+
+        <sousSection id="3.1">
+            <titre>Lisible</titre>
+
+            <Critere id="3.1.1">
+                <titre>Langue de la page</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>La langue par défaut de chaque page Web peut être déterminée par un programme informatique.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.1.2">
+                <titre>Langue d'un passage</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>La langue de chaque passage ou expression du contenu peut être déterminée par un programme informatique sauf pour un nom propre, pour un terme technique, pour un mot dont la langue est indéterminée ou pour un mot ou une expression faisant partie du langage courant de la langue utilisée dans le contexte immédiat.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.1.3">
+                <titre>Mots rares</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Un mécanisme est disponible pour identifier la définition spécifique des mots ou expressions utilisés de manière inhabituelle ou de façon limitée, y compris les expressions idiomatiques et le jargon.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+            <Critere id="3.1.4">
+                <titre>Abréviations</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Un mécanisme est disponible pour identifier la forme complète ou la signification d'une abréviation.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.1.5">
+                <titre>Niveau de lecture</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Lorsqu'un texte nécessite une capacité de lecture plus avancée que le premier cycle de l'enseignement secondaire après la suppression des noms propres et des titres, un contenu additionnel, ou une version qui ne requiert pas de capacité de lecture supérieure au premier cycle de l'enseignement secondaire est disponible.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.1.6">
+                <titre>Prononciation</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Un mécanisme permet d'identifier la prononciation spécifique des mots dont la signification est ambiguë dans le contexte si leur prononciation n'est pas connue.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+        </sousSection>
+
+        <sousSection id="3.2">
+            <titre>Prévisible</titre>
+            
+            <Critere id="3.2.1">
+                <titre>Au focus</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Quand un composant d'interface utilisateur reçoit le focus, il ne doit pas initier de changement de contexte.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.2.2">
+                <titre>À la saisie</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Le changement de paramètre d'un composant d'interface utilisateur ne doit pas initier de changement de contexte à moins que l'utilisateur n'ait été avisé de ce comportement avant d'utiliser le composant.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+            <Critere id="3.2.3">
+                <titre>Navigation cohérente</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Dans un ensemble de pages, les mécanismes de navigation qui se répètent sur plusieurs pages Web se présentent dans le même ordre relatif chaque fois qu'ils sont répétés, à moins qu'un changement soit initié par l'utilisateur.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.2.4">
+                <titre>Identification cohérente</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Dans un ensemble de pages Web les composants qui ont la même fonctionnalité sont identifiés de la même façon.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.2.5">
+                <titre>Changement à la demande</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Un changement de contexte est initié uniquement sur demande de l'utilisateur ou un mécanisme est disponible pour désactiver un tel changement.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.2.6">
+                <titre>Aide cohérente</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Si une page Web contient l'un des mécanismes d'aide suivants et que ces mécanismes sont répétés sur plusieurs pages d'un ensemble de pages, alors ils se présentent dans le même ordre relativement aux autres contenus de la page ; à moins qu'un changement soit initié par l'utilisateur:<![CDATA[<br>]]>
+- des coordonnées de personnes<![CDATA[<br>]]>
+- un mécanisme pour contacter une personne<![CDATA[<br>]]>
+- une option d'auto-assistance<![CDATA[<br>]]>
+- un mécanisme de contact entièrement automatisé</Etape>
+                </Methodologie>
+                <Notes>Les mécanismes d'aide peuvent être fournis directement sur la page, ou être fournis grâce à un lien direct vers une page distincte contenant les informations.<![CDATA[<br>]]>Pour ce critère de succès, "le même ordre relativement aux autres contenus de la page" peut être considéré comme la manière dont le contenu est ordonné lorsque la page est linéarisée. La position visuelle d'un mécanisme d'aide sera probablement cohérente d'une page à l'autre pour la même variante de page (par exemple, un point de rupture CSS). L'utilisateur peut initier un changement, comme modifier le zoom de la page ou son orientation, ce qui peut déclencher l'affichage d'une variante différente de la page. Ce critère s'intéresse à l'ordre relatif dans des pages affichées avec la même variante de page (par exemple, le même niveau de zoom et la même orientation).</Notes>
+                <CasParticuliers></CasParticuliers>
+            </Critere>
+        </sousSection>
+        <sousSection id="3.3">
+            <titre>Assistance à la saisie</titre>
+
+            <Critere id="3.3.1">
+                <titre>Identification des erreurs</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Si une erreur de saisie est détectée automatiquement, l'élément en erreur est identifié et l'erreur est décrite à l'utilisateur sous forme de texte.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.3.2">
+                <titre>Étiquettes ou instructions</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Des étiquettes sont présentées ou des instructions sont fournies quand un contenu requiert une saisie utilisateur.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.3.3">
+                <titre>Suggestion après une erreur</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Si une erreur de saisie est automatiquement détectée et que des suggestions de corrections sont connues, ces suggestions sont alors proposées à l'utilisateur à moins que cela puisse compromettre la sécurité ou la finalité du contenu.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.3.4">
+                <titre>Prévention des erreurs (juridiques, financières, de données)</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Pour les pages Web qui entraînent des engagements juridiques ou des transactions financières de la part de l'utilisateur, qui modifient ou effacent des données contrôlables par l'utilisateur dans des systèmes de stockages de données, qui enregistrent les réponses de l'utilisateur à un test ou un examen, au moins l'une des conditions suivantes est vraie:<![CDATA[<br>]]>
+- Réversible : les actions d'envoi sont réversibles.<![CDATA[<br>]]>
+- Vérifiée : les données saisies par l'utilisateur sont vérifiées au niveau des erreurs de saisie et la possibilité est donnée à l'utilisateur de les corriger.<![CDATA[<br>]]>
+- Confirmée : un mécanisme est disponible pour revoir, confirmer et corriger les informations avant leur soumission finale.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+            <Critere id="3.3.5">
+                <titre>Aide</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Une aide contextuelle est disponible.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.3.6">
+                <titre>Prévention des erreurs (toutes)</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Pour des pages Web demandant à l'utilisateur de soumettre des informations, au moins l'une des conditions suivantes est vraie:<![CDATA[<br>]]>
+- Réversible : les actions d'envoi sont réversibles.<![CDATA[<br>]]>
+- Vérifiée : les données saisies par l'utilisateur sont vérifiées au niveau des erreurs de saisie et la possibilité est donnée à l'utilisateur de les corriger.<![CDATA[<br>]]>
+- Confirmée : un mécanisme est disponible pour revoir, confirmer et corriger les informations avant leur soumission finale.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.3.7">
+                <titre>Saisie redondante</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Les informations précédemment saisies par l'utilisateur ou fournies à l'utilisateur, et qui doivent être à nouveau saisies dans le même processus sont soit:<![CDATA[<br>]]>
+- préremplies, ou<![CDATA[<br>]]>
+- disponibles pour être sélectionnées par l'utilisateur.<![CDATA[<br>]]>
+Sauf dans les cas suivants:<![CDATA[<br>]]>
+- il est essentiel de ressaisir les informations soi-même,<![CDATA[<br>]]>
+- les informations sont requises pour assurer la sécurité du contenu, ou<![CDATA[<br>]]>
+- les informations précédemment saisies ne sont plus valides.</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+
+            <Critere id="3.3.8">
+                <titre>Authentification accessible (minimum)</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Aucune étape d'un processus d'authentification ne requiert de test cognitif (comme la mémorisation d'un mot de passe ou la résolution d'une énigme), à moins que cette étape ne fournisse au moins l'un des éléments suivants:<![CDATA[<br>]]>
+- Alternative : une autre méthode d'authentification, qui ne repose pas sur un test cognitif<![CDATA[<br>]]>
+- Mécanisme : un mécanisme est disponible pour aider l'utilisateur à compléter le test cognitif<![CDATA[<br>]]>
+- Reconnaissance d'objets : le test cognitif consiste à reconnaître des objets<![CDATA[<br>]]>
+- Contenu personnel : le test cognitif consiste à identifier un contenu non textuel que l'utilisateur a fourni au site web</Etape>
+                </Methodologie>
+                <Notes>La "reconnaissance d'objets" et le "contenu personnel" peuvent être représentés par des images, des vidéos ou de l'audio.<![CDATA[<br>]]>Des exemples de mécanismes qui satisfont à ce critère comprennent:<![CDATA[<br>]]>1. la possibilité de saisir un mot de passe par l'intermédiaire d'un gestionnaire de mots de passe afin de réduire l'effort de mémorisation, et<![CDATA[<br>]]>2. la fonction copier-coller pour réduire la charge cognitive due à une saisie répétitive.</Notes>
+                <CasParticuliers></CasParticuliers>
+            </Critere>
+
+            <Critere id="3.3.9">
+                <titre>Authentification accessible (amélioré)</titre>
+                <NiveauWCAG>AAA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Aucune étape d'un processus d'authentification ne requiert de test cognitif (comme la mémorisation d'un mot de passe ou la résolution d'une énigme), à moins que cette étape ne fournisse au moins l'un des éléments suivants:<![CDATA[<br>]]>
+- Alternative : une autre méthode d'authentification, qui ne repose pas sur un test cognitif<![CDATA[<br>]]>
+- Mécanisme : un mécanisme est disponible pour aider l'utilisateur à compléter le test cognitif</Etape>
+                </Methodologie>
+                <CasParticuliers></CasParticuliers>
+                <Notes></Notes>
+            </Critere>
+        </sousSection>
+    </section>
+    <section id="4">
+        <Titre>Robuste - Le contenu doit être suffisamment robuste pour être interprété de manière fiable par une large variété d’agents utilisateurs.</Titre>
+        <sousSection id="4.1">
+            <titre>Compatible</titre>
+            <Critere id="4.1.1">
+                <titre>Analyse syntaxique (Obsolète et supprimé)</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Ce critère a été supprimé car les technologies d’assistance modernes n’ont plus besoin d’analyser directement le HTML.</Etape>
+                </Methodologie>
+                <Notes>Les problèmes initialement couverts par ce critère sont désormais adressés par d’autres critères ou sont devenus obsolètes.</Notes>
+            </Critere>
+        </sousSection>
+        <sousSection id="4.2">
+            <titre>Nom, rôle et valeur</titre>
+            <Critere id="4.2.1">
+                <titre>Nom, rôle et valeur</titre>
+                <NiveauWCAG>A</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Le nom, le rôle et les états, propriétés, et valeurs modifiables par l’utilisateur peuvent être déterminés par programme pour tous les composants d’interface utilisateur.</Etape>
+                </Methodologie>
+                <Notes>Les contrôles HTML standards satisfont déjà à ce critère lorsqu’ils sont utilisés selon les spécifications.</Notes>
+            </Critere>
+        </sousSection>
+        <sousSection id="4.3">
+            <titre>Messages d’état</titre>
+            <Critere id="4.3.1">
+                <titre>Messages d’état</titre>
+                <NiveauWCAG>AA</NiveauWCAG>
+                <Methodologie>
+                    <Etape>Les messages d’état peuvent être déterminés par programme afin qu’ils soient présentés à l’utilisateur sans recevoir le focus.</Etape>
+                </Methodologie>
+            </Critere>
+        </sousSection>
+    </section>
+
 </AUDIT>
